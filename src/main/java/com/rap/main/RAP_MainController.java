@@ -14,7 +14,7 @@ public class RAP_MainController {
 	
 	@RequestMapping(value = "/Main", method = RequestMethod.GET)
 	public String TCManagement_GET(HttpServletRequest request) {
-		logger.info("Main Tab");
+		logger.info("Main Page");
 		
 		return "Main";
 	}

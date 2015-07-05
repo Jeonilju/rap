@@ -8,7 +8,7 @@ import com.rap.models.CategoryLInfo;
 
 public interface CategoryLIDao {
 	void setDataSource(DataSource ds);	 
-	void create(String categoryL);
+	void create(int Key, String categoryL);
 	
 	List<CategoryLInfo> select(int pk);
 	List<CategoryLInfo> selectAll();
