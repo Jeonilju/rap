@@ -8,10 +8,11 @@ import com.rap.models.CategoryMInfo;
 
 public interface CategoryMIDao {
 	void setDataSource(DataSource ds);
-	void create(int Key, int categoryL_pk, String categoryM);
+	void create(String Key, int categoryL_pk, String categoryM);
 	
-	List<CategoryMInfo> select(int key);
+	List<CategoryMInfo> select(String key);
+	List<CategoryMInfo> select(String key, String categoryL);
 	
-	void delete(int key, int categoryL_pk, String categoryM);
-	void delete(int key);
+	void delete(String key, int categoryL_pk, String categoryM);
+	void delete(String key);
 }

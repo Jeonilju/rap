@@ -28,12 +28,12 @@ public class CategoryMDao implements CategoryMIDao{
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int Key, int categoryL_pk, String categoryM) {
+	public void create(String Key, int categoryL_pk, String categoryM) {
 		jdbcTemplate.update("insert into categorym (project_key, categorL_pk, categorym) values (?, ?, ?)", new Object[] { Key, categoryL_pk, categoryM });
 	}
 	
 	//int pk, int key, String categorym, Timestamp reg_date, int categotyL_pk
-	public List<CategoryMInfo> select(int key) {
+	public List<CategoryMInfo> select(String key) {
 		return jdbcTemplate.query("select * from categorym where project_key = ?",
 		    	new Object[] { key }, new RowMapper<CategoryMInfo>() {
 		    	public CategoryMInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -47,11 +47,17 @@ public class CategoryMDao implements CategoryMIDao{
 		    	}
 		    });
 	}
-	public void delete(int key, int categoryL_pk, String categoryM) {
+	
+	// TODO 쿼리문 작업해야됨
+	public List<CategoryMInfo> select(String key, String categoryL){
+		return null;
+	}
+	
+	public void delete(String key, int categoryL_pk, String categoryM) {
 		jdbcTemplate.update("delete from categorym where project_key = ? AND categoryL_pk = ? AND categorym = ?",
 		        new Object[] { key, categoryL_pk,  categoryM});		
 	}
-	public void delete(int key) {
+	public void delete(String key) {
 		jdbcTemplate.update("delete from categorym where project_key = ?",
 		        new Object[] { key });		
 	}

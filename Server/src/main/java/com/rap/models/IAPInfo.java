@@ -13,6 +13,29 @@ public class IAPInfo {
 	private String image;
 	private String discription;
 	private Timestamp reg_date;
+	private String categoryl;
+	private String categorym;
+	private String categorys;
+	
+	public IAPInfo(int pk, int key, String iap
+			, int price_real, int price_main, int price_sub, int using_type
+			, String image, String discription, Timestamp reg_date
+			, String categoryl, String categorym, String categorys) {
+		this.pk = pk;
+		this.key = key;
+		this.iap = iap;
+		this.price_real = price_real;
+		this.price_main = price_main;
+		this.price_sub = price_sub;
+		this.using_type = using_type;
+		this.image = image;
+		this.discription = discription;
+		this.reg_date = reg_date;
+		this.categoryl = categoryl;
+		this.categorym = categorym;
+		this.categorys = categorys;
+	}
+	
 	public int getPk() {
 		return pk;
 	}
@@ -72,6 +95,24 @@ public class IAPInfo {
 	}
 	public void setReg_date(Timestamp reg_date) {
 		this.reg_date = reg_date;
+	}
+	public String getCategoryl() {
+		return categoryl;
+	}
+	public void setCategoryl(String categoryl) {
+		this.categoryl = categoryl;
+	}
+	public String getCategorym() {
+		return categorym;
+	}
+	public void setCategorym(String categorym) {
+		this.categorym = categorym;
+	}
+	public String getCategorys() {
+		return categorys;
+	}
+	public void setCategorys(String categorys) {
+		this.categorys = categorys;
 	}
 	
 }

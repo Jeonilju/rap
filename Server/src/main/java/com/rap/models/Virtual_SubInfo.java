@@ -10,6 +10,18 @@ public class Virtual_SubInfo {
 	private String image;
 	private String discription;
 	private Timestamp reg_date;
+	
+	public Virtual_SubInfo( int pk, int key, String name, int price, String image, String discription, Timestamp reg_date)
+	{
+		this.pk = pk;
+		this.key = key;
+		this.name = name;
+		this.price = price;
+		this.image = image;
+		this.discription = discription;
+		this.reg_date = reg_date;
+	}
+	
 	public int getPk() {
 		return pk;
 	}

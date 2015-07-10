@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class UserInfo {
 	private int pk;
-	private int key;
+	private String key;
 	private String gcm_id;
 	private int grade_time;
 	private int grade_money;
@@ -16,12 +16,14 @@ public class UserInfo {
 	private int age;
 	private Timestamp reg_date;
 	private int count;
+	private int virtual_main;
+	private int virtual_sub;
 	
-	public UserInfo(int pk, int key, String gcm_id
+	public UserInfo(int pk, String key, String gcm_id
 			, int grade_time, int grade_money
 			, double position_let, double position_lon
 			, int gender, String os_version, String divice_version
-			, int age, int count, Timestamp reg_date){
+			, int age, int count, int virtual_main, int virtual_sub, Timestamp reg_date){
 		
 		this.pk = pk;
 		this.key = key;
@@ -36,6 +38,8 @@ public class UserInfo {
 		this.divice_version = divice_version;
 		this.age = age;
 		this.count = count;
+		this.virtual_main = virtual_main;
+		this.virtual_sub = virtual_sub;
 		this.reg_date = reg_date;
 	}
 	
@@ -45,10 +49,10 @@ public class UserInfo {
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
-	public int getKey() {
+	public String getKey() {
 		return key;
 	}
-	public void setKey(int key) {
+	public void setKey(String key) {
 		this.key = key;
 	}
 	public String getGcm_id() {
@@ -118,6 +122,22 @@ public class UserInfo {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public int getVirtual_main() {
+		return virtual_main;
+	}
+
+	public void setVirtual_main(int virtual_main) {
+		this.virtual_main = virtual_main;
+	}
+
+	public int getVirtual_sub() {
+		return virtual_sub;
+	}
+
+	public void setVirtual_sub(int virtual_sub) {
+		this.virtual_sub = virtual_sub;
 	}
 	
 	

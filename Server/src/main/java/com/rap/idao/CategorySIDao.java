@@ -4,14 +4,16 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.rap.models.CategoryMInfo;
 import com.rap.models.CategorySInfo;
 
 public interface CategorySIDao {
 	void setDataSource(DataSource ds);
-	void create(int Key, int categoryM_pk, String categoryS);
+	void create(String Key, int categoryM_pk, String categoryS);
 	
-	List<CategorySInfo> select(int key);
+	List<CategorySInfo> select(String key);
+	List<CategorySInfo> select(String key, String categoryL, String categoryM);
 	
-	void delete(int key, int categoryM_pk, String categoryS);
-	void delete(int key);
+	void delete(String key, int categoryM_pk, String categoryS);
+	void delete(String key);
 }

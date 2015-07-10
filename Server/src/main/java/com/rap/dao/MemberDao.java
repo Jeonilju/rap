@@ -30,6 +30,7 @@ public class MemberDao implements MemberIDao{
 	public void create(String email, String password) {
 		jdbcTemplate.update("insert into member (email, password) values (?, ?)", new Object[] { email, password });
 	}
+	
 	public List<MemberInfo> selectAll() {
 		return jdbcTemplate.query("select * from member ", new RowMapper<MemberInfo>() {
 		    	public MemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -42,9 +43,11 @@ public class MemberDao implements MemberIDao{
 		    	}
 		    });
 	}
+	
 	public void deleteAll() {
 		jdbcTemplate.update("delete from member");		
 	}
+	
 	public void delete(String email) {
 		jdbcTemplate.update("delete from member where email = ?",
 		        new Object[] { email });	

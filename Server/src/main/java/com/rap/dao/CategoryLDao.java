@@ -30,11 +30,11 @@ public class CategoryLDao implements CategoryLIDao{
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int project_key, String categoryL) {
+	public void create(String project_key, String categoryL) {
 		jdbcTemplate.update("insert into categoryl (project_key, categoryl) values (?, ?)", new Object[] { project_key, categoryL });
 	}
 
-	public List<CategoryLInfo> select(int key) {
+	public List<CategoryLInfo> select(String key) {
 		return jdbcTemplate.query("select * from categoryl where project_key = ?",
 		    	new Object[] { key }, new RowMapper<CategoryLInfo>() {
 		    	public CategoryLInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -48,12 +48,12 @@ public class CategoryLDao implements CategoryLIDao{
 		    });
 	}
 
-	public void delete(int key, String categoryL) {
+	public void delete(String key, String categoryL) {
 		jdbcTemplate.update("delete from categoryl where project_key = ? AND categoryl = ?",
 		        new Object[] { key, categoryL });		
 	}
 
-	public void delete(int key) {
+	public void delete(String key) {
 		jdbcTemplate.update("delete from categoryl where project_key = ?",
 		        new Object[] { key });		
 	}

@@ -27,10 +27,10 @@ public class CategorySDao implements CategorySIDao{
 		logger.info("Updated DataSource ---> " + ds);
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
-	public void create(int Key, int categoryM_pk, String categoryS) {
+	public void create(String Key, int categoryM_pk, String categoryS) {
 		jdbcTemplate.update("insert into categorys (project_key, categoryM_pk, categorys) values (?, ?, ?)", new Object[] { Key, categoryM_pk, categoryS });
 	}	
-	public List<CategorySInfo> select(int key) {
+	public List<CategorySInfo> select(String key) {
 		return jdbcTemplate.query("select * from categorys where project_key = ?",
 		    	new Object[] { key }, new RowMapper<CategorySInfo>() {
 		    	public CategorySInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -44,11 +44,18 @@ public class CategorySDao implements CategorySIDao{
 		    	}
 		    });
 	}
-	public void delete(int key, int categoryM_pk, String categoryS) {
+	
+	// TODO 쿼리문 작성해야됨
+	public List<CategorySInfo> select(String key, String categoryL, String categoryM)
+	{
+		return null;
+	}
+	
+	public void delete(String key, int categoryM_pk, String categoryS) {
 		jdbcTemplate.update("delete from categorys where project_key = ? AND categoryM_pk = ? AND categorys = ?",
 		        new Object[] { key, categoryM_pk,  categoryS});		
 	}
-	public void delete(int key) {
+	public void delete(String key) {
 		jdbcTemplate.update("delete from categorys where project_key = ?",
 		        new Object[] { key });		
 	}

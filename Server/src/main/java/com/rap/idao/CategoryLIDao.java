@@ -8,10 +8,10 @@ import com.rap.models.CategoryLInfo;
 
 public interface CategoryLIDao {
 	void setDataSource(DataSource ds);	 
-	void create(int Key, String categoryL);
+	void create(String Key, String categoryL);
 	
-	List<CategoryLInfo> select(int key);
+	List<CategoryLInfo> select(String key);
 	
-	void delete(int key, String categoryL);
-	void delete(int key);
+	void delete(String key, String categoryL);
+	void delete(String key);
 }
