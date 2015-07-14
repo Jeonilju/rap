@@ -1,23 +1,41 @@
 package com.rap.main;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
 import com.rap.dao.CategorySDao;
-import com.rap.models.CategoryLInfo;
+import com.rap.dao.MemberDao;
+import com.rap.dao.ProjectDao;
+import com.rap.dao.PromotionDao;
+import com.rap.models.MemberInfo;
+import com.rap.models.ProjectInfo;
+import com.rap.models.PromotionInfo;
+
+import net.sf.json.JSONObject;
+
+
 
 @Controller
 public class RAP_MainController {
+	private static final int PROJECTMAXNUM = 3;
 	private static final Logger logger = LoggerFactory.getLogger(RAP_MainController.class);
 	
 	@Autowired
@@ -29,6 +47,14 @@ public class RAP_MainController {
 	@Autowired
 	private CategorySDao categorySDao;
 	
+	@Autowired
+	private ProjectDao projectDao;
+
+	@Autowired
+	private MemberDao memberDao;
+	
+	@Autowired
+	private PromotionDao promotionDao;
 	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String MainController_index(HttpServletRequest request) {
@@ -37,6 +63,7 @@ public class RAP_MainController {
 		return "index";
 	}
 	
+	/** 프로젝트 등록 */
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public String MainController_register(HttpServletRequest request) {
 		logger.info("register Page");
@@ -44,11 +71,216 @@ public class RAP_MainController {
 		return "register";
 	}
 	
+	/** 프로젝트 설정 */
+	@RequestMapping(value = "/register_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String setProject(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			 @RequestParam("project_name") String project_name,
+ 			 @RequestParam("summary") String summary,
+			 @RequestParam("description") String description)
+			{
+				 logger.info("APICall: " + "setProject");	
+				 
+			    //세션 객체 생성
+			    HttpSession session = request.getSession();
+			    String email = (String)session.getAttribute("email");
+			    
+				List<MemberInfo> memberlist = memberDao.select(email);
+				List<ProjectInfo> projectlist;
+				String pk;
+				
+				//해당 이메일의 사용자가 존재하지 않을 때
+				if(memberlist == null || memberlist.isEmpty())
+				{
+					return "2";
+				}
+				else
+				{
+					int member_pk = memberlist.get(0).getPk();
+					
+					//사용자의 프로젝트 리스트
+					projectlist = projectDao.selectFromMemberPK(member_pk);
+
+					//사용자의 프로젝트 이름이 중복될 경우
+					for(int i=0;i<projectlist.size();i++){
+						if(projectlist.get(i).getProject_name().equals(project_name))
+						{
+							return "1";
+						}
+					}
+					
+					//사용자의 프로젝트 개수가 3개일 경우
+					if(projectlist.size() >= PROJECTMAXNUM)
+						return "3";
+					
+					//날짜+사용자고유키+프로젝트고유키
+					Random rnd =new Random();
+					StringBuffer buf =new StringBuffer();
+					 
+					for(int i=0;i<20;i++){
+					    if(rnd.nextBoolean()){
+					        buf.append((char)((int)(rnd.nextInt(26))+97));
+					    }else{
+					        buf.append((rnd.nextInt(10))); 
+					    }
+					}
+					String str = buf.toString();
+					
+					//해시 적용
+					do
+					{
+						pk = ""; 
+						try{
+							MessageDigest md = MessageDigest.getInstance("MD5"); 
+							md.update(str.getBytes()); 
+							byte byteData[] = md.digest();
+							StringBuffer sb = new StringBuffer(); 
+							for(int i = 0 ; i < byteData.length ; i++){
+								sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+							}
+							pk = sb.toString();
+							
+						}catch(NoSuchAlgorithmException e){
+							e.printStackTrace(); 
+							pk = null; 
+						}
+						projectlist = projectDao.select(pk);
+					}while(projectlist != null && !projectlist.isEmpty());
+						
+					projectDao.create(pk, project_name, summary, description, member_pk);
+					 
+					projectlist = projectDao.selectFromMemberPK(member_pk);
+					
+					session.setAttribute("projectlist", projectlist);
+					session.setAttribute("projectcount", projectlist.size());
+					 
+					 
+				}
+				
+				 return "0";
+			}
+	
+	/** 회원가입 설정 */
+	@RequestMapping(value = "/signup_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String setMember(HttpServletRequest request,
+ 			HttpServletResponse response,
+ 			 @RequestParam("email") String email,
+ 			 @RequestParam("password") String password 
+			)
+			{
+				 logger.info("APICall: " + "setMember");		
+				 memberDao.create(email, password);
+				 
+				 String redirectUrl = "index";
+				 
+				 return "redirect:"+redirectUrl;
+			}
+	
+	
+	/** 로그인 설정*/
+	@RequestMapping(value = "/login_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String login(HttpServletRequest request) {
+		
+		String result = "0";
+	       
+	    logger.info("User Login");
+	    
+	    String email = request.getParameter("Signin_email");
+	    String password = request.getParameter("Signin_password");
+	    
+	    //세션 객체 생성
+	    HttpSession session = request.getSession();
+	    
+	    List<MemberInfo> data;
+	    data = memberDao.select(email);
+	    
+	    //이메일이 존재하지 않을 때
+	    if(data == null || data.isEmpty())
+	    {
+	    	result = "0"; //no email
+	    }
+	    else
+	    {
+	    	if(data.get(0).getPassword().equals(password))//password unequal
+	    	{	
+	    		result = "1";
+	    		
+	    		session.setAttribute("email", email);
+	    		
+	    		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(data.get(0).getPk());
+	    		session.setAttribute("projectlist",projectlist);
+	    		session.setAttribute("projectcount", projectlist.size());
+	    	}
+	    	else
+	    	{
+	    		result = "0"; 
+	    	}
+	    }
+	    
+	    return result; 
+	}
+	
+	
+	/** 로그인 설정*/
+	@RequestMapping(value = "/overlaptest_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String idvalidcheck(HttpServletRequest request) {
+		String result = "0";
+	       
+	    logger.info("ID Valid Check");
+	    
+	    String email = request.getParameter("email");
+	    
+	    //세션 객체 생성
+	    HttpSession session = request.getSession();
+	    
+	    List<MemberInfo> data;
+	    data = memberDao.select(email);
+	    
+	    //이메일이 존재하지 않을 때
+	    if(data == null || data.isEmpty())
+	    {
+	    	result = "0";
+	    }
+	    else
+	    {
+	    	if(data.get(0).getEmail().equals(email))
+	    	{	
+	    		result = "1";
+	    	}
+	    	else
+	    	{
+	    		result = "0";
+	    	}
+	    }
+	    
+	    return result; 
+	}
+	
+	
+	/** 로그아웃 */
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String MainController_logout(HttpServletRequest request) {
+		logger.info("logout Page");
+		
+		return "logout";
+	}
+	
 	@RequestMapping(value = "/itemmanagement", method = RequestMethod.GET)
 	public String MainController_itemmanagement(HttpServletRequest request) {
 		logger.info("itemmanagement Page");
 		
 		return "itemmanagement";
+	}
+	
+	@RequestMapping(value = "/itemcategorization", method = RequestMethod.GET)
+	public String MainController_itemcategorization(HttpServletRequest request) {
+		logger.info("itemcategorization Page");
+		
+		return "itemcategorization";
 	}
 	
 	@RequestMapping(value = "/projectsettings", method = RequestMethod.GET)
@@ -68,7 +300,7 @@ public class RAP_MainController {
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	public String MainController_test(HttpServletRequest request) {
 		logger.info("test Page");
-		
+				
 		return "test";
 	}
 	
@@ -77,7 +309,108 @@ public class RAP_MainController {
 	public String MainController_promotions(HttpServletRequest request) {
 		logger.info("promotions Page");
 		
+		List<PromotionInfo> promotionlist = (List<PromotionInfo>)request.getAttribute("promotionlist");
+		
+		
+		if(promotionlist==null || promotionlist.isEmpty())
+		{
+			logger.info("No promotion");
+			request.setAttribute("promotionlist", null);
+			request.setAttribute("promotioncount", 0);
+		}
+		else
+		{
+			logger.info(promotionlist.toString());
+		}
+		
 		return "promotions";
+	}
+	
+	/** 회원가입 설정 */
+	@RequestMapping(value = "/promotion_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String setPromotion(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam("project_name") String project_name,
+ 			 @RequestParam("name") String name,
+ 			 @RequestParam("summary") String summary,
+ 			 @RequestParam("grade_using") int grade_using,
+ 			 @RequestParam("grade_time") int grade_time
+			)
+			{
+				 logger.info("APICall: " + "setPromotion");		
+				 
+				 String project_key = "";
+				 
+				 HttpSession session = request.getSession();
+				 List<ProjectInfo> projectlist = (List<ProjectInfo>)session.getAttribute("projectlist");
+		    	 int projectcount = (Integer)session.getAttribute("projectcount");
+		    	 
+		    	 for(int i=0;i<projectcount;i++)
+		    	 {
+		    		 if(projectlist.get(i).getProject_name().equals(project_name))
+		    		 {
+		    			 project_key = projectlist.get(i).getPk();
+		    		 }
+		    	 }
+		    	 
+		    	 logger.info("name = "+name);
+		    	 logger.info("summary = "+summary);
+		    	 logger.info("grade_using = "+grade_using);
+		    	 logger.info("grade_time = "+grade_time);
+		    	 
+		    	 if(project_key!=null && !project_key.isEmpty())
+		    		 promotionDao.create(project_key, name, summary, grade_using, grade_time);
+		    	 else
+		    		 return "1";
+		    	 
+				 return "200";
+			}
+	
+	/** 프로모션 목록 설정*/
+	@RequestMapping(value = "/promotionlist_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String MainController_promotionlist_db(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam("project_name") String project_name,
+			 ModelMap model
+		) {
+	       
+	    logger.info("promotionlist_db");
+	    
+	    logger.info("project_name = "+project_name);
+	    String project_key="";
+	    JSONObject jObject = new JSONObject();
+	    
+	    if(project_name!=null || !project_name.isEmpty())
+	    {
+	    	//세션 객체 생성
+		    HttpSession session = request.getSession();
+		    String email = (String)session.getAttribute("email");
+		    
+			List<MemberInfo> memberlist = memberDao.select(email);
+			
+			if(memberlist.size()>0)
+			{
+				List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(memberlist.get(0).getPk());
+				
+				for(int i=0;i<projectlist.size();i++)
+				{
+					if(projectlist.get(i).getProject_name().equals(project_name))
+					{
+						project_key = projectlist.get(i).getPk();
+					    logger.info("project_key = "+project_key);
+					}
+				}
+				List<PromotionInfo> promotionlist = promotionDao.selectFromProject(project_key);
+				jObject.put("promotionlist", promotionlist);
+				logger.info(jObject.toString());
+				return jObject.toString();
+			}
+	    }
+	    
+	    return "";
+	    
 	}
 	
 	@RequestMapping(value = "/age", method = RequestMethod.GET)

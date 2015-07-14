@@ -3,26 +3,26 @@ package com.rap.models;
 import java.sql.Timestamp;
 
 public class ProjectInfo {
-	private int pk;
+	private String pk;
 	private String project_name;
 	private String summary;
-	private String discription;
+	private String description;
 	private int member_pk;
 	private Timestamp reg_date;
 	
-	public ProjectInfo(int pk, String project_name, String summary, String discription, int member_pk, Timestamp reg_date){
+	public ProjectInfo(String pk, String project_name, String summary, String description, int member_pk, Timestamp reg_date){
 		this.pk = pk;
 		this.project_name = project_name;
 		this.summary = summary;
-		this.discription = discription;
+		this.description = description;
 		this.member_pk = member_pk;
 		this.reg_date = reg_date;
 	}
 	
-	public int getPk() {
+	public String getPk() {
 		return pk;
 	}
-	public void setPk(int pk) {
+	public void setPk(String pk) {
 		this.pk = pk;
 	}
 	public String getProject_name() {
@@ -37,11 +37,11 @@ public class ProjectInfo {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
-	public String getDiscription() {
-		return discription;
+	public String getDescription() {
+		return description;
 	}
-	public void setDiscription(String discription) {
-		this.discription = discription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public int getMember_pk() {
 		return member_pk;

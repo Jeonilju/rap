@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List, com.rap.models.ProjectInfo"%>
 
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
@@ -16,9 +15,9 @@
 			<div id="sidebar-wrapper">
 				<ul class="sidebar-nav">
 					<li><br> <br> <br></li>
-					<li class="sidebar-brand"><a href="#"> Project </a></li>
-					<li><a href="register">Project Registration</a></li>
-					<li><a href="projectsettings">Project Settings</a></li>
+					<li class="sidebar-brand"><a href="#"> Virtual Store </a></li>
+					<li><a href="#">Item Categorization</a></li>
+					<li><a href="itemmanagement">Item Management</a></li>
 				</ul>
 			</div>
 			<!-- /#sidebar-wrapper -->
@@ -30,66 +29,14 @@
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<BR> <BR> <BR> <BR> <BR> <BR>
-							<h2> Project Settings </h2>
+							<h2>Item Categorization</h2>
 						</div>
 					</div>
-					<br>
-					<%
-					String email = (String) session.getAttribute("email");
-					if (email == null || email.isEmpty()) {
-					
-					%>
-					<!-- 로그인하지 않은 경우 -->
-					<div class="panel panel-default">
-						<div class="panel-heading clearfix">
-							<h3 class="panel-title pull-left"></h3>
-						</div>
-						<div class="panel-body">
-							<div>로그인해주세요.</div>
-						</div>
-					</div>
-					
-					<%
-					}
-					else
-					{
-						List<ProjectInfo> projectlist = (List<ProjectInfo>) session.getAttribute("projectlist");
-						int projectcount = (Integer) session.getAttribute("projectcount");
-						
-						for(int i=0;i<projectcount;i++)
-						{
-					%>
-					<!-- project list 존재하는 경우 -->
-					<div class="panel panel-default">
-						<div class="panel-heading clearfix">
-							<h3 class="panel-title pull-left"><%= projectlist.get(i).getProject_name() %></h3>
-							<i class="fa fa-trash pull-right"></i> <i
-								class="fa fa-edit pull-right" style="margin-right: 4px;"></i>
-
-						</div>
-						<div class="panel-body">
-							<div>summary : <%= projectlist.get(i).getSummary() %></div>
-							<div>description : <%= projectlist.get(i).getDescription() %></div>
-						</div>
-						<div class="panel-footer">
-							<div class="pull-right"><%= projectlist.get(i).getReg_date() %></div>
-							<br>
-						</div>
-					</div>
-					
-					<%
-						}
-						if(projectcount == 0){
-							out.println("<div class='row'><center>");
-							out.println("<br>등록된 프로젝트가 없습니다.");
-							out.println("</center></div>");
-						}
-					}
-					 %>
-					<!-- 
 					<div class="row">
+						<!-- form -->
 						<form class="form-inline" name="ItemCategorization"
 							id="ItemCategorization" novalidate>
+							<!-- Large Category -->
 							<div>
 								<div class="form-group" style="padding:20px">
 									<label>Large Category</label> 
@@ -116,7 +63,6 @@
 							<br>
 						</form>
 					</div>
-					 -->
 			<!-- /#form -->
 		</div>
 	</div>

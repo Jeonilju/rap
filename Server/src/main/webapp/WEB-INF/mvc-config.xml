@@ -65,6 +65,9 @@
 	<beans:bean id="ProjectDao" class="com.rap.dao.ProjectDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	<beans:bean id="PromotionDao" class="com.rap.dao.PromotionDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
 	<beans:bean id="SettingDao" class="com.rap.dao.SettingDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
