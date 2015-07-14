@@ -13,7 +13,7 @@
 		<!-- wrapper -->
 		<div id="wrapper">
 			<!-- sidebar-wrapper -->
-			<jsp:include page="projectnav.jsp" flush="false" />
+			<jsp:include page="projecthomenav.jsp" flush="false" />
 			<!-- /#sidebar-wrapper -->
 
 			<!-- page-content-wrapper -->
@@ -23,7 +23,7 @@
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<BR> <BR> <BR> <BR> <BR> <BR>
-							<h2> Project settings </h2>
+							<h2> Project HOME </h2>
 						</div>
 					</div>
 					<br>
@@ -46,22 +46,37 @@
 					}
 					else
 					{
-						ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
-						String projectname = currentproject.getProject_name();
-						String projectdescription = currentproject.getDescription();
-						String projectsummary = currentproject.getSummary();
+						List<ProjectInfo> projectlist = (List<ProjectInfo>) request.getAttribute("projectlist");
+						int projectcount = (Integer) request.getAttribute("projectcount");
+						
+						for(int i=0;i<projectcount;i++)
+						{
 					%>
 					<!-- project list 존재하는 경우 -->
-					<div class="row">
+					<div class="panel panel-default">
+						<div class="panel-heading clearfix">
+							<h3 class="panel-title pull-left"><a href="projectsettings?currentprojectname=<%= projectlist.get(i).getProject_name() %>"><%= projectlist.get(i).getProject_name() %></a></h3>
+							<i class="fa fa-trash pull-right"></i> <i
+								class="fa fa-edit pull-right" style="margin-right: 4px;"></i>
+
+						</div>
 						<div class="panel-body">
-							<div>수정가능하게 바꾸기~~~~~~~~~~~</div>
-							<div>projectname : <%= projectname %></div>
-							<div>summary : <%= projectsummary %></div>
-							<div>description : <%= projectdescription %></div>
+							<div>summary : <%= projectlist.get(i).getSummary() %></div>
+							<div>description : <%= projectlist.get(i).getDescription() %></div>
+						</div>
+						<div class="panel-footer">
+							<div class="pull-right"><%= projectlist.get(i).getReg_date() %></div>
+							<br>
 						</div>
 					</div>
 					
 					<%
+						}
+						if(projectcount == 0){
+							out.println("<div class='row'><center>");
+							out.println("<br>등록된 프로젝트가 없습니다.");
+							out.println("</center></div>");
+						}
 					}
 					 %>
 			<!-- /#form -->
