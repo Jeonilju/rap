@@ -1,19 +1,14 @@
 package com.rap.main;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +24,7 @@ import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.dao.Virtual_MainDao;
 import com.rap.dao.Virtual_SubDao;
+import com.rap.gcm.RAP_GCMManager;
 
 @Controller
 public class RAP_APIsController {
@@ -62,12 +58,20 @@ public class RAP_APIsController {
 	private Virtual_SubDao virtual_subDao;
 	
 	@RequestMapping(value = "/APIs", method = RequestMethod.GET)
-	public String TCManagement_GET(HttpServletRequest request) {
+	public String APIs_GET(HttpServletRequest request) {
 		logger.info("APIs Tab");
 		
 		return "APIs";
 	}
 	
+	@RequestMapping(value = "/APIs/GCM_TEST", method = RequestMethod.GET)
+	public String gcmTest(HttpServletRequest request) {
+		logger.info("APIs Tab");
+		
+		RAP_GCMManager.getInstance().sendPush("제목", "내용", userDao.select("1"));
+		
+		return "APIs";
+	}
 	
 	////////////////////////////////////////////////////////////////
 	//////////											////////////
@@ -305,7 +309,7 @@ public class RAP_APIsController {
 	@ResponseBody
 	public String checkVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key) {
-		logger.info("APIs Tab");
+		logger.info("/APIs/checkVirtualMain");
 
 		String json = new Gson().toJson(virtual_mainDao.select(project_key));
 		return json;

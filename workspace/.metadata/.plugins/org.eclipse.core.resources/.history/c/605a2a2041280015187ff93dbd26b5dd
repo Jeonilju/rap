@@ -1,0 +1,36 @@
+package com.rap.example;
+
+import android.os.Bundle;
+
+import com.rap.R;
+import com.rap.activity.RAPBaseActivity;
+
+public class IAPSampleActivity extends RAPBaseActivity{
+
+	
+	
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_iap_sample);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	
+	
+}

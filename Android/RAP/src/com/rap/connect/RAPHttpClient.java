@@ -47,7 +47,6 @@ public class RAPHttpClient {
 
 					Bundle data = new Bundle();
 					data.putString("res", RAPHttpClient.getInstance().excute(request));
-					
 					msg.setData(data);
 					//callback.sendMessage(msg);
 				} catch (Exception e) {

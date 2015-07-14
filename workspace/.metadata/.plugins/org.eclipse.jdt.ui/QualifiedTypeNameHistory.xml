@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.sql.Timestamp"/>
+<fullyQualifiedTypeName name="com.rap.activity.RAPBaseActivity"/>
+<fullyQualifiedTypeName name="com.rap.R"/>
+<fullyQualifiedTypeName name="com.rap.R.id"/>
+<fullyQualifiedTypeName name="android.widget.ListView"/>
+<fullyQualifiedTypeName name="android.widget.AdapterView.OnItemClickListener"/>
+<fullyQualifiedTypeName name="com.rap.connect.RAPAPIs"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="android.support.annotation.MainThread"/>
+<fullyQualifiedTypeName name="com.rap.example.RAP_MainActivity"/>
+<fullyQualifiedTypeName name="com.rap.example.IAPSampleActivity"/>
+<fullyQualifiedTypeName name="com.klt.setting.Preference"/>
+<fullyQualifiedTypeName name="com.klt.activity.Setting2Activity"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="org.json.JSONArray"/>
+<fullyQualifiedTypeName name="android.widget.Spinner"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+</qualifiedTypeNameHistroy>

@@ -17,11 +17,19 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	private static final String TAG = "RAP_GCM";
 	
+	public GCMIntentService(){ 
+		this(RAPSetting.getGCMProjectId());
+	}
+	
+	public GCMIntentService(String project_id) { 
+		super(project_id); 
+	}
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		try {  
-		    Class.forName("android.os.AsyncTask");  
+		    Class.forName("android.os.AsyncTask");
 		} catch (ClassNotFoundException e) {  
 		}  
 	}
@@ -36,11 +44,51 @@ public class GCMIntentService extends GCMBaseIntentService {
 	
 	@Override
 	protected void onError(Context arg0, String arg1) {
-		
+		Log.i(TAG, "GCM onError");
 	}
 
 	@Override
 	protected void onMessage(Context context, Intent intent) {
+		
+		Log.i(TAG, "GCM Message Get");
+		
+		String title = intent.getStringExtra("title");
+		String contents = intent.getStringExtra("contents");
+		
+//		// target Activity 설정
+//		Intent targetActivity = new Intent(this, IntroActivity.class);
+//		PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext()
+//                   , 0
+//                   , targetActivity
+//                   , Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+//		
+//		Notification notice = new NotificationCompat.Builder(this)
+//				.setContentTitle(title)
+//				.setContentText(contents)
+//				.setSmallIcon(R.drawable.app_icon1)
+//				.setAutoCancel(true).setContentIntent(pIntent).build();
+//
+//		if(Preference.getBoolean(context, Conf.PREFERENCE_ALARM))
+//		{
+//			// 알림창
+//			NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//			manager.notify(1, notice);
+//		}
+//		
+//		if(Preference.getBoolean(context, Conf.PREFERENCE_ALARM_VIB))
+//		{
+//			// 진동 설정
+//			Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//			vibe.vibrate(500);
+//		}
+//
+//		if(Preference.getBoolean(context, Conf.PREFERENCE_ALARM_SOUND))
+//		{
+//			// 알림음
+//			Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_NOTIFICATION);
+//			Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+//			ringtone.play();	
+//		}
 		
 		if(intent.hasExtra("type")){
 			String type = intent.getStringExtra("type");

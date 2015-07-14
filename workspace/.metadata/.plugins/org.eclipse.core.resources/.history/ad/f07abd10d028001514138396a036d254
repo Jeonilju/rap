@@ -1,0 +1,525 @@
+package com.klt.activity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.klt.BaseActivity;
+import com.klt.R;
+import com.klt.connectior.KLTAPIs;
+import com.klt.connectior.KLTHttpClient;
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+
+public class SignupFormActivity extends BaseActivity{
+
+	private boolean isAdmin = false;
+	private boolean isIDChacked = false;
+	
+	private EditText signup_et_name, signup_et_id, signup_et_pw, signup_et_pw2
+				, signup_et_carNum, signup_et_address1, signup_et_address2
+				, signup_form_et_move_phone1, signup_form_et_move_phone2, signup_form_et_move_phone3
+				, signup_form_et_banknumber; 
+	
+	private Spinner signup_sp_bank, signup_sp_work, signup_sp_code;
+	private ArrayList<String> bankList, workList, codeList;
+	private ArrayList<Integer> workList_id, codeList_id;
+	
+	private Button signup_btn_id_duplication, signup_btn_submit, signup_btn_cancel;
+	
+	private String SeletedBankName = "";
+	private String SelectedWorkName = "";
+	private int SelectedWork_id = 0;
+	private String SelectedCode = "";
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		setContentView(R.layout.activity_signup_form);
+		setTitle(getString(R.string.title_signup));
+		super.onCreate(savedInstanceState, this);
+		
+		isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+		
+		initResource();
+		initEvent();
+		setDump2();
+		setOffice();
+	}
+
+	private void setOffice(){
+		try {
+			HttpRequestBase req = KLTAPIs.getOfficeList();
+			KLTHttpClient.getInstance().background(req, getOfficeList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setAdminCode(){
+		try {
+			HttpRequestBase req = KLTAPIs.getAdminCodeList();
+			KLTHttpClient.getInstance().background(req, getAdminCodeList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setDump2() {
+		
+		String phoneNum1 = Preference.getString(SignupFormActivity.this, Conf.PREFERENCE_PHONE1);
+		String phoneNum2 = Preference.getString(SignupFormActivity.this, Conf.PREFERENCE_PHONE2);
+		String phoneNum3 = Preference.getString(SignupFormActivity.this, Conf.PREFERENCE_PHONE3);
+		
+		signup_form_et_move_phone1.setText(phoneNum1);
+		signup_form_et_move_phone2.setText(phoneNum2);
+		signup_form_et_move_phone3.setText(phoneNum3);
+	}
+	
+	private void initResource(){
+		signup_et_name = (EditText) findViewById(R.id.signup_form_et_name);
+		signup_et_id = (EditText) findViewById(R.id.signup_form_et_id);
+		signup_et_pw = (EditText) findViewById(R.id.signup_form_et_pw);
+		signup_et_pw2 = (EditText) findViewById(R.id.signup_form_et_pw2);
+		signup_et_carNum = (EditText) findViewById(R.id.signup_form_et_carnum);
+		signup_et_address1 = (EditText) findViewById(R.id.signup_form_et_address);
+		signup_et_address2 = (EditText) findViewById(R.id.signup_form_et_address2); 
+		signup_form_et_move_phone1 = (EditText) findViewById(R.id.signup_form_et_move_phone1);
+		signup_form_et_move_phone2 = (EditText) findViewById(R.id.signup_form_et_move_phone2);
+		signup_form_et_move_phone3 = (EditText) findViewById(R.id.signup_form_et_move_phone3);
+		signup_form_et_banknumber = (EditText) findViewById(R.id.signup_form_et_banknumber);
+		
+		signup_btn_id_duplication = (Button) findViewById(R.id.signup_form_btn_id); 
+		signup_btn_submit = (Button) findViewById(R.id.form_btn_add_account);
+		signup_btn_cancel = (Button) findViewById(R.id.form_btn_back);
+		
+		signup_sp_work = (Spinner) findViewById(R.id.signup_form_et_place);
+		signup_sp_code  = (Spinner) findViewById(R.id.signup_form_et_code);
+		
+		initSpiner();
+	}
+	
+	private void initSpiner(){
+		signup_sp_bank = (Spinner) findViewById(R.id.signup_form_sp_bankname);
+		
+		bankList = new ArrayList<String>();
+		bankList.add("농협");
+		bankList.add("국민은행");
+		bankList.add("신한은행");
+		bankList.add("우리은행");
+		bankList.add("기업은행");
+		bankList.add("하나은행");
+		bankList.add("대구은행");
+		bankList.add("부산은행");
+		bankList.add("우체국");
+		bankList.add("스탠다드차타드은행");
+		bankList.add("외환은행");
+		bankList.add("광주은행");
+		
+		ArrayAdapter<String> bankAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, bankList);
+		signup_sp_bank.setPrompt("은행을 선택해주세요");
+		signup_sp_bank.setAdapter(bankAdapter);
+		signup_sp_bank.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				SeletedBankName = bankList.get(position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+			
+		});
+	}
+	
+	private void initEvent(){
+		signup_btn_id_duplication.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					String id = signup_et_id.getText().toString();
+					HttpRequestBase req = KLTAPIs.getUserExist(id);
+					KLTHttpClient.getInstance().background(req, idChacker);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		signup_et_address1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SignupFormActivity.this, AddressActivity.class);
+				startActivity(intent);
+
+				AddressActivity.setHandler(new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						Bundle bundle = msg.getData();
+						String address = bundle.getString("Address");
+
+						signup_et_address1.setText(address);
+					}
+				});
+			}
+		});
+		
+		signup_btn_submit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				String id = signup_et_id.getText().toString()
+						, name = signup_et_name.getText().toString()
+						, password = signup_et_pw.getText().toString()
+						, password2 = signup_et_pw2.getText().toString()
+						, carNumber = signup_et_carNum.getText().toString()
+						, address1 = signup_et_address1.getText().toString()
+						, address2 = signup_et_address2.getText().toString()
+						, companyAddress1 = SelectedWorkName
+						, adminCode = SelectedCode
+						, banking = signup_form_et_banknumber.getText().toString()
+						, telephone_num = signup_form_et_move_phone1.getText().toString() 
+										+ signup_form_et_move_phone2.getText().toString() 
+										+ signup_form_et_move_phone3.getText().toString();
+				
+				if(!isIDChacked){
+					Toast.makeText(SignupFormActivity.this, "아이디 중복검사를 해주세요.", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(name.equals(""))
+				{
+					// 이름
+					Toast.makeText(SignupFormActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(id.equals(""))
+				{
+					Toast.makeText(SignupFormActivity.this, "아이디를 확인해주세요", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(!password.equals(password2))
+				{
+					Toast.makeText(SignupFormActivity.this, "비밀번호가 일치하지 않습니다. :" + password + ", " + password2, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(carNumber.equals(""))
+				{
+					Toast.makeText(SignupFormActivity.this, "차량번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(signup_et_address1.getText().toString().equals("")
+						|| signup_et_address2.getText().toString().equals(""))
+				{
+					Toast.makeText(SignupFormActivity.this, "주소를 입력해주세요", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(SelectedWorkName.equals(""))
+				{
+					Toast.makeText(SignupFormActivity.this, "소재지를 입력해주세요.", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(SeletedBankName.equals(""))
+				{
+					Toast.makeText(SignupFormActivity.this, "은행을 선택해주세요.", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(signup_form_et_banknumber.equals(""))
+				{
+					Toast.makeText(SignupFormActivity.this, "계좌번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(SelectedCode.equals("")){
+					Toast.makeText(SignupFormActivity.this, "추천인 코드를 선택해주세요", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				else if(telephone_num.equals("")){
+					Toast.makeText(SignupFormActivity.this, "핸드폰 번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
+				try {
+					String uuid = Preference.getString(SignupFormActivity.this, "gcmid");
+					HttpRequestBase req = KLTAPIs.SignUp(name, id, password, carNumber, telephone_num, address1, address2, companyAddress1, SelectedWork_id, uuid, SeletedBankName, banking, adminCode);
+					KLTHttpClient.getInstance().background(req, sigupHandler);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		
+		signup_btn_cancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		
+		// 텍스트 변경이 있을떄 아이디 인증 다시하도록
+		signup_et_id.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				isIDChacked = false;
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+	
+	// Handler 
+	Handler sigupHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(SignupFormActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						Toast.makeText(SignupFormActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+						recomentMemberDig();
+						break;
+					default:
+						Toast.makeText(SignupFormActivity.this, "회원가입 실패\n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	Handler idChacker = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(SignupFormActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					switch (status) {
+					case 200:
+						JSONObject res = new JSONObject(json.getString("res"));
+						
+						if(res.getBoolean("exist")){
+							// 가입 가능
+							Toast.makeText(SignupFormActivity.this, "이미 존재하는 아이디입니다.", Toast.LENGTH_SHORT).show();
+							isIDChacked = false;
+						}
+						else{
+							// 가입 불가능
+							Toast.makeText(SignupFormActivity.this, "사용하실 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
+							isIDChacked = true;							
+						}
+						break;
+					default:
+						Toast.makeText(SignupFormActivity.this, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	private void recomentMemberDig() {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+		alt_bld.setMessage("준회원으로 등록되셨습니다.\n"
+				+ "\n 정회원으로 가입하시면 더 많은 정보를 받아보실 수 있습니다.\n"
+				+ "정회원으로 가입하시겠습니까?")
+				.setCancelable(false)
+				.setPositiveButton("네",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								ShowDig("결제페이지는 준비중입니다.");
+							}
+						})
+				.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+						finish();
+					}
+				});
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("회원가입 완료");
+		alert.show();
+	}
+	
+	private void ShowDig(String message){
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(SignupFormActivity.this);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton(getString(R.string.close),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								finish();
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("");
+		alert.show();
+	}
+	
+	Handler getOfficeList = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(SignupFormActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject res = new JSONObject(json.getString("res"));
+						
+						workList = new ArrayList<String>();
+						workList_id = new ArrayList<Integer>();
+						for(int index = 0;index < res.getJSONArray("offices").length();index++){
+							workList.add(res.getJSONArray("offices").getJSONObject(index).getString("name"));
+							workList_id.add(res.getJSONArray("offices").getJSONObject(index).getInt("id"));
+						}
+						
+						ArrayAdapter<String> workAdapter = new ArrayAdapter<String>(SignupFormActivity.this, android.R.layout.simple_spinner_dropdown_item, workList);
+						signup_sp_work.setPrompt("소재지를 선택해주세요");
+						signup_sp_work.setAdapter(workAdapter);
+						signup_sp_work.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+							@Override
+							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+								SelectedWorkName = workList.get(position);
+								SelectedWork_id = position;
+							}
+
+							@Override
+							public void onNothingSelected(AdapterView<?> parent) {
+								
+							}
+							
+						});
+						
+						// 소재지 다 가져오면 다음으로 추천인코드를 가져옴
+						setAdminCode();
+						break;
+					default:
+						Toast.makeText(SignupFormActivity.this, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	Handler getAdminCodeList = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(SignupFormActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject res = new JSONObject(json.getString("res"));
+						
+						codeList = new ArrayList<String>();
+						for(int index = 0;index < res.getJSONArray("admin_codes").length();index++){
+							codeList.add(res.getJSONArray("admin_codes").getJSONObject(index).getString("name"));
+						}
+						
+						ArrayAdapter<String> codeAdapter = new ArrayAdapter<String>(SignupFormActivity.this, android.R.layout.simple_spinner_dropdown_item, codeList);
+						signup_sp_code.setPrompt("추천인 코드선택");
+						signup_sp_code.setAdapter(codeAdapter);
+						signup_sp_code.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+							@Override
+							public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+								SelectedCode = codeList.get(position);
+							}
+
+							@Override
+							public void onNothingSelected(AdapterView<?> parent) {
+								
+							}
+							
+						});
+						
+						break;
+					default:
+						Toast.makeText(SignupFormActivity.this, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+}
