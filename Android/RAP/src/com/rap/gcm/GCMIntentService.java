@@ -4,8 +4,16 @@ import java.io.IOException;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Vibrator;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -54,45 +62,49 @@ public class GCMIntentService extends GCMBaseIntentService {
 		
 		String title = intent.getStringExtra("title");
 		String contents = intent.getStringExtra("contents");
+		String className = intent.getStringExtra("class");
 		
-//		// target Activity 설정
-//		Intent targetActivity = new Intent(this, IntroActivity.class);
-//		PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext()
-//                   , 0
-//                   , targetActivity
-//                   , Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-//		
-//		Notification notice = new NotificationCompat.Builder(this)
-//				.setContentTitle(title)
-//				.setContentText(contents)
-//				.setSmallIcon(R.drawable.app_icon1)
-//				.setAutoCancel(true).setContentIntent(pIntent).build();
-//
-//		if(Preference.getBoolean(context, Conf.PREFERENCE_ALARM))
-//		{
-//			// 알림창
-//			NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//			manager.notify(1, notice);
-//		}
-//		
-//		if(Preference.getBoolean(context, Conf.PREFERENCE_ALARM_VIB))
-//		{
-//			// 진동 설정
-//			Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//			vibe.vibrate(500);
-//		}
-//
-//		if(Preference.getBoolean(context, Conf.PREFERENCE_ALARM_SOUND))
-//		{
-//			// 알림음
-//			Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_NOTIFICATION);
-//			Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
-//			ringtone.play();	
-//		}
+		// target Activity 설정
+		Intent targetActivity;
+		PendingIntent pIntent = null;
+		try {
+			targetActivity = new Intent(this, Class.forName(className));
+			pIntent = PendingIntent.getActivity(getApplicationContext()
+	                   , 0
+	                   , targetActivity
+	                   , Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+		} 
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			Log.e(TAG, "존재하지 않는 ClassName입니다. [" + className + "]");
+		}
 		
-		if(intent.hasExtra("type")){
-			String type = intent.getStringExtra("type");
-			Log.e("getmessage", "getmessage:" + type);
+		
+		Notification notice = new NotificationCompat.Builder(this)
+				.setContentTitle(title)
+				.setContentText(contents)
+				.setAutoCancel(true).setContentIntent(pIntent).build();
+
+		if(RAPSetting.isAlarm())
+		{
+			// 알림창
+			NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			manager.notify(1, notice);
+		}
+		
+		if(RAPSetting.isAlarmVib())
+		{
+			// 진동 설정
+			Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			vibe.vibrate(RAPSetting.getVibSize());
+		}
+
+		if(RAPSetting.isAlarmSound())
+		{
+			// 알림음
+			Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_NOTIFICATION);
+			Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
+			ringtone.play();	
 		}
 	}
 	

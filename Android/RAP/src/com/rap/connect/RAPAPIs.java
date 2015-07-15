@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import com.rap.RAPSetting;
@@ -215,7 +216,13 @@ public class RAPAPIs {
 	public static HttpRequestBase UserInfo_Location(Context mContext) throws UnsupportedEncodingException{
 	
 		Log.i(TAG, "사용자 위치정보 API 호출");
-		Log.i(TAG, "lat/lon: " + RAPUser.getLocation(mContext).getLatitude() + "/" + RAPUser.getLocation(mContext).getLongitude());
+		Location userLocation = RAPUser.getLocation(mContext);
+		if(userLocation == null){
+			Log.e(TAG, "사용자의 위치정보를 가져올 수 없습니다.");
+			Log.e(TAG, "잠시후에 호출해주세요.");
+			return null;
+		}
+		Log.i(TAG, "lat/lon: " + userLocation.getLatitude() + "/" + userLocation.getLongitude());
 		
 		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/location");
 		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");

@@ -1,0 +1,347 @@
+package com.klt.view;
+
+import java.util.ArrayList;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.klt.R;
+import com.klt.connectior.KLTAPIs_Order;
+import com.klt.connectior.KLTHttpClient;
+import com.klt.data.OrderInfo;
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+
+public class OrdererListAdapter  extends BaseAdapter {
+
+	private Context mContext = null;
+
+	// 문자열을 보관 할 ArrayList
+    private ArrayList<OrderInfo>   contentList;
+    
+    // 생성자
+    public OrdererListAdapter(Context context, ArrayList<OrderInfo> list) {
+    	mContext = context;
+        contentList = list;
+    }
+    
+    public void setList(ArrayList<OrderInfo> list){
+    	contentList = list;
+    	this.notifyDataSetChanged();
+    }
+ 
+    // 현재 아이템의 수를 리턴
+    @Override
+    public int getCount() {
+        return contentList.size();
+    }
+ 
+    // 현재 아이템의 오브젝트를 리턴, Object를 상황에 맞게 변경하거나 리턴받은 오브젝트를 캐스팅해서 사용
+    @Override
+    public Object getItem(int position) {
+        return contentList.get(position);
+    }
+ 
+    // 아이템 position의 ID 값 리턴
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+ 
+    // 출력 될 아이템 관리
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final int pos = position;
+        
+        // 리스트가 길어지면서 현재 화면에 보이지 않는 아이템은 converView가 null인 상태로 들어 옴
+        if ( convertView == null ) {
+            // view가 null일 경우 커스텀 레이아웃을 얻어 옴
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.adapter_order_list, parent, false);
+             
+            // TextView에 현재 position의 문자열 추가
+            TextView text = (TextView) convertView.findViewById(R.id.orderlist_address);
+            text.setText(contentList.get(position).getAddress());
+            
+            TextView text2 = (TextView) convertView.findViewById(R.id.orderlist_height);
+            text2.setText(contentList.get(position).getHeight() + " 높이(층)\t");
+            
+            TextView text3 = (TextView) convertView.findViewById(R.id.orderlist_pay);
+            text3.setText(contentList.get(position).getPay() + " 작업 비용");
+            
+            // 버튼을 터치 했을 때 이벤트 발생
+            Button btn = (Button) convertView.findViewById(R.id.orderlist_btn_req);
+            String orderStateStr = "";
+            switch (contentList.get(position).getState()) {
+			case 0:
+				//orderStateStr = "작업신청";
+				btn.setBackgroundResource(R.drawable.order_status_ready);
+				break;
+			case 1:
+				// 작업중 (취소 가능)
+				btn.setBackgroundResource(R.drawable.order_status_running);
+				break;
+			case 2:
+				// 작업중 (취소 불가능)
+				btn.setBackgroundResource(R.drawable.order_status_running);
+				break;
+			case 3:
+				// 작업 완료
+				btn.setBackgroundResource(R.drawable.order_status_end);
+				break;
+			default:
+				orderStateStr = "알수없음";
+				break;
+			}
+
+			btn.setText(orderStateStr);
+
+			btn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					switch (contentList.get(position).getState()) {
+					case 0:
+						// orderStateStr = "작업신청";
+						ShowDig("다른 작업자의 신청을 기다리고 있습니다.");
+						break;
+					case 1:
+						// orderStateStr = "작업중";
+						ShowDig("다른 작업자가 신청했습니다. 신청을 받아들이시겠습니까?");
+						break;
+					case 2:
+						ShowDig("진행중인 작업입니다.");
+						break;
+					case 3:
+						ShowDig("작업이 완료된 오더입니다.");
+						break;
+					default:
+						ShowDig("알수없는 상태");
+						break;
+					}
+				}
+			});
+		} else {
+			// 마이페이지에서의 Order 리스트
+		}
+
+		// 리스트 아이템을 터치 했을 때 이벤트 발생
+		convertView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				OrderDetail(pos);
+			}
+		});
+
+        return convertView;
+    }
+    
+    /** 작업 완료 */
+    private void OrderCompliteDig(final int index) {
+		
+		String message = "작업을 완료하시겠습니까?";
+		
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+		dialogBuilder.setTitle("작업 완료");
+		dialogBuilder.setMessage(message).setCancelable(false)
+				.setPositiveButton("완료", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						try {
+							HttpRequestBase req = KLTAPIs_Order.changeOrderStatus(contentList.get(index).getId()
+									, Preference.getPreferenceString(mContext, Conf.PREFERENCE_ID, "false")
+									, Preference.getPreferenceString(mContext, Conf.PREFERENCE_PW, "false")
+									, 2);
+							
+							KLTHttpClient.getInstance().background(req, orderCompliteReq);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}	
+				})
+				.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+		AlertDialog alert = dialogBuilder.create();
+		alert.show();
+	}
+    
+    /** 작업 조회 */
+    private void OrderDetail(final int index){
+    	String message = "작업 세부내용입니다." + "\n\n"
+				+ "지역: " + contentList.get(index).getAddress() + "\n"
+				+ "높이: " + contentList.get(index).getHeight() + "\n"
+				+ "무게: " + contentList.get(index).getTon() + "\n"
+				+ "날짜: " + contentList.get(index).getDate() + "\n"
+				+ "가격: " + contentList.get(index).getPay() + " 만원";
+		
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
+		dialogBuilder.setTitle("작업 조회");
+		dialogBuilder.setMessage(message).setCancelable(false)
+				.setNegativeButton("확인", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+		AlertDialog alert = dialogBuilder.create();
+		alert.show();
+    }
+   
+	Handler orderCompliteReq = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(mContext, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					switch (status) {
+					case 200:
+						// TODO 성공
+						CompliteOrderReqDig("작업이 완료되었습니다.");
+						break;
+					default:
+						Toast.makeText(mContext, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	
+	/** Order 신청을 받을지 말지 결정하는란 */
+	private void AcceptOrderReqDig(String message, final int index){
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton("승인",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								try {
+									HttpRequestBase req = KLTAPIs_Order.OrderAccept(contentList.get(index).getId());
+									KLTHttpClient.getInstance().background(req, orderAcceptReq);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						})
+						.setNegativeButton("거절", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								try {
+									HttpRequestBase req = KLTAPIs_Order.OrderReject(contentList.get(index).getId());
+									KLTHttpClient.getInstance().background(req, orderAcceptReq);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				((Activity)mContext).finish();
+			}
+		});
+		alert.setTitle("");
+		alert.show();
+	}
+	
+	Handler orderAcceptReq = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(mContext, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					switch (status) {
+					case 200:
+						CompliteOrderReqDig("요청을 처리했습니다.");
+						break;
+					default:
+						Toast.makeText(mContext, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	private void CompliteOrderReqDig(String message){
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton(mContext.getString(R.string.close),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				((Activity)mContext).finish();
+			}
+		});
+		alert.setTitle("");
+		alert.show();
+	}
+	
+	private void ShowDig(String message){
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton(mContext.getString(R.string.close),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("");
+		alert.show();
+	}
+}

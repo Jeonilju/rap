@@ -3,6 +3,8 @@ package com.rap.activity;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
@@ -10,10 +12,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.rap.RAPSetting;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
-import com.rap.example.RAP_MainActivity;
 
 public class RAPBaseActivity extends Activity{
 
@@ -28,31 +28,38 @@ public class RAPBaseActivity extends Activity{
 	/** 앱 종료시간 */
 	private static Timestamp endTime;
 	
-	private static String previousActivity = "";
-	private static String currentActiviy = "";
+	/** Activity 스텍 */
+	private static List<Activity> activityList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Log.i(TAG, "AppCount: " + AppCount);
+		if(activityList == null)
+			activityList = new ArrayList<Activity>();
+		
+		activityList.add(this);
 		
 		if(AppCount == 0){
-			// 처음 실행
-			previousActivity = this.getClass().getName();
-			currentActiviy = this.getClass().getName();
-			
 			startTime = new Timestamp(System.currentTimeMillis());
 		}
 		
-		currentActiviy = previousActivity;
-		previousActivity = this.getClass().getName();
-		
-		if(!previousActivity.equals(currentActiviy)){
+		if(activityList.size() > 1){
 			// Activity간의 이동이 발생한 경우
 			try {
-				HttpRequestBase req = RAPAPIs.ActivityInfo_Move(previousActivity, currentActiviy);
+				
+				int index = activityList.size() - 2;
+				
+				Log.i(TAG, "Move Activity: "
+						+ activityList.get(index).getClass().getName() + " to "
+						+ activityList.get(index + 1).getClass().getName());
+				
+				HttpRequestBase req = RAPAPIs.ActivityInfo_Move(
+						activityList.get(index).getClass().getName()
+						, activityList.get(index + 1).getClass().getName());
+				
 				RAPHttpClient.getInstance().background(req, null);
+				
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -79,28 +86,27 @@ public class RAPBaseActivity extends Activity{
 		
 		AppCount--;
 		
+		activityList.remove(this);
+		
 		if(AppCount == 0){
-			// 앱 종료
 			Log.i(TAG, "Application 종료");
-			
 			try {
 				HttpRequestBase req = RAPAPIs.Common_AppCount();
 				RAPHttpClient.getInstance().background(req, null);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			try {
+				
 				endTime = new Timestamp(System.currentTimeMillis());
 				HttpRequestBase req2 = RAPAPIs.Common_AppTime(startTime.getTime(), endTime.getTime());
 				RAPHttpClient.getInstance().background(req2, null);
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		}
+	}
+	
+	/** 엑티비티 카운트 */
+	public static int getActivityCount(){
+		return activityList.size();
 	}
 }

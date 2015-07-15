@@ -1,0 +1,236 @@
+package com.klt.activity;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.klt.BaseActivity;
+import com.klt.R;
+import com.klt.connectior.KLTAPIs;
+import com.klt.connectior.KLTHttpClient;
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+import com.klt.view.PointChangingDialog;
+import com.klt.view.PointChargingListDialog;
+import com.klt.view.PointUsingListDialog;
+import com.klt.view.WithdrawDialog;
+
+
+public class PointActivity extends BaseActivity {
+
+	Button btnPointWithdraw, btnPointCharge, btnPointChargeList,
+			btnPointUsingList;
+	
+	TextView textMyPoint;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		setContentView(R.layout.activity_point);
+		setTitle(getString(R.string.title_point));
+		super.onCreate(savedInstanceState, this);
+
+		initResource();
+		initEvent();
+		init();
+	}
+
+	private void init(){
+		try {
+			HttpRequestBase req = KLTAPIs_Point.getMyPoint(
+					Preference.getPreferenceString(this, Conf.PREFERENCE_ID, "false")
+					, Preference.getPreferenceString(this, Conf.PREFERENCE_PW, "false"));
+			
+			KLTHttpClient.getInstance().background(req, getPoint);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void initResource() {
+		btnPointWithdraw = (Button) findViewById(R.id.point_btn_withdraw);
+		btnPointCharge = (Button) findViewById(R.id.point_btn_charge);
+		btnPointChargeList = (Button) findViewById(R.id.point_btn_chargelist);
+		btnPointUsingList = (Button) findViewById(R.id.point_btn_usinglist);
+		
+		textMyPoint = (TextView) findViewById(R.id.point_text_myPoint_);
+	}
+
+	private void initEvent() {
+		btnPointWithdraw.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showPointWhthdrawDig();
+			}
+		});
+
+		btnPointCharge.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showPointChargingDig();
+			}
+		});
+
+		btnPointChargeList.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showPointChargingListDig();
+			}
+		});
+
+		btnPointUsingList.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showPointUsingListDig();
+			}
+		});
+	}
+
+	/** 포인트 출금 */
+	private void showPointWhthdrawDig() {
+		WithdrawDialog dialog = new WithdrawDialog(PointActivity.this);
+		dialog.setTitle(getString(R.string.point_withdraw_msg));
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				init();
+			}
+		});
+
+		dialog.show();
+	}
+
+	/** 포인트 충전 */
+	private void showPointChargingDig() {
+		PointChangingDialog dialog = new PointChangingDialog(PointActivity.this);
+		dialog.setTitle(getString(R.string.point_charge_msg));
+
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				init();
+			}
+		});
+
+		dialog.show();
+
+	}
+	
+	/** 포인트 충전 내역 조회 */
+	private void showPointChargingListDig(){
+		PointChargingListDialog dialog = new PointChargingListDialog(PointActivity.this);
+		dialog.setTitle(getString(R.string.point_search_chargelist));
+
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+
+			}
+		});
+
+		dialog.show();
+	}
+	
+	/** 포인트 사용 내역 조회 */
+	private void showPointUsingListDig(){
+		PointUsingListDialog dialog = new PointUsingListDialog(PointActivity.this);
+		dialog.setTitle(getString(R.string.point_search_usinglist));
+
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				init();
+			}
+		});
+
+		dialog.show();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+	
+	Handler getPoint = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(PointActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject res = new JSONObject(json.getString("res"));
+						int point = res.getInt("point");
+						Preference.putInt(PointActivity.this, Conf.PREFERENCE_MYPOINT, point);
+						textMyPoint.setText(point + " 포인트");
+						
+						break;
+					case 400:
+						// 인자 오류
+						break;
+					case 401:
+						// 페스워드 오류
+						break;
+					case 403:
+						// 오더 관련자가 아닌경우
+						break;
+					case 404:
+						// 오더가 존재하지 않음
+						break;
+					case 409:
+						// 변경 불가능한 상태
+						break;
+					default:
+						Toast.makeText(PointActivity.this, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	private void ShowDig(String message){
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(PointActivity.this);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton(getString(R.string.close),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("");
+		alert.show();
+	}
+}

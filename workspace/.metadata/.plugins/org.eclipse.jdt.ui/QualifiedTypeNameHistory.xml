@@ -17,6 +17,17 @@
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="android.widget.Spinner"/>
-<fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_User"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_Mypage"/>
+<fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_Point"/>
+<fullyQualifiedTypeName name="java.util.Calendar"/>
+<fullyQualifiedTypeName name="java.util.TimeZone"/>
+<fullyQualifiedTypeName name="com.klt.setting.Conf"/>
+<fullyQualifiedTypeName name="com.klt.data.OrderInfo"/>
+<fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_Order"/>
+<fullyQualifiedTypeName name="com.klt.view.OrdereeListAdapter"/>
+<fullyQualifiedTypeName name="com.klt.view.OrdererListAdapter"/>
+<fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
 </qualifiedTypeNameHistroy>

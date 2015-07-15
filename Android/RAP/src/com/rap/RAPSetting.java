@@ -34,6 +34,18 @@ public class RAPSetting {
 	/** 앱 실행 시간 */
 	private static boolean		isRunningTime = false;
 	
+	/** GCM 알람  */
+	private static boolean		isAlarm = false;
+	
+	/** GCM 알람 진동 */
+	private static boolean		isAlarmVib = false;
+	
+	/** GCM 알람 진동 세기 */
+	private static int			VibSize = 500;
+	
+	/** GCM 알람 소리 */
+	private static boolean		isAlarmSound = false;
+	
 	private static RAPNetworkConnection 			NetworkConnectionMode = RAPNetworkConnection.RealTime;
 	
 	public static RAPNetworkConnection getNetworkConnectionMode() {
@@ -123,4 +135,37 @@ public class RAPSetting {
 	public static void setGCMValue(String gCMValue) {
 		GCMValue = gCMValue;
 	}
+
+	public static boolean isAlarm() {
+		return isAlarm;
+	}
+
+	public static void setAlarm(boolean isAlarm) {
+		RAPSetting.isAlarm = isAlarm;
+	}
+
+	public static boolean isAlarmVib() {
+		return isAlarmVib;
+	}
+
+	public static void setAlarmVib(boolean isAlarmVib) {
+		RAPSetting.isAlarmVib = isAlarmVib;
+	}
+
+	public static int getVibSize() {
+		return VibSize;
+	}
+
+	public static void setVibSize(int vibSize) {
+		VibSize = vibSize;
+	}
+
+	public static boolean isAlarmSound() {
+		return isAlarmSound;
+	}
+
+	public static void setAlarmSound(boolean isAlarmSound) {
+		RAPSetting.isAlarmSound = isAlarmSound;
+	}
+	
 }
