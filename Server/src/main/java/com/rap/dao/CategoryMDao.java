@@ -29,7 +29,7 @@ public class CategoryMDao implements CategoryMIDao{
 	}
 
 	public void create(String Key, int categoryL_pk, String categoryM) {
-		jdbcTemplate.update("insert into categorym (project_key, categorL_pk, categorym) values (?, ?, ?)", new Object[] { Key, categoryL_pk, categoryM });
+		jdbcTemplate.update("insert into categorym (project_key, categoryL_pk, categoryM) values (?, ?, ?)", new Object[] { Key, categoryL_pk, categoryM });
 	}
 	
 	//int pk, int key, String categorym, Timestamp reg_date, int categotyL_pk
@@ -40,21 +40,32 @@ public class CategoryMDao implements CategoryMIDao{
 		    	{
 		    		return new CategoryMInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
-		    				, resultSet.getString("categorym")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryM")
 		    				, resultSet.getTimestamp("reg_date")
-		    				, resultSet.getInt("categorL_pk"));
+		    				, resultSet.getInt("categoryL_pk"));
 		    	}
 		    });
 	}
 	
 	// TODO 쿼리문 작업해야됨
 	public List<CategoryMInfo> select(String key, String categoryL){
-		return null;
+		return jdbcTemplate.query("select * from categorym where categoryL_pk = (select categoryl.pk from categoryl where project_key = ? and categoryl = ?)",
+		    	new Object[] { key, categoryL }, new RowMapper<CategoryMInfo>() {
+		    	public CategoryMInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new CategoryMInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryM")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getInt("categoryL_pk"));
+		    	}
+		    });
 	}
 	
 	public void delete(String key, int categoryL_pk, String categoryM) {
-		jdbcTemplate.update("delete from categorym where project_key = ? AND categoryL_pk = ? AND categorym = ?",
+		jdbcTemplate.update("delete from categorym where project_key = ? AND categoryL_pk = ? AND categoryM = ?",
 		        new Object[] { key, categoryL_pk,  categoryM});		
 	}
 	public void delete(String key) {

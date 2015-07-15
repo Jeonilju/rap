@@ -6,113 +6,16 @@
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
 
-<!-- Custom CSS -->
-<link href="../dist/css/sb-admin-2.css" rel="stylesheet">
-   
-    <!-- Custom Fonts -->
-    <link href="./resources/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<script>
-function registerProject(){
-	
-	var param = "project_name" + "=" + $("#project_name").val()
-	 + "&" + "summary" + "=" + $("#summary").val()
-	 + "&" + "description" + "=" + $("#description").val();
-	
-	
-	$.ajax({
-		url : "register_db",
-		type : "POST",
-		data : param,
-		cache : false,
-		async : false,
-		dataType : "text",
-
-		success : function(response) {				
-			//중복되는 프로젝트 이름 존재않음
-			if(response=='0')
-			{
-				location.href='projectsettings';
-				alert("프로젝트가 등록되었습니다.")
-				
-			}		
-			//한 사용자내에서 똑같은 프로젝트 이름 존재
-			else if(response=='1')
-			{
-				alert("프로젝트 이름이 중복이 됩니다. 다시 입력 해주세요");
-				return false;
-			}
-			//이메일 값이 존재하지 않는 경우
-			else if(response=='2')
-			{
-				alert("로그인해주세요.");
-				return false;
-			}
-			//이메일 값이 존재하지 않는 경우
-			else if(response=='3')
-			{
-				alert("등록가능한 프로젝트 수를 초과했습니다.");
-				return false;
-			}
-			else
-			{
-				alert("예기치못한 에러 발생.");
-				return false;
-			}
-		},
-		
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-
-
-	});
-	
-}
-
-function registerFormCheck()
-{
-	//폼 체크
-	if($("#project_name").val() == '' || $("#project_name").val()==null)
-	{
-		alert("프로젝트 이름을 입력하세요");
-		return false;
-	}
-	if($("#summary").val() == '' || $("#summary").val()==null)
-	{
-		alert("프로젝트 요약을 입력하세요");
-		return false;
-	}
-	if($("#description").val() == '' || $("#description").val()==null)
-	{
-		alert("프로젝트 설명을 입력하세요");
-		return false;
-	}
-	
-	registerProject();
-	
-}
-
-</script>
+<!-- Custom Js -->
+<script src="./resources/js/projectRegister.js"></script>
 
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
 		<div id="wrapper">
 			<!-- sidebar-wrapper -->
-			<div id="sidebar-wrapper">
-				<ul class="sidebar-nav">
-					<li><br>
-					<br>
-					<br></li>
-					<li class="sidebar-brand"><a href="#"> Project </a></li>
-					<li><a href="register">Project Registration</a></li>
-					<li><a href="projectsettings">Project Settings</a></li>
-				</ul>
-			</div>
-			<!-- #sidebar-wrapper -->
+			<jsp:include page="projecthomenav.jsp" flush="false" />
+			<!-- /#sidebar-wrapper -->
 
 			<!-- page-content-wrapper -->
 			<div id="page-content-wrapper">
@@ -152,6 +55,9 @@ function registerFormCheck()
 		                                	else{
 		                                		
 		                                		out.println("<div>User Projects</div>");
+		                                		if(projectcount == null)
+		                                			out.println("<div style='font-size: 40px;'>0/3</div>");
+		                                		else
 		                                		out.println("<div style='font-size: 40px;'>"+projectcount.intValue()+"/3</div>");
 		                                	}
 		                                %>
@@ -164,11 +70,13 @@ function registerFormCheck()
 	                
 	                <%
 	                //로그인 상태일때
-	                if(email != null || !email.isEmpty())
+	                if(email != null)
                 	{
-	                	//프로젝트 개수가 3개 이하일 경우 폼 활성화
-	                	if(projectcount.intValue()<3)
+	                	if(!email.isEmpty())
 	                	{
+		                	//프로젝트 개수가 3개 이하일 경우 폼 활성화
+		                	if(projectcount !=null && projectcount.intValue()<3)
+		                	{
 	                %>
 					<div class="row">
 						<div class="col-lg-8 col-lg-offset-2">
@@ -224,6 +132,7 @@ function registerFormCheck()
 					</div>
 					
 					<%
+		                	}
                 		}
                 	}
 					%>

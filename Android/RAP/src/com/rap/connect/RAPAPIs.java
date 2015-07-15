@@ -135,9 +135,8 @@ public class RAPAPIs {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * GPS 정보 전송
-	 * @param isMan	남자면 True, 여자면 False
-	 * @throws UnsupportedEncodingException 
+	 * GCM 정보 전송
+	 *  
 	 * */
 	public static HttpRequestBase UserInfo_GCM(String gcm_id) throws UnsupportedEncodingException{
 		
@@ -323,6 +322,29 @@ public class RAPAPIs {
 		return httpPost;
 	}
 	
+	/**
+	 * 
+	 * */
+	public static HttpRequestBase UserInfo_GCM(int age) throws UnsupportedEncodingException{
+		
+		Log.i(TAG, "사용자 나이정보 API 호출2");
+		Log.i(TAG, "name: " + RAPUser.getUserId());
+		Log.i(TAG, "key: " + RAPSetting.getRAPKey());
+		Log.i(TAG, "Age: " + age);
+		
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/age");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("age", "" + age));
+		
+		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+		httpPost.setEntity(entityRequest);
+		//httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		
+		return httpPost;
+	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////														////////////////////////
 	///////////////////////						카테고리 정보						////////////////////////

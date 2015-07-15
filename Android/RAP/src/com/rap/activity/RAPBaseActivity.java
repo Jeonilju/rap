@@ -9,7 +9,9 @@ import java.util.List;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.rap.connect.RAPAPIs;
@@ -18,6 +20,8 @@ import com.rap.connect.RAPHttpClient;
 public class RAPBaseActivity extends Activity{
 
 	private static final String TAG="RAPBaseActivity";
+	
+	public static TelephonyManager userInfo;
 	
 	/** 앱 카운트 */
 	private static int AppCount = 0;
@@ -35,8 +39,11 @@ public class RAPBaseActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(activityList == null)
+		if(activityList == null){
 			activityList = new ArrayList<Activity>();
+			userInfo = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+		}
+			
 		
 		activityList.add(this);
 		
@@ -108,5 +115,9 @@ public class RAPBaseActivity extends Activity{
 	/** 엑티비티 카운트 */
 	public static int getActivityCount(){
 		return activityList.size();
+	}
+	
+	public static Context getLastContext(){
+		return activityList.get(getActivityCount() - 1);
 	}
 }

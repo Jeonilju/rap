@@ -25,6 +25,9 @@ import com.rap.dao.CategorySDao;
 import com.rap.dao.MemberDao;
 import com.rap.dao.ProjectDao;
 import com.rap.dao.PromotionDao;
+import com.rap.models.CategoryLInfo;
+import com.rap.models.CategoryMInfo;
+import com.rap.models.CategorySInfo;
 import com.rap.models.MemberInfo;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
@@ -56,23 +59,48 @@ public class RAP_MainController {
 	@Autowired
 	private PromotionDao promotionDao;
 	
+	/** RAP 홈 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String MainController_index(HttpServletRequest request) {
 		logger.info("index Page");
 		
 		return "index";
 	}
-	
-	/** 프로젝트 등록 */
-	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String MainController_register(HttpServletRequest request) {
-		logger.info("register Page");
+
+	/** 프로젝트 홈 */
+	@RequestMapping(value = "/projecthome", method = RequestMethod.GET)
+	public String MainController_projecthome(HttpServletRequest request) {
+		logger.info("projecthome Page");
+
+	    //세션 객체 생성
+	    HttpSession session = request.getSession();
+		String email = (String)session.getAttribute("email");
+	    
+		List<MemberInfo> memberlist = memberDao.select(email);
 		
-		return "register";
+		if(memberlist != null)
+		{
+			if(!memberlist.isEmpty())
+			{
+				List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(memberlist.get(0).getPk());
+				request.setAttribute("projectlist",projectlist);
+				request.setAttribute("projectcount", projectlist.size());
+			}
+		}
+		
+		return "projecthome";
 	}
 	
-	/** 프로젝트 설정 */
-	@RequestMapping(value = "/register_db", method = RequestMethod.POST)
+	/** 프로젝트 등록 */
+	@RequestMapping(value = "/projectregister", method = RequestMethod.GET)
+	public String MainController_projectregister(HttpServletRequest request) {
+		logger.info("projectregister Page");
+
+		return "projectregister";
+	}
+	
+	/** 프로젝트 등록 처리 */
+	@RequestMapping(value = "/projectregister_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String setProject(HttpServletRequest request,
  			HttpServletResponse response,
@@ -152,14 +180,52 @@ public class RAP_MainController {
 					 
 					projectlist = projectDao.selectFromMemberPK(member_pk);
 					
-					session.setAttribute("projectlist", projectlist);
-					session.setAttribute("projectcount", projectlist.size());
+					request.setAttribute("projectlist", projectlist);
+					request.setAttribute("projectcount", projectlist.size());
 					 
 					 
 				}
 				
 				 return "0";
 			}
+	
+	/** 프로젝트 홈 */
+	@RequestMapping(value = "/projectsettings", method = RequestMethod.GET)
+	public String MainController_projectsettings(HttpServletRequest request,
+			 @RequestParam("currentprojectname") String currentprojectname
+			) {
+		logger.info("projectsettings Page");
+		
+		//세션 객체 생성
+	    HttpSession session = request.getSession();
+	    String email = (String)session.getAttribute("email");
+	    
+	    List<MemberInfo> memberlist = memberDao.select(email);
+	    int member_pk = -1;
+	    
+	    if(memberlist != null)
+	    {
+	    	if(!memberlist.isEmpty())
+	    	{
+	    		member_pk = memberlist.get(0).getPk();
+	    	}
+	    }
+	    
+	    List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+		int projectcount = projectlist.size();
+		
+	    for(int i=0;i<projectcount;i++)
+	    {
+	    	if(projectlist.get(i).getProject_name().equals(currentprojectname))
+	    	{
+	    		session.setAttribute("currentproject", projectlist.get(i));
+	    	    logger.info(projectlist.get(i).getProject_name());
+	    	}
+	    }
+	    
+	    
+		return "projectsettings";
+	}
 	
 	/** 회원가입 설정 */
 	@RequestMapping(value = "/signup_db", method = RequestMethod.POST)
@@ -209,10 +275,6 @@ public class RAP_MainController {
 	    		result = "1";
 	    		
 	    		session.setAttribute("email", email);
-	    		
-	    		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(data.get(0).getPk());
-	    		session.setAttribute("projectlist",projectlist);
-	    		session.setAttribute("projectcount", projectlist.size());
 	    	}
 	    	else
 	    	{
@@ -283,11 +345,141 @@ public class RAP_MainController {
 		return "itemcategorization";
 	}
 	
-	@RequestMapping(value = "/projectsettings", method = RequestMethod.GET)
-	public String MainController_projectsettings(HttpServletRequest request) {
-		logger.info("projectsettings Page");
+	@RequestMapping(value = "/Lcategory_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String MainController_Lcategory_db(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam("project_name") String project_name,
+			 ModelMap model
+			 ) {
+		logger.info("Lcategory_db Page");
 		
-		return "projectsettings";
+	    String project_key="";
+	    JSONObject jObject = new JSONObject();
+	    
+	    if(project_name!=null || !project_name.isEmpty())
+	    {
+	    	//세션 객체 생성
+		    HttpSession session = request.getSession();
+		    String email = (String)session.getAttribute("email");
+		    
+			List<MemberInfo> memberlist = memberDao.select(email);
+			
+			if(memberlist.size()>0)
+			{
+				List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(memberlist.get(0).getPk());
+				
+				for(int i=0;i<projectlist.size();i++)
+				{
+					if(projectlist.get(i).getProject_name().equals(project_name))
+					{
+						project_key = projectlist.get(i).getPk();
+					    logger.info("project_key = "+project_key);
+					}
+				}
+				List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+				jObject.put("categoryLlist", categoryLlist);
+				logger.info(jObject.toString());
+				
+				return jObject.toString();
+			}
+	    }
+	    
+		logger.info("project is null");
+		
+		return "0";
+	}
+	
+	@RequestMapping(value = "/Mcategory_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String MainController_Mcategory_db(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam("project_name") String project_name,
+			 @RequestParam("categoryL") String categoryL
+			 ) {
+		logger.info("Mcategory_db Page");
+		
+	    String project_key="";
+	    JSONObject jObject = new JSONObject();
+	    
+	    if(project_name!=null || !project_name.isEmpty())
+	    {
+	    	//세션 객체 생성
+		    HttpSession session = request.getSession();
+		    String email = (String)session.getAttribute("email");
+		    
+			List<MemberInfo> memberlist = memberDao.select(email);
+			
+			if(memberlist.size()>0)
+			{
+				List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(memberlist.get(0).getPk());
+				
+				for(int i=0;i<projectlist.size();i++)
+				{
+					if(projectlist.get(i).getProject_name().equals(project_name))
+					{
+						project_key = projectlist.get(i).getPk();
+					    logger.info("project_key = "+project_key);
+					}
+				}
+				List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL);
+				
+				jObject.put("categoryMlist", categoryMlist);
+				logger.info(jObject.toString());
+				
+				return jObject.toString();
+			}
+	    }
+	    
+		logger.info("project is null");
+		
+		return "0";
+	}
+
+	@RequestMapping(value = "/Scategory_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String MainController_Scategory_db(HttpServletRequest request,
+ 			HttpServletResponse response,
+			 @RequestParam("project_name") String project_name,
+			 @RequestParam("categoryM") String categoryM
+			 ) {
+		logger.info("Scategory_db Page");
+		
+	    String project_key="";
+	    JSONObject jObject = new JSONObject();
+	    
+	    if(project_name!=null || !project_name.isEmpty())
+	    {
+	    	//세션 객체 생성
+		    HttpSession session = request.getSession();
+		    String email = (String)session.getAttribute("email");
+		    
+			List<MemberInfo> memberlist = memberDao.select(email);
+			
+			if(memberlist.size()>0)
+			{
+				List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(memberlist.get(0).getPk());
+				
+				for(int i=0;i<projectlist.size();i++)
+				{
+					if(projectlist.get(i).getProject_name().equals(project_name))
+					{
+						project_key = projectlist.get(i).getPk();
+					    logger.info("project_key = "+project_key);
+					}
+				}
+				List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM);
+				
+				jObject.put("categorySlist", categorySlist);
+				logger.info(jObject.toString());
+				
+				return jObject.toString();
+			}
+	    }
+	    
+		logger.info("project is null");
+		
+		return "0";
 	}
 	
 	@RequestMapping(value = "/analytics", method = RequestMethod.GET)
@@ -343,17 +535,23 @@ public class RAP_MainController {
 				 String project_key = "";
 				 
 				 HttpSession session = request.getSession();
-				 List<ProjectInfo> projectlist = (List<ProjectInfo>)session.getAttribute("projectlist");
-		    	 int projectcount = (Integer)session.getAttribute("projectcount");
-		    	 
-		    	 for(int i=0;i<projectcount;i++)
-		    	 {
-		    		 if(projectlist.get(i).getProject_name().equals(project_name))
-		    		 {
-		    			 project_key = projectlist.get(i).getPk();
-		    		 }
-		    	 }
-		    	 
+				 String email = (String)session.getAttribute("email");
+				    
+				List<MemberInfo> memberlist = memberDao.select(email);
+				
+				if(memberlist.size()>0)
+				{
+					List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(memberlist.get(0).getPk());
+					
+					for(int i=0;i<projectlist.size();i++)
+					{
+						if(projectlist.get(i).getProject_name().equals(project_name))
+						{
+							project_key = projectlist.get(i).getPk();
+						    logger.info("project_key = "+project_key);
+						}
+					}
+				}
 		    	 logger.info("name = "+name);
 		    	 logger.info("summary = "+summary);
 		    	 logger.info("grade_using = "+grade_using);

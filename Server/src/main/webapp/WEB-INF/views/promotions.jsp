@@ -10,10 +10,16 @@
 <link href="./resources/font-awesome/css/font-awesome.css"
 	rel="stylesheet" type="text/css">
 
+<%
+	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
+%>
 <script type="text/javaScript">
+
+$(document).ready(function(){getpromotionlist()});
+
 function getpromotionlist()
 {
-	var param = "project_name" + "=" + document.promotionForm.ProjectSelect.value;
+	var param = "project_name" + "=" + "<%=(String)currentproject.getProject_name() %>";
 	
 	$.ajax({
 		url : "promotionlist_db",
@@ -36,9 +42,6 @@ function getpromotionlist()
 							+"<div class='panel-body'><div>"
 							+list[i].summary
 							+"</div></div><div class='panel-footer'><a class='btn btn-default pull-right' href='#'> 푸시 알림 </a> <br><br></div><br>");	
-					$('#addbutton').html("<button type='button' class='btn btn-success btn-block'"+
-							"data-toggle='modal' data-target='#PromotionModal'><i class='fa fa-plus'></i>"+
-							"Add</button>");
 				}
 				
 				if(listLen==0)
@@ -67,17 +70,9 @@ function getpromotionlist()
 
 	<div class="container">
 		<div id="wrapper">
-			<!-- Sidebar -->
-			<div id="sidebar-wrapper">
-				<ul class="sidebar-nav">
-					<li><br> <br> <br></li>
-					<li class="sidebar-brand"><a> Promotions </a></li>
-					<li><a href="#">Promotions Administration</a></li>
-				</ul>
-			</div>
+			<!-- sidebar-wrapper -->
+			<jsp:include page="projectnav.jsp" flush="false" />
 			<!-- /#sidebar-wrapper -->
-
-
 			<!--contents-->
 			<div id="page-content-wrapper">
 				<div class="container-fluid">
@@ -116,24 +111,14 @@ function getpromotionlist()
 									<div class="col-lg-9">
 										<div class="form-group">
 											<div class="row">
-												<label>프로젝트 선택</label> <select size="1" id="ProjectSelect"
-													name="ProjectSelect" onChange="getpromotionlist()">
-													<option value="0" selected>해당없음</option>
-													<%
-
-														List<ProjectInfo> projectlist = (List<ProjectInfo>) session.getAttribute("projectlist");
-														int projectcount = (Integer) session.getAttribute("projectcount");
-													
-														for(int i=0;i<projectcount;i++)
-														{
-															out.println("<option value='"+projectlist.get(i).getProject_name()+"'>"+projectlist.get(i).getProject_name()+"</option>");
-														}
-													%>
-												</select>
+												
 											</div>
 										</div>
 									</div>
-									<div class="col-lg-3" id="addbutton">
+									<div class="col-lg-3">
+										<button type='button' class='btn btn-success btn-block'
+										data-toggle='modal' data-target='#PromotionModal'>
+										<i class='fa fa-plus'></i>Add</button>
 									</div>
 								</div>
 							</form>
@@ -181,7 +166,7 @@ function save() {
 	var PromotionSummary = document.getElementById('PromotionSummary');
 	var grade_time = document.promotionAddForm.grade_time.value;
 	var grade_using = document.promotionAddForm.grade_using.value;
-	var project_name = document.promotionForm.ProjectSelect.value;
+	var project_name = "<%=(String)currentproject.getProject_name() %>";
 	
 	var param = "project_name" + "=" + project_name + "&" 
 				+ "name" + "=" + PromotionName.value + "&" 

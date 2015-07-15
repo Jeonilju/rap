@@ -8,11 +8,5 @@
 </head>
 <body>
 
-<%
-String email = request.getParameter("email");
-session.setAttribute("email", email); 
-
-%>
-
 </body>
 </html>

@@ -28,7 +28,7 @@ public class CategorySDao implements CategorySIDao{
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 	public void create(String Key, int categoryM_pk, String categoryS) {
-		jdbcTemplate.update("insert into categorys (project_key, categoryM_pk, categorys) values (?, ?, ?)", new Object[] { Key, categoryM_pk, categoryS });
+		jdbcTemplate.update("insert into categorys (project_key, categoryM_pk, categoryS) values (?, ?, ?)", new Object[] { Key, categoryM_pk, categoryS });
 	}	
 	public List<CategorySInfo> select(String key) {
 		return jdbcTemplate.query("select * from categorys where project_key = ?",
@@ -37,8 +37,8 @@ public class CategorySDao implements CategorySIDao{
 		    	{
 		    		return new CategorySInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
-		    				, resultSet.getString("categorys")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryS")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getInt("categoryM_pk"));
 		    	}
@@ -46,13 +46,24 @@ public class CategorySDao implements CategorySIDao{
 	}
 	
 	// TODO 쿼리문 작성해야됨
-	public List<CategorySInfo> select(String key, String categoryL, String categoryM)
+	public List<CategorySInfo> select(String key, String categoryM)
 	{
-		return null;
+		return jdbcTemplate.query("select * from categorys where categoryM_pk = (select categorym.pk from categorym where project_key = ? and categorym = ?)",
+		    	new Object[] { key, categoryM }, new RowMapper<CategorySInfo>() {
+		    	public CategorySInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new CategorySInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryS")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getInt("categoryM_pk"));
+		    	}
+		    });
 	}
 	
 	public void delete(String key, int categoryM_pk, String categoryS) {
-		jdbcTemplate.update("delete from categorys where project_key = ? AND categoryM_pk = ? AND categorys = ?",
+		jdbcTemplate.update("delete from categorys where project_key = ? AND categoryM_pk = ? AND categoryS = ?",
 		        new Object[] { key, categoryM_pk,  categoryS});		
 	}
 	public void delete(String key) {

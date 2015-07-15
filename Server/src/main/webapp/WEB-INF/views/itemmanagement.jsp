@@ -7,24 +7,9 @@
 	<div class="container">
 		<!-- 래퍼 -->
 		<div id="wrapper">
-			<!-- 사이드바 -->
-			<div id="sidebar-wrapper">
-				<ul class="sidebar-nav">
-					<li><br><br><br></li>
-					<li class="sidebar-brand">
-						<a href="">
-							Virtual Store
-						</a>
-					</li>
-					<li>
-						<a href="projectsettings">Project Settings</a>
-					</li>
-					<li>
-						<a href="itemmanagement">Item Management</a>
-					</li>
-				</ul>
-			</div>
-			<!-- /#사이드바 -->
+			<!-- sidebar-wrapper� -->
+			<jsp:include page="projectnav.jsp" flush="false" />
+			<!-- /#sidebar-wrapper -->
 
 			<!-- page wrapper -->
 			<div id="page-content-wrapper">

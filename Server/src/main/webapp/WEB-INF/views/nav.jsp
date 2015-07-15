@@ -33,19 +33,17 @@ if (request.getProtocol().equals("HTTP/1.1"))
 	href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"
 	rel="stylesheet" type="text/css">
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
-
+<!-- Custrom CSS -->
+<link rel="stylesheet" href="./resources/css/bootstrap-select.css">
+  
 <!-- jQuery -->
 <script src="./resources/js/jquery.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="./resources/js/bootstrap.min.js"></script>
+<!-- Select js -->
+  <script src="./resources/js/bootstrap-select.js"></script>
+ <script src="//cdnjs.cloudflare.com/ajax/libs/metisMenu/1.1.0/metisMenu.js"></script>
 
 <!-- Plugin JavaScript -->
 <script
@@ -276,7 +274,7 @@ function countCheck(){
 					return false;
 				}	
 				
-				alert(check);
+				//alert(check);
 			},
 			error : function(request, status, error) {
 				if (request.status != '0') {
@@ -349,12 +347,7 @@ function countCheck(){
 					class="dropdown-toggle" data-toggle="dropdown">Developer <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-						<li role="presentation"><a role="menuitem" href="register">Project</a></li>
-						<li role="presentation"><a role="menuitem"
-							href="itemcategorization">Virtual Store</a></li>
-						<li role="presentation"><a role="menuitem" href="promotions">Promotions</a></li>
-						<li role="presentation"><a role="menuitem"
-							href="operation_count">Analytics</a></li>
+						<li role="presentation"><a role="menuitem" href="projecthome">Project</a></li>
 					</ul></li>
 				<li class="dropdown"><a id="drop2" href="#" role="button"
 					class="dropdown-toggle" data-toggle="dropdown">Resources <b

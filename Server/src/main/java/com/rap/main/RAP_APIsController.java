@@ -68,7 +68,7 @@ public class RAP_APIsController {
 	public String gcmTest(HttpServletRequest request) {
 		logger.info("APIs Tab");
 		
-		RAP_GCMManager.getInstance().sendPush("제목", "내용", userDao.select("1"));
+		RAP_GCMManager.getInstance().sendPush("제목", "내용", "com.rap.example.RAP_MainActivity" , userDao.select("1"));
 		
 		return "APIs";
 	}
@@ -190,7 +190,7 @@ public class RAP_APIsController {
 	@RequestMapping(value = "/APIs/Activity/move", method = RequestMethod.POST)
 	@ResponseBody
 	public String  setActivityMove(
-			@RequestParam("key") int key, 
+			@RequestParam("key") String key, 
 			@RequestParam("name") String name, 
 			@RequestParam("activity_name") String activity_name,
 			@RequestParam("activityb_name") String activityb_name){
@@ -200,11 +200,24 @@ public class RAP_APIsController {
 		return "";
 	}
 	
+	/** GCM ID 정보 설정 */
+	@RequestMapping(value = "/APIs/User/GCM", method = RequestMethod.POST)
+	@ResponseBody
+	public String  setGCMId(
+			@RequestParam("key") String key, 
+			@RequestParam("name") String name, 
+			@RequestParam("gcmid") String gcmid){
+		logger.info("APIcall: " + "setGCMId");
+		userDao.setGCMId(key, name, gcmid);
+		
+		return "";
+	}
+	
 	/** Activity 단일 정보 설정 */
 	@RequestMapping(value = "/APIs/Activity/frequency", method = RequestMethod.POST)
 	@ResponseBody
 	public String  setActivityMove(
-			@RequestParam("key") int key, 
+			@RequestParam("key") String key, 
 			@RequestParam("name") String name, 
 			@RequestParam("activity_name") String activity_name){
 		logger.info("APIcall: " + "setActivityMove");
@@ -249,7 +262,8 @@ public class RAP_APIsController {
 			, @RequestParam("CategoryM") String CategoryM) {
 		logger.info("APIs Tab");
 
-		String json = new Gson().toJson(categorySDao.select(project_key, CategoryL, CategoryM));
+		// TODO 미구현
+		String json = "";//new Gson().toJson(categorySDao.select(project_key, CategoryL, CategoryM));
 		
 		return json;
 	}

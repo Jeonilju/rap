@@ -17,13 +17,14 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
+import com.rap.R;
 import com.rap.RAPSetting;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
-	private static final String TAG = "RAP_GCM";
+	private static final String TAG = "RAP_GCMIntentService";
 	
 	public GCMIntentService(){ 
 		this(RAPSetting.getGCMProjectId());
@@ -80,21 +81,26 @@ public class GCMIntentService extends GCMBaseIntentService {
 		}
 		
 		
-		Notification notice = new NotificationCompat.Builder(this)
+		Notification notice = new NotificationCompat.Builder(context)
 				.setContentTitle(title)
 				.setContentText(contents)
-				.setAutoCancel(true).setContentIntent(pIntent).build();
+				.setAutoCancel(true)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setTicker("test")
+				.setContentIntent(pIntent).build();
 
 		if(RAPSetting.isAlarm())
 		{
 			// 알림창
+			Log.i(TAG, "isAlarm 설정");
 			NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			manager.notify(1, notice);
+			manager.notify(987465, notice);
 		}
 		
 		if(RAPSetting.isAlarmVib())
 		{
 			// 진동 설정
+			Log.i(TAG, "isAlarmVib 설정");
 			Vibrator vibe = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 			vibe.vibrate(RAPSetting.getVibSize());
 		}
@@ -102,6 +108,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		if(RAPSetting.isAlarmSound())
 		{
 			// 알림음
+			Log.i(TAG, "isAlarmSound 설정");
 			Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(getApplicationContext(),RingtoneManager.TYPE_NOTIFICATION);
 			Ringtone ringtone = RingtoneManager.getRingtone(getApplicationContext(), ringtoneUri);
 			ringtone.play();	

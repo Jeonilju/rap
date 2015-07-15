@@ -41,7 +41,7 @@ public class CategoryLDao implements CategoryLIDao{
 		    	{
 		    		return new CategoryLInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("categoryl")
 		    				, resultSet.getTimestamp("reg_date"));
 		    	}

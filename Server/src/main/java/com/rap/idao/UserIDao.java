@@ -19,6 +19,7 @@ public interface UserIDao {
 	void setDevice(String project_key, String name, String device_vertion);
 	void setAge(String project_key, String name, int age);
 	void setSex(String project_key, String name, int sex);
+	void setGCMId(String project_key, String name, String gcm_id);
 	
 	void getVirtual_main(String project_key, String name, int money);
 	void useVirtual_main(String project_key, String name, int money);

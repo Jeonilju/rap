@@ -70,12 +70,12 @@ public class UserDao implements UserIDao{
 			+ " where project_key = ? AND name = ?", 
 			new Object[]  { os_version, project_key, name});
 	}
-	public void setDevice(String project_key, String name, String device_vertion) {
+	public void setDevice(String project_key, String name, String device_version) {
 		isExist(project_key, name);
 		jdbcTemplate.update("update user set "
-				+ " device_vertion = ?"
+				+ " device_version = ?"
 			+ " where project_key = ? AND name = ?", 
-			new Object[]  { device_vertion, project_key, name});
+			new Object[]  { device_version, project_key, name});
 	}
 	public void setAge(String project_key, String name, int age) {
 		isExist(project_key, name);
@@ -91,7 +91,14 @@ public class UserDao implements UserIDao{
 			+ " where project_key = ? AND name = ?", 
 			new Object[]  { sex, project_key, name});
 	}
-
+	public void setGCMId(String project_key, String name, String gcm_id){
+		isExist(project_key, name);
+		isExist(project_key, name);
+		jdbcTemplate.update("update user set "
+				+ " gcm_id = ?"
+			+ " where project_key = ? AND name = ?", 
+			new Object[]  { gcm_id, project_key, name});
+	}
 	public void getVirtual_main(String project_key, String name, int money) {
 		isExist(project_key, name);
 		jdbcTemplate.update("update user set "
@@ -159,7 +166,7 @@ public class UserDao implements UserIDao{
 		    				, resultSet.getDouble("position_lon")
 		    				, resultSet.getInt("sex")
 		    				, resultSet.getString("os_version")
-		    				, resultSet.getString("device_vertion")
+		    				, resultSet.getString("device_version")
 		    				, resultSet.getInt("age")
 		    				, resultSet.getInt("count")
 		    				, resultSet.getInt("virtual_main")
