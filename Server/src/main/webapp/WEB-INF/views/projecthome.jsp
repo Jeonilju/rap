@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List, com.rap.models.ProjectInfo"%>
+<%@ page import="java.util.List, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
 
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
@@ -28,9 +28,13 @@
 					</div>
 					<br>
 					<%
-					String email = (String) session.getAttribute("email");
-					if (email == null || email.isEmpty()) {
-					
+					MemberInfo member = (MemberInfo)session.getAttribute("currentmember");
+					String email = "";
+				
+					if(member != null) email = member.getEmail();
+				
+					if(email == null || email.isEmpty())
+					{
 					%>
 					<!-- 로그인하지 않은 경우 -->
 					<div class="panel panel-default">

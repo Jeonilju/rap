@@ -9,11 +9,8 @@
 <fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="android.support.annotation.MainThread"/>
 <fullyQualifiedTypeName name="com.rap.example.RAP_MainActivity"/>
-<fullyQualifiedTypeName name="com.rap.example.IAPSampleActivity"/>
 <fullyQualifiedTypeName name="com.klt.setting.Preference"/>
 <fullyQualifiedTypeName name="com.klt.activity.Setting2Activity"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
-<fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="android.widget.Spinner"/>
 <fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_User"/>
 <fullyQualifiedTypeName name="java.lang.Integer"/>
@@ -27,8 +24,6 @@
 <fullyQualifiedTypeName name="com.klt.view.OrdereeListAdapter"/>
 <fullyQualifiedTypeName name="com.klt.view.OrdererListAdapter"/>
 <fullyQualifiedTypeName name="android.content.DialogInterface.OnClickListener"/>
-<fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="android.app.NotificationManager"/>
 <fullyQualifiedTypeName name="android.support.v7.app.NotificationCompat"/>
 <fullyQualifiedTypeName name="android.app.Notification"/>
@@ -42,4 +37,19 @@
 <fullyQualifiedTypeName name="com.rap.activity.RAPBaseActivity"/>
 <fullyQualifiedTypeName name="com.rap.R"/>
 <fullyQualifiedTypeName name="com.rap.R.drawable"/>
+<fullyQualifiedTypeName name="android.os.Handler"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="org.json.JSONArray"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
+<fullyQualifiedTypeName name="com.rap.example.IAPSampleActivity"/>
+<fullyQualifiedTypeName name="java.net.URLEncoder"/>
+<fullyQualifiedTypeName name="org.apache.http.params.HttpParams"/>
+<fullyQualifiedTypeName name="java.util.LinkedList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="org.apache.http.client.utils.URLEncodedUtils"/>
+<fullyQualifiedTypeName name="org.apache.http.NameValuePair"/>
+<fullyQualifiedTypeName name="org.apache.http.message.BasicNameValuePair"/>
+<fullyQualifiedTypeName name="com.klt.activity.MainActivity"/>
+<fullyQualifiedTypeName name="com.klt.activity.SigninActivity"/>
 </qualifiedTypeNameHistroy>

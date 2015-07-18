@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page
+	import="com.rap.models.MemberInfo"%>
 <head>
 <%   
 response.setHeader("Cache-Control","no-store");   
@@ -358,8 +360,10 @@ function countCheck(){
 					</ul></li>
 				
 				<%
+					MemberInfo member = (MemberInfo)session.getAttribute("currentmember");
 					String email = "";
-					email = (String)session.getAttribute("email");
+				
+					if(member != null) email = member.getEmail();
 				
 					if(email == null || email.isEmpty())
 					{
@@ -375,7 +379,7 @@ function countCheck(){
 					else
 					{
 				%>
-				<li role="presenxtation"><a><%=(String)session.getAttribute("email") %></a></li>
+				<li role="presenxtation"><a><%=email %></a></li>
 				<li role="presentation"><button type="button" class="btn"
 						onclick="window.location.href='logout'" style="margin: 5px;">LogOut</button></li>
 				<%

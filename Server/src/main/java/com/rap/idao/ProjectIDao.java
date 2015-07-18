@@ -11,7 +11,7 @@ public interface ProjectIDao {
 	
 	void create(String pk, String project_name, String summary, String description, int member_pk);
 	List<ProjectInfo> select(String pk);
-	List<ProjectInfo> selectFromMemberPK(int member_pk);
+	public List<ProjectInfo> selectFromMemberPK(int member_pk);
 	void deleteAll();
 	void delete(String pk);
 }
