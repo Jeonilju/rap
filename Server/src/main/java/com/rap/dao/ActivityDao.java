@@ -30,15 +30,15 @@ public class ActivityDao implements ActivityIDao {
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 
-	public void create(int project_key, String name, String activity_name) {
+	public void create(String project_key, String name, String activity_name) {
 		jdbcTemplate.update("insert into activity_log (project_key, name, activity_name) values (?, ?, ?)", new Object[] { project_key, name, activity_name });
 	}
 	
-	public void create(int project_key, String name, String activity_name, String activityb_name) {
+	public void create(String project_key, String name, String activity_name, String activityb_name) {
 		jdbcTemplate.update("insert into activity_log (project_key, name, activity_name, activityb_name) values (?, ?, ?, ?)", new Object[] { project_key, name, activity_name, activityb_name });
 	}
 
-	public List<ActivityInfo> select(int project_key) {
+	public List<ActivityInfo> select(String project_key) {
 		return jdbcTemplate.query("select * from activity_log where project_key = ?",
 		    	new Object[] { project_key }, new RowMapper<ActivityInfo>() {
 		    	public ActivityInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
@@ -58,7 +58,7 @@ public class ActivityDao implements ActivityIDao {
 		jdbcTemplate.update("delete from activity_log");
 	}
 
-	public void delete(int project_key) {
+	public void delete(String project_key) {
 		jdbcTemplate.update("delete from activity_log where project_key = ?", new Object[] { project_key });
 	}
 }

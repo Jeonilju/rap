@@ -1,11 +1,17 @@
 package com.rap.gcm;
 
+import java.io.IOException;
+
+import org.apache.http.client.methods.HttpRequestBase;
+
 import android.content.Context;
 import android.util.Log;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.rap.Preference;
 import com.rap.RAPSetting;
+import com.rap.connect.RAPAPIs;
+import com.rap.connect.RAPHttpClient;
 
 public class RAPGcmManager {
 	
@@ -29,6 +35,12 @@ public class RAPGcmManager {
 		} 
 		
 		Preference.putString(mContext, Preference.PREF_GCM, myGCMID);
+		try {
+			HttpRequestBase req = RAPAPIs.UserInfo_GCM(myGCMID);
+			RAPHttpClient.getInstance().background(req, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Log.i(TAG, "GCM°ª: " + myGCMID);
 	}
 }

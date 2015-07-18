@@ -1,25 +1,21 @@
 package com.rap.main;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
+import com.rap.Helper.StringPattern;
 import com.rap.dao.ActivityDao;
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
@@ -29,6 +25,7 @@ import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.dao.Virtual_MainDao;
 import com.rap.dao.Virtual_SubDao;
+import com.rap.gcm.RAP_GCMManager;
 
 @Controller
 public class RAP_APIsController {
@@ -62,12 +59,20 @@ public class RAP_APIsController {
 	private Virtual_SubDao virtual_subDao;
 	
 	@RequestMapping(value = "/APIs", method = RequestMethod.GET)
-	public String TCManagement_GET(HttpServletRequest request) {
+	public String APIs_GET(HttpServletRequest request) {
 		logger.info("APIs Tab");
 		
 		return "APIs";
 	}
 	
+	@RequestMapping(value = "/APIs/GCM_TEST", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	public String gcmTest(HttpServletRequest request) {
+		logger.info("APIs Tab");
+		
+		RAP_GCMManager.getInstance().sendPush("제목", "내용", "com.rap.example.RAP_MainActivity" , userDao.select("1"));
+		
+		return "APIs";
+	}
 	
 	////////////////////////////////////////////////////////////////
 	//////////											////////////
@@ -76,7 +81,7 @@ public class RAP_APIsController {
 	////////////////////////////////////////////////////////////////
 	
 	/** 성별 설정 */
-	@RequestMapping(value = "/APIs/User/sex", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/sex", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserSex(
 			@RequestParam("key") String key, 
@@ -89,7 +94,7 @@ public class RAP_APIsController {
 	}
 	
 	/** 나이 설정 */
-	@RequestMapping(value = "/APIs/User/age", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/age", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String setUserAge(HttpServletRequest request,
  			HttpServletResponse response
@@ -104,7 +109,7 @@ public class RAP_APIsController {
 	}
 	
 	/** 위치 설정 */
-	@RequestMapping(value = "/APIs/User/location", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/location", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserLocation(
 			@RequestParam("key") String key, 
@@ -118,7 +123,7 @@ public class RAP_APIsController {
 	}
 	
 	/** OS정보 설정 */
-	@RequestMapping(value = "/APIs/User/os", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/os", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserOs(
 			 @RequestParam("key") String key, 
@@ -131,7 +136,7 @@ public class RAP_APIsController {
 	}
 	
 	/** GCM 정보 설정 */
-	@RequestMapping(value = "/APIs/User/gcm", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/gcm", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserGCM(
 			 @RequestParam("key") String key, 
@@ -144,7 +149,7 @@ public class RAP_APIsController {
 	}
 	
 	/** 기기정보 설정 */
-	@RequestMapping(value = "/APIs/User/device", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/device", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserDevice(
 			@RequestParam("key") String key, 
@@ -157,7 +162,7 @@ public class RAP_APIsController {
 	}
 	
 	/** 사용시간 설정 */
-	@RequestMapping(value = "/APIs/User/time", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/time", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserUsingTime(
 			@RequestParam("key") int key, 
@@ -171,7 +176,7 @@ public class RAP_APIsController {
 	}
 	
 	/** 사용횟수 설정 */
-	@RequestMapping(value = "/APIs/User/count", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/User/count", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserUsingCount(
 			@RequestParam("key") String key, 
@@ -183,10 +188,10 @@ public class RAP_APIsController {
 	}
 	
 	/** Activity 이동 정보 설정 */
-	@RequestMapping(value = "/APIs/Activity/move", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/Activity/move", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setActivityMove(
-			@RequestParam("key") int key, 
+			@RequestParam("key") String key, 
 			@RequestParam("name") String name, 
 			@RequestParam("activity_name") String activity_name,
 			@RequestParam("activityb_name") String activityb_name){
@@ -196,11 +201,24 @@ public class RAP_APIsController {
 		return "";
 	}
 	
+	/** GCM ID 정보 설정 */
+	@RequestMapping(value = "/APIs/User/GCM", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String  setGCMId(
+			@RequestParam("key") String key, 
+			@RequestParam("name") String name, 
+			@RequestParam("gcmid") String gcmid){
+		logger.info("APIcall: " + "setGCMId");
+		userDao.setGCMId(key, name, gcmid);
+		
+		return "";
+	}
+	
 	/** Activity 단일 정보 설정 */
-	@RequestMapping(value = "/APIs/Activity/frequency", method = RequestMethod.POST)
+	@RequestMapping(value = "/APIs/Activity/frequency", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setActivityMove(
-			@RequestParam("key") int key, 
+			@RequestParam("key") String key, 
 			@RequestParam("name") String name, 
 			@RequestParam("activity_name") String activity_name){
 		logger.info("APIcall: " + "setActivityMove");
@@ -215,38 +233,40 @@ public class RAP_APIsController {
 	//////////											////////////
 	////////////////////////////////////////////////////////////////
 	
-	@RequestMapping(value = "/APIs/getCategoryL", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/getCategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getCategoryL(HttpServletRequest request
 			, @RequestParam("project_key") String project_key) {
-		logger.info("APIs Tab");
+		logger.info("대분류 조회");
 		
 		String json = new Gson().toJson(categoryLDao.select(project_key));
 		return json;
 	}
 	
-	@RequestMapping(value = "/APIs/getCategoryM", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/getCategoryM", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getCategoryM(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL) {
-		logger.info("APIs Tab");
+		CategoryL = StringPattern.parseUTF(CategoryL);
+		logger.info("중분류 조회: " + CategoryL);
 		
 		String json = new Gson().toJson(categoryMDao.select(project_key, CategoryL));
 		
 		return json;
 	}
 	
-	@RequestMapping(value = "/APIs/getCategoryS", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/getCategoryS", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getCategoryS(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL
 			, @RequestParam("CategoryM") String CategoryM) {
-		logger.info("APIs Tab");
+		CategoryL = StringPattern.parseUTF(CategoryL);
+		CategoryM = StringPattern.parseUTF(CategoryM);
+		logger.info("소분류 조회: " + CategoryL + ", " + CategoryM);
 
 		String json = new Gson().toJson(categorySDao.select(project_key, CategoryL, CategoryM));
-		
 		return json;
 	}
 	
@@ -256,7 +276,7 @@ public class RAP_APIsController {
 	//////////											////////////
 	////////////////////////////////////////////////////////////////
 	
-	@RequestMapping(value = "/APIs/getIAP_CategoryL", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/getIAP_CategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryL(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -268,7 +288,7 @@ public class RAP_APIsController {
 		return json;
 	}
 	
-	@RequestMapping(value = "/APIs/getIAP_CategoryM", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/getIAP_CategoryM", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryM(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -281,7 +301,7 @@ public class RAP_APIsController {
 		return json;
 	}
 	
-	@RequestMapping(value = "/APIs/getIAP_CategoryS", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/getIAP_CategoryS", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryS(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -301,17 +321,17 @@ public class RAP_APIsController {
 	//////////											////////////
 	////////////////////////////////////////////////////////////////
 	
-	@RequestMapping(value = "/APIs/checkVirtualMain", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/checkVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key) {
-		logger.info("APIs Tab");
+		logger.info("/APIs/checkVirtualMain");
 
 		String json = new Gson().toJson(virtual_mainDao.select(project_key));
 		return json;
 	}
 	
-	@RequestMapping(value = "/APIs/checkVirtualSub", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/checkVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key) {
@@ -324,7 +344,7 @@ public class RAP_APIsController {
 	/**
 	 * 사용자의 Main 가상화폐 조회
 	 * */
-	@RequestMapping(value = "/APIs/GetVirtualMain", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/GetVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -338,7 +358,7 @@ public class RAP_APIsController {
 	/**
 	 * 사용자의 Main 가상화폐 사용
 	 * */
-	@RequestMapping(value = "/APIs/UseVirtualMain", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/UseVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String UseVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -354,7 +374,7 @@ public class RAP_APIsController {
 	/**
 	 * 사용자의 Main 가상화폐 추가
 	 * */
-	@RequestMapping(value = "/APIs/TakeVirtualMain", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/TakeVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String TakeVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -370,7 +390,7 @@ public class RAP_APIsController {
 	/**
 	 * 사용자의 Sub 가상화폐 조회
 	 * */
-	@RequestMapping(value = "/APIs/GetVirtualSub", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/GetVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String GetVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -384,7 +404,7 @@ public class RAP_APIsController {
 	/**
 	 * 사용자의 Sub 가상화폐 사용
 	 * */
-	@RequestMapping(value = "/APIs/UseVirtualSub", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/UseVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String UseVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
@@ -400,7 +420,7 @@ public class RAP_APIsController {
 	/**
 	 * 사용자의 Sub 가상화폐 추가
 	 * */
-	@RequestMapping(value = "/APIs/TakeVirtualSub", method = RequestMethod.GET)
+	@RequestMapping(value = "/APIs/TakeVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String TakeVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key

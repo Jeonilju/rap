@@ -6,8 +6,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import com.rap.activity.RAPBaseActivity;
 
 public class RAPUser {
 
@@ -23,7 +24,7 @@ public class RAPUser {
 	
 	/** 사용자 이름 반환*/
 	public static String getUserId(){
-		return Settings.Secure.ANDROID_ID;
+		return android.provider.Settings.Secure.getString(RAPBaseActivity.getLastContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 	}
 	
 	/** OS 버전 반환 */

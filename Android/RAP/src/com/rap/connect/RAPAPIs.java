@@ -1,16 +1,21 @@
 package com.rap.connect;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.Log;
 
 import com.rap.RAPSetting;
@@ -134,9 +139,8 @@ public class RAPAPIs {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * GPS 정보 전송
-	 * @param isMan	남자면 True, 여자면 False
-	 * @throws UnsupportedEncodingException 
+	 * GCM 정보 전송
+	 *  
 	 * */
 	public static HttpRequestBase UserInfo_GCM(String gcm_id) throws UnsupportedEncodingException{
 		
@@ -215,7 +219,13 @@ public class RAPAPIs {
 	public static HttpRequestBase UserInfo_Location(Context mContext) throws UnsupportedEncodingException{
 	
 		Log.i(TAG, "사용자 위치정보 API 호출");
-		Log.i(TAG, "lat/lon: " + RAPUser.getLocation(mContext).getLatitude() + "/" + RAPUser.getLocation(mContext).getLongitude());
+		Location userLocation = RAPUser.getLocation(mContext);
+		if(userLocation == null){
+			Log.e(TAG, "사용자의 위치정보를 가져올 수 없습니다.");
+			Log.e(TAG, "잠시후에 호출해주세요.");
+			return null;
+		}
+		Log.i(TAG, "lat/lon: " + userLocation.getLatitude() + "/" + userLocation.getLongitude());
 		
 		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/location");
 		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -316,6 +326,29 @@ public class RAPAPIs {
 		return httpPost;
 	}
 	
+	/**
+	 * 
+	 * */
+	public static HttpRequestBase UserInfo_GCM(int age) throws UnsupportedEncodingException{
+		
+		Log.i(TAG, "사용자 나이정보 API 호출2");
+		Log.i(TAG, "name: " + RAPUser.getUserId());
+		Log.i(TAG, "key: " + RAPSetting.getRAPKey());
+		Log.i(TAG, "Age: " + age);
+		
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/age");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("age", "" + age));
+		
+		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+		httpPost.setEntity(entityRequest);
+		//httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		
+		return httpPost;
+	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////														////////////////////////
 	///////////////////////						카테고리 정보						////////////////////////
@@ -324,18 +357,34 @@ public class RAPAPIs {
 	
 	public static HttpRequestBase GetCategoryL() {
 		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryL?project_key=" + RAPSetting.getRAPKey());
+		
 		HttpGet httpGet = new HttpGet(url);
 		return httpGet;
 	}
 	
 	public static HttpRequestBase GetCategoryM(String CategoryL) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryM?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL);
+		
+		List<NameValuePair> params = new LinkedList<NameValuePair>();
+		params.add(new BasicNameValuePair("project_key", RAPSetting.getRAPKey()));
+		params.add(new BasicNameValuePair("CategoryL", CategoryL));
+		
+		//String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryM?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL);
+		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryM?" + URLEncodedUtils.format(params, "UTF-8"));
+		
 		HttpGet httpGet = new HttpGet(url);
+		
 		return httpGet;
 	}
 	
 	public static HttpRequestBase GetCategoryS(String CategoryL, String CategoryM) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryS?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL  + "&CategoryM=" + CategoryM);
+		
+		List<NameValuePair> params = new LinkedList<NameValuePair>();
+		params.add(new BasicNameValuePair("project_key", RAPSetting.getRAPKey()));
+		params.add(new BasicNameValuePair("CategoryL", CategoryL));
+		params.add(new BasicNameValuePair("CategoryM", CategoryM));
+		
+		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryS?" + URLEncodedUtils.format(params, "UTF-8"));
+
 		HttpGet httpGet = new HttpGet(url);
 		return httpGet;
 	}

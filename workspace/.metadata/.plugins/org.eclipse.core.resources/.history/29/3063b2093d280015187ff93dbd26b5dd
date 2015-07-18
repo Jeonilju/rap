@@ -1,0 +1,7 @@
+package com.rap.iap;
+
+public class RAPCategoryL {
+	private int pk;
+	private String categoryL;
+	private Timestamp regDate;
+}
