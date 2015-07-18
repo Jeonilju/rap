@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo"%>
+	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
@@ -85,8 +85,13 @@ function getpromotionlist()
 				</div>
 
 				<%
-					String email = (String) session.getAttribute("email");
-					if (email == null || email.isEmpty()) {
+				MemberInfo member = (MemberInfo)session.getAttribute("currentmember");
+				String email = "";
+			
+				if(member != null) email = member.getEmail();
+			
+				if(email == null || email.isEmpty())
+				{
 				%>
 				<!-- 이메일이 세션에 존재하지 않는 경우 -->
 				<div class="panel panel-default" style="margin-top: 10px;">

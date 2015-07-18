@@ -12,7 +12,7 @@ public interface CategorySIDao {
 	void create(String Key, int categoryM_pk, String categoryS);
 	
 	List<CategorySInfo> select(String key);
-	List<CategorySInfo> select(String key, String categoryM);
+	List<CategorySInfo> select(String key, int categoryM_pk);
 	
 	void delete(String key, int categoryM_pk, String categoryS);
 	void delete(String key);

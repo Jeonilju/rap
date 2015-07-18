@@ -46,10 +46,10 @@ public class CategorySDao implements CategorySIDao{
 	}
 	
 	// TODO 쿼리문 작성해야됨
-	public List<CategorySInfo> select(String key, String categoryM)
+	public List<CategorySInfo> select(String key, int categoryM_pk)
 	{
-		return jdbcTemplate.query("select * from categorys where categoryM_pk = (select categorym.pk from categorym where project_key = ? and categorym = ?)",
-		    	new Object[] { key, categoryM }, new RowMapper<CategorySInfo>() {
+		return jdbcTemplate.query("select * from categorys where categoryM_pk = ? and project_key = ?",
+		    	new Object[] { categoryM_pk, key }, new RowMapper<CategorySInfo>() {
 		    	public CategorySInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
 		    		return new CategorySInfo(
