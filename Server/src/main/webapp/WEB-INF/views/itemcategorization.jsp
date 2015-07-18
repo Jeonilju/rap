@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page
-	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo
-	, com.rap.models.CategoryLInfo"%>
+	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
 <%
 	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
 	String currentprojectname = "";
@@ -24,31 +23,25 @@ function getLcategory()
 	$('#Lcategory1').html("<option value='' selected>해당없음</option>");
 	$('#Lcategory2').html("<option value='' selected>해당없음</option>");
 	$('#Lcategory3').html("<option value='' selected>해당없음</option>");
-		
+	
 	$.ajax({
 		url : "Lcategory_db",
 		type : "POST",
-		data : param,
 		dataType : "JSON",
 		success : function(data) {
 			
 			if(data!=null || data!="")
 			{
-
-				<%  		
-					List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>)request.getAttribute("categoryLlist");
-					int categoryLSize = categoryLlist.size();
+				var list = data.categoryLlist;
+				var listLen = list.length;
+				
+				for(var i=0;i<listLen;i++)
+				{
+					$('#Lcategory1').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
+					$('#Lcategory2').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
+					$('#Lcategory3').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
 					
-					for(int i=0;i<categoryLSize;i++)
-					{
-				%>
-				$('#Lcategory1').append("<option value='"+<%=categoryLlist.get(i).getCategoryL() %>+"'>"+list[i].categoryL+"</option>");
-				$('#Lcategory2').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-				$('#Lcategory3').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-				<%
-						
-					}
-				%>
+				}
 			}
 		},
 
@@ -65,8 +58,7 @@ function getMcategory(id)
 	$('#Mcategory'+id).html("<option value='' selected>해당없음</option>");
 	$('#Scategory'+id).html("<option value='' selected>해당없음</option>");
 	
-	var param = "project_name" + "=" + "<%=currentprojectname %>"+
-				"&categoryL=" + document.getElementById('Lcategory'+id).value;
+	var param = "categoryL=" + document.getElementById('Lcategory'+id).value;
 	
 	$.ajax({
 		url : "Mcategory_db",
@@ -99,8 +91,7 @@ function getScategory(id)
 {
 	$('#Scategory'+id).html("<option value='' selected>해당없음</option>");
 	
-	var param = "project_name" + "=" + "<%=currentprojectname %>"+
-		"&categoryM=" + document.getElementById('Mcategory'+id).value;
+	var param = "categoryM=" + document.getElementById('Mcategory'+id).value;
 	
 	$.ajax({
 		url : "Scategory_db",
