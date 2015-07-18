@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="OrderCompliteDig" key="selection"/>
+		<item value="GCM Mess" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="GCM Messa"/>
+			<item value="GCM Mess"/>
+			<item value="TAG"/>
+			<item value="GPS"/>
+			<item value="UserInfo_GCM"/>
+			<item value="위치"/>
 			<item value="&#x09;&#x09;&#x09;"/>
 			<item value="res"/>
-			<item value="OrderCompliteDig"/>
-			<item value="orderCompliteReq"/>
-			<item value="fin"/>
-			<item value="orderReq"/>
-			<item value="충전"/>
-			<item value="getUesingPoint"/>
 		</list>
 		<list key="replacehistory">
 		</list>

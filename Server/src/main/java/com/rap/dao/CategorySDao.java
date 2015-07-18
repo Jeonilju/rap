@@ -45,11 +45,14 @@ public class CategorySDao implements CategorySIDao{
 		    });
 	}
 	
-	// TODO 쿼리문 작성해야됨
-	public List<CategorySInfo> select(String key, String categoryM)
+	public List<CategorySInfo> select(String key, String categoryL, String categoryM)
 	{
-		return jdbcTemplate.query("select * from categorys where categoryM_pk = (select categorym.pk from categorym where project_key = ? and categorym = ?)",
-		    	new Object[] { key, categoryM }, new RowMapper<CategorySInfo>() {
+		return jdbcTemplate.query("select * from categorys where "
+				+ "categoryM_pk = (select categorym.pk from categorym where project_key = ? and "
+					+ "categoryL_pk = (select categoryl.pk from categoryl where project_key = ? and categoryl = ?)"
+					+ " and categorym = ?"
+				+ ") and project_key = ?",
+		    	new Object[] { key,key, categoryL, categoryM, key }, new RowMapper<CategorySInfo>() {
 		    	public CategorySInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
 		    		return new CategorySInfo(

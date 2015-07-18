@@ -17,7 +17,7 @@ import android.util.Log;
 
 public class RAPHttpClient {
 
-	public static final String HOST = "192.168.0.20";
+	public static final String HOST = "192.168.219.172";
 	public static final int PORT = 8080;
 	
 	private static final String TAG = "RAPHttpClient";
@@ -48,10 +48,14 @@ public class RAPHttpClient {
 					Bundle data = new Bundle();
 					data.putString("res", RAPHttpClient.getInstance().excute(request));
 					msg.setData(data);
-					//callback.sendMessage(msg);
+					
+					if(callback != null)
+						callback.sendMessage(msg);
 				} catch (Exception e) {
 					e.printStackTrace();
-					//callback.sendEmptyMessage(-1);
+					
+					if(callback != null)
+						callback.sendEmptyMessage(-1);
 				}
 			}
 		}).start();

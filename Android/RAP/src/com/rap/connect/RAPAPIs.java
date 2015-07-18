@@ -1,13 +1,17 @@
 package com.rap.connect;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
@@ -353,18 +357,34 @@ public class RAPAPIs {
 	
 	public static HttpRequestBase GetCategoryL() {
 		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryL?project_key=" + RAPSetting.getRAPKey());
+		
 		HttpGet httpGet = new HttpGet(url);
 		return httpGet;
 	}
 	
 	public static HttpRequestBase GetCategoryM(String CategoryL) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryM?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL);
+		
+		List<NameValuePair> params = new LinkedList<NameValuePair>();
+		params.add(new BasicNameValuePair("project_key", RAPSetting.getRAPKey()));
+		params.add(new BasicNameValuePair("CategoryL", CategoryL));
+		
+		//String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryM?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL);
+		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryM?" + URLEncodedUtils.format(params, "UTF-8"));
+		
 		HttpGet httpGet = new HttpGet(url);
+		
 		return httpGet;
 	}
 	
 	public static HttpRequestBase GetCategoryS(String CategoryL, String CategoryM) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryS?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL  + "&CategoryM=" + CategoryM);
+		
+		List<NameValuePair> params = new LinkedList<NameValuePair>();
+		params.add(new BasicNameValuePair("project_key", RAPSetting.getRAPKey()));
+		params.add(new BasicNameValuePair("CategoryL", CategoryL));
+		params.add(new BasicNameValuePair("CategoryM", CategoryM));
+		
+		String url = (RAPHttpClient.getBaseURL() + "/APIs/getCategoryS?" + URLEncodedUtils.format(params, "UTF-8"));
+
 		HttpGet httpGet = new HttpGet(url);
 		return httpGet;
 	}
