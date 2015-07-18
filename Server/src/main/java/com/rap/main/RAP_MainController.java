@@ -64,12 +64,15 @@ public class RAP_MainController {
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
 		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
-
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-		request.setAttribute("projectlist", projectlist);
-		request.setAttribute("projectcount", projectlist.size());
-
+		
+		if(member != null)
+		{
+			int member_pk = member.getPk();
+	
+			List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+			request.setAttribute("projectlist", projectlist);
+			request.setAttribute("projectcount", projectlist.size());
+		}
 		return "projecthome";
 	}
 
