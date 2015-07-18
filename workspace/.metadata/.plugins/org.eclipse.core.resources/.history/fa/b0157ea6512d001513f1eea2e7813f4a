@@ -1,0 +1,138 @@
+package com.klt.activity;
+
+import java.io.IOException;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.klt.BaseActivity;
+import com.klt.R;
+import com.klt.connectior.KLTAPIs_User;
+import com.klt.connectior.KLTHttpClient;
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+
+public class SigninActivity extends BaseActivity{
+
+	Button btn_login, btn_signup;
+	EditText et_id, et_pw;
+	private CheckBox signup_cb_autologin;
+	
+	String id, pw;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		setContentView(R.layout.activity_signin);
+		setTitle(getString(R.string.title_signin));
+		super.onCreate(savedInstanceState, this);
+		
+		initResource();
+		initDump();
+		initEvent();
+	}
+
+	private void initResource(){
+		btn_login = (Button) findViewById(R.id.login_btn);
+		btn_signup = (Button) findViewById(R.id.login_join_now);
+		
+		signup_cb_autologin = (CheckBox)findViewById(R.id.login_cb_autologin);
+		
+		et_id = (EditText) findViewById(R.id.login_id_edt);
+		et_pw = (EditText) findViewById(R.id.login_pw_edt);
+	}
+	
+	private void initDump(){
+		et_id.setText(Preference.getString(SigninActivity.this, Conf.PREFERENCE_ID));
+		et_pw.setText(Preference.getString(SigninActivity.this, Conf.PREFERENCE_PW));
+		signup_cb_autologin.setChecked(Preference.getBoolean(SigninActivity.this, Conf.PREFERENCE_AUTO));
+	}
+	
+	private void initEvent(){
+		btn_login.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				id = et_id.getText().toString();
+				pw = et_pw.getText().toString();
+				
+				
+				try {
+					HttpRequestBase req = KLTAPIs_User.Login(id, pw);
+					KLTHttpClient.getInstance().background(req, loginCallback);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		btn_signup.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(SigninActivity.this, SignupConditionActivity.class);
+				startActivity(intent);
+			}
+		});
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+	
+	Handler loginCallback = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(SigninActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						Preference.putString(SigninActivity.this, Conf.PREFERENCE_ID, et_id.getText().toString());
+						Preference.putString(SigninActivity.this, Conf.PREFERENCE_PW, et_pw.getText().toString());
+						Preference.putBoolean(SigninActivity.this, Conf.PREFERENCE_ISLOGIN, true);
+						if(signup_cb_autologin.isChecked()){
+							// 자동 로그인
+							Preference.putBoolean(SigninActivity.this, Conf.PREFERENCE_AUTO, true);
+						}
+						else{
+							Preference.putBoolean(SigninActivity.this, Conf.PREFERENCE_AUTO, false);
+						}
+						finish();
+						break;
+					case 401:
+						Toast.makeText(SigninActivity.this, "잘못된 비밀번호 입니다. 확인후 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+						break;
+					case 404:
+						Toast.makeText(SigninActivity.this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
+						break;
+					default:
+						Toast.makeText(SigninActivity.this, "알수없는 요청입니다.\n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+}

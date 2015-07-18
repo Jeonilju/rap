@@ -45,6 +45,22 @@ public class CategorySDao implements CategorySIDao{
 		    });
 	}
 	
+	public List<CategorySInfo> select(String key, int categoryM_pk)
+	{
+		return jdbcTemplate.query("select * from categorys where categoryM_pk = ? and project_key = ?",
+		    	new Object[] { categoryM_pk, key }, new RowMapper<CategorySInfo>() {
+		    	public CategorySInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new CategorySInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryS")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getInt("categoryM_pk"));
+		    	}
+		    });
+	}
+	
 	public List<CategorySInfo> select(String key, String categoryL, String categoryM)
 	{
 		return jdbcTemplate.query("select * from categorys where "

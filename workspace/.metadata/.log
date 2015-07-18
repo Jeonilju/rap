@@ -2559,3 +2559,15 @@ user global configuration and to define the default location to store repositori
 not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
 EGit might behave differently since they see different configuration options.
 This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2015-07-18 22:32:05.680
+!MESSAGE Can't find file F:\Data\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\google\google_play_services\libproject\google-play-services_lib\.classpath in workspace
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2015-07-18 22:33:36.812
+!MESSAGE Can't find file F:\Data\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\google\google_play_services\libproject\google-play-services_lib\.classpath in workspace
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2015-07-18 22:33:49.467
+!MESSAGE Can't find file F:\Data\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\google\google_play_services\libproject\google-play-services_lib\.classpath in workspace
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2015-07-18 22:34:02.656
+!MESSAGE Can't find file F:\Data\adt-bundle-windows-x86_64-20140702\adt-bundle-windows-x86_64-20140702\sdk\extras\google\google_play_services\libproject\google-play-services_lib\.classpath in workspace

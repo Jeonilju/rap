@@ -11,7 +11,8 @@ public interface CategoryMIDao {
 	void create(String Key, int categoryL_pk, String categoryM);
 	
 	List<CategoryMInfo> select(String key);
-	List<CategoryMInfo> select(String key, String categoryM);
+	List<CategoryMInfo> select(String key, int categoryL_pk);
+	List<CategoryMInfo> select(String key, String categoryL);
 	
 	void delete(String key, int categoryL_pk, String categoryM);
 	void delete(String key);

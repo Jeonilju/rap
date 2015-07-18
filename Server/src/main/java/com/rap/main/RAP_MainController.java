@@ -441,7 +441,7 @@ public class RAP_MainController {
 	public String MainController_Scategory_db(HttpServletRequest request,
  			HttpServletResponse response,
 			 @RequestParam("project_name") String project_name,
-			 @RequestParam("categoryM") String categoryM
+			 @RequestParam("categoryM") int categoryM
 			 ) {
 		logger.info("Scategory_db Page");
 		

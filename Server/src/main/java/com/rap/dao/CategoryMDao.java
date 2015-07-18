@@ -48,7 +48,22 @@ public class CategoryMDao implements CategoryMIDao{
 		    });
 	}
 	
-	// TODO 쿼리문 작업해야됨
+	public List<CategoryMInfo> select(String key, int categoryL_pk){
+		return jdbcTemplate.query("select * from categorym where categoryL_pk = ? and project_key = ?",
+		    	new Object[] { categoryL_pk,key }, new RowMapper<CategoryMInfo>() {
+		    	public CategoryMInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new CategoryMInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryM")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getInt("categoryL_pk"));
+		    	}
+		    });
+	}
+
+	
 	public List<CategoryMInfo> select(String key, String categoryL){
 		return jdbcTemplate.query("select * from categorym where categoryL_pk = (select categoryl.pk from categoryl where project_key = ? and categoryl = ?)",
 		    	new Object[] { key, categoryL }, new RowMapper<CategoryMInfo>() {
