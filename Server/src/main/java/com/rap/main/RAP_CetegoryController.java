@@ -53,70 +53,67 @@ public class RAP_CetegoryController {
 	public String MainController_Lcategory_db(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Lcategory_db Page");
 
+		JSONObject jObject = new JSONObject();
+		
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
-		MemberInfo currentmember = (MemberInfo)session.getAttribute("currentmember");
+		//MemberInfo currentmember = (MemberInfo)session.getAttribute("currentmember");
 		
-		String project_name = currentproject.getProject_name();
-
-		// 프로젝트 이름 존재 x
-		if (project_name == null)
+		//세션에 프로젝트 존재 X
+		if(currentproject == null)
 			return "1";
-		if (project_name.isEmpty())
-			return "1";
-
+		
 		String project_key = currentproject.getPk();
 		
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "";
+			return "2";
 		if (project_key.isEmpty())
-			return "";
+			return "2";
 		
 		//대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
 		
 		request.setAttribute("categoryLlist", categoryLlist);
 
-		return "200";
+		jObject.put("categoryLlist", categoryLlist);
+		logger.info(jObject.toString());
+
+		return jObject.toString();
 
 	}
 
 	@RequestMapping(value = "/Mcategory_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String MainController_Mcategory_db(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("categoryL") String categoryL) {
+			@RequestParam("categoryL") String categoryL) {
 		logger.info("Mcategory_db Page");
 
-		String project_key = "";
 		JSONObject jObject = new JSONObject();
-
-		// 프로젝트 이름 존재 x
-		if (project_name == null)
-			return "";
-		if (project_name.isEmpty())
-			return "";
-
-		// 세션 객체 생성
+		
+		//세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
-
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
-
+		ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
+		
+		//세션에 프로젝트 존재 X
+		if(currentproject == null)
+			return "1";
+		
+		String project_key = currentproject.getPk();
+		
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "";
+			return "2";
 		if (project_key.isEmpty())
-			return "";
+			return "2";
 
+		//대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+		
+		if(categoryLlist == null) return "3";
+		
+		logger.info(categoryLlist.toString());
+		
 		int categoryLlistcount = categoryLlist.size();
 		int categoryL_pk = -1;
 
@@ -126,9 +123,6 @@ public class RAP_CetegoryController {
 		}
 
 		logger.info("categoryL_pk = "+categoryL_pk);
-		if (categoryL_pk == -1)
-			return "";
-
 		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
 
 		jObject.put("categoryMlist", categoryMlist);
@@ -143,35 +137,27 @@ public class RAP_CetegoryController {
 			@RequestParam("project_name") String project_name, @RequestParam("categoryM") String categoryM) {
 		logger.info("Scategory_db Page");
 
-		String project_key = "";
 		JSONObject jObject = new JSONObject();
-
-		// 프로젝트 이름 존재 x
-		if (project_name == null)
-			return "";
-		if (project_name.isEmpty())
-			return "";
-
-		// 세션 객체 생성
+		
+		//세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
-
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
-
+		ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
+		
+		//세션에 프로젝트 존재 X
+		if(currentproject == null)
+			return "1";
+		
+		String project_key = currentproject.getPk();
+		
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "";
+			return "2";
 		if (project_key.isEmpty())
-			return "";
+			return "2";
 
+		//대분류 리스트
 		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key);
+		
 		int categoryMlistcount = categoryMlist.size();
 		int categoryM_pk = -1;
 
