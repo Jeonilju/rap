@@ -203,4 +203,34 @@ public class UserDao implements UserIDao{
 			create(project_key, name);
 		}
 	}
+	
+	
+	
+	
+	public int countSex(String project_key, int sex){
+		logger.info("count sex");
+		List<UserInfo> result = jdbcTemplate.query("select * from user where project_key=? AND sex=?",
+		    	new Object[] { project_key,sex }, new RowMapper<UserInfo>() {
+		    	public UserInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new UserInfo(resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				,resultSet.getString("gcm_id")
+		    				, resultSet.getInt("grade_time")
+		    				, resultSet.getInt("grade_money")
+		    				, resultSet.getDouble("position_let")
+		    				, resultSet.getDouble("position_lon")
+		    				, resultSet.getInt("sex")
+		    				, resultSet.getString("os_version")
+		    				, resultSet.getString("device_version")
+		    				, resultSet.getInt("age")
+		    				, resultSet.getInt("count")
+		    				, resultSet.getInt("virtual_main")
+		    				, resultSet.getInt("virtual_sub")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		return result.size();
+	}	
+	
 }
