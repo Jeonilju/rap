@@ -1,0 +1,493 @@
+package com.klt.activity;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.klt.BaseActivity;
+import com.klt.R;
+import com.klt.connectior.KLTAPIs;
+import com.klt.connectior.KLTAPIs_Order;
+import com.klt.connectior.KLTHttpClient;
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+
+public class AddOrderActivity extends BaseActivity {
+
+	private EditText etDate, etWeight, etHeight, etPhone1, etPhone2, etPhone3,
+			etAddress1, etAddress2, etPay;
+	private Button btnCalendar, btnHeight, btnOrderAdd;
+
+	private int hight = 2;
+	private double wheigh = 1.0;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		setContentView(R.layout.activity_add_order);
+		setTitle(getString(R.string.title_order_add));
+		super.onCreate(savedInstanceState, this);
+
+		initResource();
+		initEvent();
+		initDump();
+	}
+
+	private void initResource() {
+		etDate = (EditText) findViewById(R.id.add_order_et_move_datetime);
+		etWeight = (EditText) findViewById(R.id.add_order_et_move_t);
+		etHeight = (EditText) findViewById(R.id.add_order_et_move_height);
+		etPhone1 = (EditText) findViewById(R.id.add_order_et_move_phone1);
+		etPhone2 = (EditText) findViewById(R.id.add_order_et_move_phone2);
+		etPhone3 = (EditText) findViewById(R.id.add_order_et_move_phone3);
+		etAddress1 = (EditText) findViewById(R.id.add_order_et_move_address1);
+		etAddress2 = (EditText) findViewById(R.id.add_order_et_move_address2);
+		etPay = (EditText) findViewById(R.id.add_order_et_move_pay);
+
+		btnCalendar = (Button) findViewById(R.id.add_order_btn_move_datetime);
+		btnHeight = (Button) findViewById(R.id.add_order_btn_move_height);
+		
+		btnOrderAdd = (Button) findViewById(R.id.add_order_btn_move_register);
+	}
+
+	private void initDump(){
+		String phoneNum1 = Preference.getString(AddOrderActivity.this, Conf.PREFERENCE_PHONE1);
+		String phoneNum2 = Preference.getString(AddOrderActivity.this, Conf.PREFERENCE_PHONE2);
+		String phoneNum3 = Preference.getString(AddOrderActivity.this, Conf.PREFERENCE_PHONE3);
+		
+		etPhone1.setText(phoneNum1);
+		etPhone2.setText(phoneNum2);
+		etPhone3.setText(phoneNum3);
+	}
+	
+	private void initEvent() {
+
+		etDate.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showDateDig();
+			}
+		});
+
+		etWeight.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showWhightDig();
+			}
+		});
+
+		etHeight.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showHightDig();
+			}
+		});
+
+		etAddress1.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showAddressDig();
+			}
+		});
+
+		btnCalendar.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showDateDig();
+			}
+		});
+
+		btnHeight.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				showHightDig();
+			}
+		});
+		
+		btnOrderAdd.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					
+					if(etDate.getText().toString().equals("")
+							|| etWeight.getText().toString().equals("")
+							|| etHeight.getText().toString().equals("")
+							|| etPhone1.getText().toString().equals("")
+							|| etPhone2.getText().toString().equals("")
+							|| etPhone3.getText().toString().equals("")
+							|| etAddress1.getText().toString().equals("")
+							|| etAddress2.getText().toString().equals("")
+							|| etPay.getText().toString().equals("")){
+						Toast.makeText(AddOrderActivity.this, "입력값을 모두 입력해 주세요.", Toast.LENGTH_SHORT).show();
+						return;
+					}
+					
+					String username = Preference.getString(AddOrderActivity.this, Conf.PREFERENCE_ID); 
+					String password = Preference.getString(AddOrderActivity.this, Conf.PREFERENCE_PW);;
+					String date = etDate.getText().toString();
+					float ton = (float) wheigh;
+					int floor = Integer.parseInt(etHeight.getText().toString());
+					String phone = etPhone1.getText().toString() + etPhone2.getText().toString() + etPhone3.getText().toString(); 
+					String address = etAddress1.getText().toString();
+					String detail_address = etAddress2.getText().toString();
+					int price = Integer.parseInt(etPay.getText().toString().substring(0, etPay.getText().toString().indexOf(".")));
+					
+					HttpRequestBase req = KLTAPIs_Order.OrderRegister(username, password, date, ton, floor, phone, address, detail_address, price);
+					KLTHttpClient.getInstance().background(req, addOrder);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				
+			}
+		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	/** 날짜 설정 다이얼로그 */
+	private void showDateDig() {
+		GregorianCalendar calendar = new GregorianCalendar();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+		new DatePickerDialog(AddOrderActivity.this, dateSetListener, year,
+				month, day).show();
+	}
+
+	/** 날짜 설정 다이얼로그 */
+	private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			String msg = String.format("%d-%d-%d", year, monthOfYear + 1,
+					dayOfMonth);
+			etDate.setText(msg);
+			Toast.makeText(AddOrderActivity.this, msg, Toast.LENGTH_SHORT)
+					.show();
+		}
+	};
+
+	/** 높이 설정 다이얼로그 */
+	private void showHightDig() {
+		final Dialog d = new Dialog(AddOrderActivity.this);
+
+		d.setTitle("높이 설정");
+		d.setContentView(R.layout.dialog_number_picker);
+
+		Button b1 = (Button) d.findViewById(R.id.numberPicker_btn_cancel);
+		Button b2 = (Button) d.findViewById(R.id.numberPicker_btn_set);
+		NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
+
+		np.setMaxValue(27); // max value 100
+		np.setMinValue(2); // min value 0
+		np.setWrapSelectorWheel(false);
+		np.setOnValueChangedListener(new OnValueChangeListener() {
+
+			@Override
+			public void onValueChange(NumberPicker picker, int oldVal,
+					int newVal) {
+				// etWeight.setText(newVal);
+				hight = newVal;
+			}
+		});
+
+		b1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				d.dismiss();
+				etHeight.setText("" + hight);
+				ChackPayStatus();
+			}
+		});
+		b2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				d.dismiss(); // dismiss the dialog
+				etHeight.setText("" + hight);
+				ChackPayStatus();
+			}
+		});
+		d.show();
+	}
+
+	/** 무게 설정 다이얼로그 */
+	public void showWhightDig() {
+		final Dialog d = new Dialog(AddOrderActivity.this);
+		d.setTitle("무게 설정");
+		d.setContentView(R.layout.dialog_whight_picker);
+
+		Button b1 = (Button) d.findViewById(R.id.numberPicker_btn_cancel);
+		Button b2 = (Button) d.findViewById(R.id.numberPicker_btn_set);
+		Spinner whightSp = (Spinner) d.findViewById(R.id.whight_picker);
+
+		final ArrayList<String> whightList = new ArrayList<String>();
+		whightList.add("1톤 미만");
+		whightList.add("1톤 이상 5톤 이하");
+		whightList.add("6톤");
+		whightList.add("7.5톤");
+		whightList.add("10톤");
+		whightList.add("11톤");
+		whightList.add("12.5톤");
+		whightList.add("15톤");
+		
+		ArrayAdapter<String> whightAdapter = new ArrayAdapter<String>(AddOrderActivity.this, android.R.layout.simple_spinner_dropdown_item, whightList);
+		whightSp.setPrompt("무게를 선택해주세요");
+		whightSp.setAdapter(whightAdapter);
+		whightSp.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				switch (position) {
+				case 0:
+					wheigh = 1;
+					break;
+				case 1:
+					wheigh = 2;
+					break;
+				case 2:
+					wheigh = 6;
+					break;
+				case 3:
+					wheigh = 7.5;
+					break;
+				case 4:
+					wheigh = 10;
+					break;
+				case 5:
+					wheigh = 11;
+					break;
+				case 6:
+					wheigh = 12.5;
+					break;
+				case 7:
+					wheigh = 15;
+					break;
+
+				default:
+					break;
+				}
+				//wheigh = whightList.get(position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+			
+		});
+
+		b1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				d.dismiss();
+			}
+		});
+		b2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				d.dismiss();
+				if(wheigh == 1){
+					etWeight.setText("1톤 미만");
+				}
+				else if(wheigh == 2){
+					etWeight.setText("2톤이상 5톤이하");
+				}
+				else {
+					etWeight.setText("" + wheigh + " 톤");
+				}
+				ChackPayStatus();
+			}
+		});
+		d.show();
+	}
+
+	/** 주소 다이얼로그 */
+	private void showAddressDig() {
+		Intent intent = new Intent(AddOrderActivity.this, AddressActivity.class);
+		startActivity(intent);
+
+		AddressActivity.setHandler(new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				Bundle bundle = msg.getData();
+				String address = bundle.getString("Address");
+
+				etAddress1.setText(address);
+				ChackPayStatus();
+			}
+		});
+	}
+	
+	/** Pay를 계산해도 되는지 여부 */
+	private void ChackPayStatus(){
+		
+		if(etWeight.getText().toString().equals("")
+				|| etHeight.getText().toString().equals("")
+				|| etAddress1.getText().toString().equals(""))
+		{
+			return;
+		}
+		
+		try {
+			float ton = (float) wheigh;
+			int floor = Integer.parseInt(etHeight.getText().toString());
+			String address = etAddress1.getText().toString();
+			
+			HttpRequestBase req = KLTAPIs.getPay(ton, floor, address);
+			KLTHttpClient.getInstance().background(req, getPay);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void AddOrder()
+	{
+		final Dialog d = new Dialog(AddOrderActivity.this);
+
+		d.setTitle("등록 완료");
+		d.setContentView(R.layout.dialog_order_add);
+		Button b1 = (Button) d.findViewById(R.id.order_add_dig_btn);
+		
+		b1.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				d.dismiss();
+				Intent intent = new Intent(AddOrderActivity.this, MyPageActivity.class);
+				startActivity(intent);
+			}
+		});
+
+		d.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				finish();
+			}
+		});
+		
+		d.show();
+	}
+	
+	Handler getPay = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(AddOrderActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						Toast.makeText(AddOrderActivity.this, "금액 받아옴", Toast.LENGTH_SHORT).show();
+						
+						JSONObject res = new JSONObject(json.getString("res"));
+						etPay.setText("" + res.getDouble("price") + " 만원");
+						break;
+					case 500:
+						ShowDig("가격정보가 없습니다.\n아래 번호로 문의해주세요.\n" + Conf.PHONE);
+						break;
+					default:
+						Toast.makeText(AddOrderActivity.this, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	Handler addOrder = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(AddOrderActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						AddOrder();	// 성공
+						break;
+					case 500:
+						break;
+					default:
+						Toast.makeText(AddOrderActivity.this, "알수없는 요청입니다. \n" + msg.getData().getString("res"), Toast.LENGTH_SHORT).show();
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	private void ShowDig(String message){
+		Log.e(TAG, "Show Dialog: " + message);
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(AddOrderActivity.this);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton(getString(R.string.close),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int id) {
+								
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("");
+		alert.show();
+	}
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.rap"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="21" />
+
+    <!-- Base -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    
+    <!-- GCM -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="com.rap.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.rap.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <!-- GPS -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
+    <!-- 진동 -->
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.rap.example.RAP_MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name="com.rap.example.IAPSampleActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.rap.example.SampleActivity1" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.rap.example.SampleActivity2" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.rap.example.SampleActivity3" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.rap.example.SampleActivity4" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.rap.example.SampleActivity5" android:screenOrientation="portrait"></activity>
+        
+    	<!-- GCM Receiver -->
+		<receiver
+           	android:name="com.rap.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<action android:name="android.intent.action.REBOOT" />
+                <category android:name="com.rap" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.rap.gcm.GCMIntentService" />
+        
+    </application>
+
+</manifest>

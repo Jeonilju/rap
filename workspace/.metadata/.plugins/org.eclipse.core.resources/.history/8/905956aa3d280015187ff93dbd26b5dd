@@ -1,0 +1,19 @@
+package com.rap.iap;
+
+import java.sql.Timestamp;
+
+public class RAPIapInfo {
+	private int pk;
+	private String Name;
+	private int PriceReal;
+	private int PriceMain;
+	private int PriceSub;
+	private int type;
+	private RAPPriceType PriceType;
+	private String imagePath;
+	private Timestamp regDate;
+	
+	private String categoryL;
+	private String categoryM;
+	private String categoryS;
+}

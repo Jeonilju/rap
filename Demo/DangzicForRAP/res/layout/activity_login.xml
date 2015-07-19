@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <EditText
+            android:id="@+id/login_id_edt"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="40dp"
+            android:hint="아이디"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+
+        <EditText
+            android:id="@+id/login_pw_edt"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_id_edt"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="5dp"
+            android:hint="비밀번호"
+            android:password="true"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff" />
+
+        <CheckBox
+            android:id="@+id/login_cb_autologin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/login_pw_edt"
+            android:layout_below="@id/login_pw_edt"
+            android:layout_margin="10dp"
+            android:text="자동로그인"
+            android:textColor="#ffffff" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_cb_autologin"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="5dp" >
+
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/login_btn" />
+            
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

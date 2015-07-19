@@ -1,0 +1,13 @@
+package com.rap.iap;
+
+import java.sql.Timestamp;
+
+public class RAPVirtualSub {
+	private int pk;
+	private String name;
+	private int price;
+	private String imagePath;
+	private String description;
+	private Timestamp regDate;
+	
+}
