@@ -58,9 +58,7 @@ public class RAP_CetegoryController {
 
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-		// MemberInfo currentmember =
-		// (MemberInfo)session.getAttribute("currentmember");
-
+		
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
 			return "Project Not Found";
@@ -207,9 +205,7 @@ public class RAP_CetegoryController {
 	public String registerLcategory(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("Lcategory") String Lcategory) {
 		logger.info("registerLcategory pages");
-
-		JSONObject jObject = new JSONObject();
-
+		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
@@ -236,14 +232,11 @@ public class RAP_CetegoryController {
 
 		logger.info("카테고리명 존재");
 
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 		int categoryLlistcount = categoryLlist.size();
 
-		for (int i = 0; i < categoryLlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categoryLlist.get(i).getCategoryL().equals(Lcategory))
-				return "Lcategory already exist";
-		}
+		if(categoryLlistcount > 0)
+			return "Lcategory already exist";
 
 		logger.info("같은 이름의 카테고리 없음");
 		categoryLDao.create(project_key, Lcategory);
@@ -293,28 +286,22 @@ public class RAP_CetegoryController {
 			return "Enter Mcategory";
 		logger.info("중분류 존재");
 
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-		int categoryLlistcount = categoryLlist.size();
-		int categoryL_pk = -1;
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 
-		for (int i = 0; i < categoryLlistcount; i++) {
-			if (categoryLlist.get(i).equals(Lcategory))
-				categoryL_pk = categoryLlist.get(i).getPk();
-		}
-
-		// 대분류 pk가 존재하지 않는경우
-		if (categoryL_pk == -1)
+		if(categoryLlist == null)
 			return "error";
+		
+		int categoryL_pk = categoryLlist.get(0).getPk();
 
-		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
-		int categoryMlistcount = categoryMlist.size();
-
-		for (int i = 0; i < categoryMlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categoryMlist.get(i).getCategoryM().equals(Mcategory))
-				return "error";
-		}
-
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
+		if(categoryMlist == null)
+			{		logger.info("중분류가 null");
+return "error";}
+		
+		if(categoryMlist.size() > 0)
+			{logger.info("중분류사이즈 >0");
+			return "Mcategory already exist";}
+		
 		logger.info("같은 이름의 카테고리 없음");
 		categoryMDao.create(project_key, categoryL_pk, Mcategory);
 
@@ -371,54 +358,32 @@ public class RAP_CetegoryController {
 			return "Enter Scategory";
 		logger.info("소분류 존재");
 
-		// 대분류 리스트
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+		//대분류
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 
-		if (categoryLlist == null)
+		if(categoryLlist == null)
+			return "error";
+		
+		int categoryL_pk = categoryLlist.get(0).getPk();
+
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
+		if(categoryMlist == null)
 			return "error";
 
-		int categoryLlistcount = categoryLlist.size();
-		int categoryL_pk = -1;
+		int categoryM_pk = categoryMlist.get(0).getPk();
 
-		for (int i = 0; i < categoryLlistcount; i++) {
-			if (categoryLlist.get(i).getCategoryL().equals(Lcategory))
-				categoryL_pk = categoryLlist.get(i).getPk();
-		}
-
-		// 대분류 pk 존재하지 않는 경우
-		if (categoryL_pk == -1)
-			return "error";
-
-		// 중분류 리스트
-		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
-		int categoryMlistcount = categoryMlist.size();
-		int categoryM_pk = -1;
-
-		for (int i = 0; i < categoryMlistcount; i++) {
-			if (categoryMlist.get(i).getCategoryM().equals(Mcategory))
-				categoryM_pk = categoryMlist.get(i).getPk();
-		}
-
-		// 중분류 pk 존재하지 않는 경우
-		if (categoryM_pk == -1)
-			return "error";
-
-		List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM_pk);
+		List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM_pk, Scategory);
 		int categorySlistcount = categorySlist.size();
 
-		logger.info("소분류이미 존재하는지 체크");
-		for (int i = 0; i < categorySlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categorySlist.get(i).getCategoryS().equals(Scategory))
-				return "Scategory already exist";
-		}
-
+		if(categorySlistcount>0)
+			return "Scategory already exist";
+		
 		logger.info("같은 이름의 카테고리 없음");
 		categorySDao.create(project_key, categoryM_pk, Scategory);
 
 		return "200";
 	}
-	
+
 	/** 대분류 삭제 */
 	@RequestMapping(value = "/deleteLcategory", method = RequestMethod.POST)
 	@ResponseBody
@@ -445,9 +410,9 @@ public class RAP_CetegoryController {
 		// 대분류명 존재 X
 		if (Lcategory == null)
 			return "3";
-		
+
 		categoryLDao.delete(project_key, Lcategory);
-		
+
 		return "200";
 	}
 
@@ -455,8 +420,7 @@ public class RAP_CetegoryController {
 	@RequestMapping(value = "/deleteMcategory", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteMcategory(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("Lcategory") String Lcategory,
-			@RequestParam("Mcategory") String Mcategory) {
+			@RequestParam("Lcategory") String Lcategory, @RequestParam("Mcategory") String Mcategory) {
 		logger.info("deleteMcategory pages");
 
 		// 세션 객체 생성
@@ -491,21 +455,87 @@ public class RAP_CetegoryController {
 			return "Enter Mcategory";
 		logger.info("중분류 존재");
 
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-		int categoryLlistcount = categoryLlist.size();
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 		int categoryL_pk = -1;
-
-		for (int i = 0; i < categoryLlistcount; i++) {
-			if (categoryLlist.get(i).equals(Lcategory))
-				categoryL_pk = categoryLlist.get(i).getPk();
-		}
-
-		// 대분류 pk가 존재하지 않는경우
-		if (categoryL_pk == -1)
-			return "error";
 		
+		//카테고리가 존재하지않을 때
+		if(categoryLlist == null) return "error";
+		
+		categoryL_pk = categoryLlist.get(0).getPk();
+
+		logger.info("categoryL_pk = "+categoryL_pk);
 		categoryMDao.delete(project_key, categoryL_pk, Mcategory);
+
+		return "200";
+	}
+
+	/** 소분류 삭제 */
+	@RequestMapping(value = "/deleteScategory", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteScategory(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("Lcategory") String Lcategory, @RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory) {
+		logger.info("deleteScategory pages");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "Project Not Found";
+		if (project_key.isEmpty())
+			return "Project Not Found";
+
+		logger.info("프로젝트 존재");
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "Enter Lcategory";
+		if (Lcategory.isEmpty())
+			return "Enter Lcategory";
+		logger.info("대분류 존재");
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "Enter Mcategory";
+		if (Mcategory.isEmpty())
+			return "Enter Mcategory";
+		logger.info("중분류 존재");
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+			return "Enter Scategory";
+		if (Scategory.isEmpty())
+			return "Enter Scategory";
+		logger.info("소분류 존재");
+
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
+		int categoryL_pk = -1;
 		
+		//카테고리가 존재하지않을 때
+		if(categoryLlist == null) return "error";
+		
+		categoryL_pk = categoryLlist.get(0).getPk();
+
+		logger.info("categoryL_pk = "+categoryL_pk);
+
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
+		int categoryM_pk = -1;
+		
+		//카테고리가 존재하지 않을 때
+		if(categoryMlist == null) return "error";
+		categoryM_pk = categoryMlist.get(0).getPk();
+		
+		//소분류 삭제
+		categorySDao.delete(project_key, categoryM_pk, Scategory);
+
 		return "200";
 	}
 }

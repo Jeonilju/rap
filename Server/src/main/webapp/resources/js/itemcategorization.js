@@ -292,3 +292,44 @@ function deleteMcategory(id) {
 	});
 	
 }
+
+
+function deleteScategory(id) {
+
+	var Scategory = document.getElementById(id);
+	var Mcategory = document.getElementById('Mcategory3');
+	var Lcategory = document.getElementById('Lcategory3');
+	
+	var param = "Lcategory" + "=" + Lcategory.value + "&" 
+				+ "Mcategory" + "=" + Mcategory.value + "&" 
+				+ "Scategory" + "=" + Scategory.value;
+	
+	$.ajax({
+		url : "deleteScategory",
+		type : "POST",
+		data : param,
+		dataType : "text",
+		success : function(data) {
+			if(data == "200")
+				alert("소분류가 삭제되었습니다.");
+			else if(data == "Project Not Found")
+				alert("프로젝트가 존재하지않습니다.");
+			else if(data == "Enter Lcategory")
+				alert("대분류명을 입력해주세요");
+			else if(data == "Enter Mcategory")
+				alert("중분류명을 입력해주세요");
+			else if(data == "Enter Scategory")
+				alert("소분류명을 입력해주세요");
+			else
+				alert("에러가 발생했습니다.");
+		},
+
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+	
+}
