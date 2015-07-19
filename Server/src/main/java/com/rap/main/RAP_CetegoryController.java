@@ -54,70 +54,67 @@ public class RAP_CetegoryController {
 	public String MainController_Lcategory_db(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Lcategory_db Page");
 
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
-		MemberInfo currentmember = (MemberInfo)session.getAttribute("currentmember");
-		
-		String project_name = currentproject.getProject_name();
+		JSONObject jObject = new JSONObject();
 
-		// 프로젝트 이름 존재 x
-		if (project_name == null)
-			return "1";
-		if (project_name.isEmpty())
-			return "1";
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+		
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
 
 		String project_key = currentproject.getPk();
-		
+
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "";
+			return "Project Not Found";
 		if (project_key.isEmpty())
-			return "";
-		
-		//대분류 리스트
+			return "Project Not Found";
+
+		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-		
+
 		request.setAttribute("categoryLlist", categoryLlist);
 
-		return "200";
+		jObject.put("categoryLlist", categoryLlist);
+		logger.info(jObject.toString());
+
+		return jObject.toString();
 
 	}
 
 	@RequestMapping(value = "/Mcategory_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String MainController_Mcategory_db(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("categoryL") String categoryL) {
+			@RequestParam("categoryL") String categoryL) {
 		logger.info("Mcategory_db Page");
 
-		String project_key = "";
 		JSONObject jObject = new JSONObject();
-
-		// 프로젝트 이름 존재 x
-		if (project_name == null)
-			return "";
-		if (project_name.isEmpty())
-			return "";
 
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "rap : 1";
 
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
+		String project_key = currentproject.getPk();
 
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "";
+			return "2";
 		if (project_key.isEmpty())
-			return "";
+			return "2";
 
+		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+
+		if (categoryLlist == null)
+			return "3";
+
+		logger.info(categoryLlist.toString());
+
 		int categoryLlistcount = categoryLlist.size();
 		int categoryL_pk = -1;
 
@@ -126,10 +123,7 @@ public class RAP_CetegoryController {
 				categoryL_pk = categoryLlist.get(i).getPk();
 		}
 
-		logger.info("categoryL_pk = "+categoryL_pk);
-		if (categoryL_pk == -1)
-			return "";
-
+		logger.info("categoryL_pk = " + categoryL_pk);
 		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
 
 		jObject.put("categoryMlist", categoryMlist);
@@ -141,38 +135,50 @@ public class RAP_CetegoryController {
 	@RequestMapping(value = "/Scategory_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String MainController_Scategory_db(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("categoryM") String categoryM) {
+			@RequestParam("categoryL") String categoryL, @RequestParam("categoryM") String categoryM) {
 		logger.info("Scategory_db Page");
 
-		String project_key = "";
 		JSONObject jObject = new JSONObject();
-
-		// 프로젝트 이름 존재 x
-		if (project_name == null)
-			return "";
-		if (project_name.isEmpty())
-			return "";
 
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "1";
 
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "2";
+		if (project_key.isEmpty())
+			return "2";
+
+		// 대분류 리스트
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+
+		if (categoryLlist == null)
+			return "3";
+
+		logger.info("categoryL = " + categoryL);
+		logger.info("categoryM = " + categoryM);
+
+		int categoryLlistcount = categoryLlist.size();
+		int categoryL_pk = -1;
+
+		for (int i = 0; i < categoryLlistcount; i++) {
+			if (categoryLlist.get(i).getCategoryL().equals(categoryL))
+				categoryL_pk = categoryLlist.get(i).getPk();
 		}
 
-		if (project_key == null)
-			return "";
-		if (project_key.isEmpty())
-			return "";
+		// 대분류 pk 존재하지 않는 경우
+		if (categoryL_pk == -1)
+			return "4";
 
-		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key);
+		// 중분류 리스트
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
 		int categoryMlistcount = categoryMlist.size();
 		int categoryM_pk = -1;
 
@@ -181,8 +187,9 @@ public class RAP_CetegoryController {
 				categoryM_pk = categoryMlist.get(i).getPk();
 		}
 
+		// 중분류 pk 존재하지 않는 경우
 		if (categoryM_pk == -1)
-			return "";
+			return "5";
 
 		List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM_pk);
 
@@ -196,47 +203,40 @@ public class RAP_CetegoryController {
 	@RequestMapping(value = "/registerLcategory", method = RequestMethod.POST)
 	@ResponseBody
 	public String registerLcategory(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("Lcategory") String Lcategory) {
+			@RequestParam("Lcategory") String Lcategory) {
 		logger.info("registerLcategory pages");
-
-		String project_key = "";
-
+		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-		
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
 
-		// 프로젝트가 존재하지 않는 경우
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "1";
+			return "Project Not Found";
 		if (project_key.isEmpty())
-			return "1";
+			return "Project Not Found";
 
 		logger.info("프로젝트 존재");
+
 		// 카테고리명이 정상적으로 들어오지 않은 경우
 		if (Lcategory == null)
-			return "2";
+			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
-			return "2";
+			return "Enter Lcategory";
 
 		logger.info("카테고리명 존재");
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 		int categoryLlistcount = categoryLlist.size();
 
-		for (int i = 0; i < categoryLlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categoryLlist.get(i).getCategoryL().equals(Lcategory))
-				return "3";
-		}
+		if(categoryLlistcount > 0)
+			return "Lcategory already exist";
 
 		logger.info("같은 이름의 카테고리 없음");
 		categoryLDao.create(project_key, Lcategory);
@@ -248,70 +248,60 @@ public class RAP_CetegoryController {
 	@RequestMapping(value = "/registerMcategory", method = RequestMethod.POST)
 	@ResponseBody
 	public String registerMcategory(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("Mcategory") String Mcategory,
-			@RequestParam("Lcategory") String Lcategory) {
+			@RequestParam("Mcategory") String Mcategory, @RequestParam("Lcategory") String Lcategory) {
 
 		logger.info("registerMcategory pages");
 
-		String project_key = "";
+		JSONObject jObject = new JSONObject();
 
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
 
-		// 프로젝트가 존재하지 않는 경우
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "1";
+			return "Project Not Found";
 		if (project_key.isEmpty())
-			return "1";
+			return "Project Not Found";
 
 		logger.info("프로젝트 존재");
 
 		// 대분류가 정상적으로 들어오지 않은 경우
 		if (Lcategory == null)
-			return "2";
+			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
-			return "2";
+			return "Enter Lcategory";
 		logger.info("대분류 존재");
 
 		// 중분류가 정상적으로 들어오지 않은 경우
 		if (Mcategory == null)
-			return "3";
+			return "Enter Mcategory";
 		if (Mcategory.isEmpty())
-			return "3";
+			return "Enter Mcategory";
 		logger.info("중분류 존재");
 
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-		int categoryLlistcount = categoryLlist.size();
-		int categoryL_pk = -1;
+		if(categoryLlist == null)
+			return "error";
+		
+		int categoryL_pk = categoryLlist.get(0).getPk();
 
-		for (int i = 0; i < categoryLlistcount; i++) {
-			if (categoryLlist.get(i).equals(Lcategory))
-				categoryL_pk = categoryLlist.get(i).getPk();
-		}
-
-		if (categoryL_pk == -1)
-			return "";
-
-		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
-		int categoryMlistcount = categoryMlist.size();
-
-		for (int i = 0; i < categoryMlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categoryMlist.get(i).getCategoryM().equals(Mcategory))
-				return "4";
-		}
-
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
+		if(categoryMlist == null)
+			{		logger.info("중분류가 null");
+return "error";}
+		
+		if(categoryMlist.size() > 0)
+			{logger.info("중분류사이즈 >0");
+			return "Mcategory already exist";}
+		
 		logger.info("같은 이름의 카테고리 없음");
 		categoryMDao.create(project_key, categoryL_pk, Mcategory);
 
@@ -322,133 +312,230 @@ public class RAP_CetegoryController {
 	@RequestMapping(value = "/registerScategory", method = RequestMethod.POST)
 	@ResponseBody
 	public String registerScategory(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("Scategory") String Scategory,
-			@RequestParam("Mcategory") String Mcategory, @RequestParam("Lcategory") String Lcategory) {
+			@RequestParam("Scategory") String Scategory, @RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Lcategory") String Lcategory) {
 
 		logger.info("registerScategory pages");
 
-		String project_key = "";
+		JSONObject jObject = new JSONObject();
 
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
 
-		// 프로젝트가 존재하지 않는 경우
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "1";
+			return "Project Not Found";
 		if (project_key.isEmpty())
-			return "1";
+			return "Project Not Found";
 
 		logger.info("프로젝트 존재");
 
 		// 대분류가 정상적으로 들어오지 않은 경우
 		if (Lcategory == null)
-			return "2";
+			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
-			return "2";
+			return "Enter Lcategory";
 		logger.info("대분류 존재");
 
 		// 중분류가 정상적으로 들어오지 않은 경우
 		if (Mcategory == null)
-			return "3";
+			return "Enter Mcategory";
 		if (Mcategory.isEmpty())
-			return "3";
+			return "Enter Mcategory";
 		logger.info("중분류 존재");
 
 		// 소분류가 정상적으로 들어오지 않은 경우
 		if (Scategory == null)
-			return "4";
+			return "Enter Scategory";
 		if (Scategory.isEmpty())
-			return "4";
+			return "Enter Scategory";
 		logger.info("소분류 존재");
 
-		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key);
-		int categoryMlistcount = categoryMlist.size();
-		int categoryM_pk = -1;
+		//대분류
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 
-		for (int i = 0; i < categoryMlistcount; i++) {
-			if (categoryMlist.get(i).equals(Mcategory))
-				categoryM_pk = categoryMlist.get(i).getPk();
-		}
+		if(categoryLlist == null)
+			return "error";
+		
+		int categoryL_pk = categoryLlist.get(0).getPk();
 
-		if (categoryM_pk == -1)
-			return "";
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
+		if(categoryMlist == null)
+			return "error";
 
-		List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM_pk);
+		int categoryM_pk = categoryMlist.get(0).getPk();
+
+		List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM_pk, Scategory);
 		int categorySlistcount = categorySlist.size();
 
-		for (int i = 0; i < categorySlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categorySlist.get(i).getCategoryS().equals(Scategory))
-				return "4";
-		}
-
+		if(categorySlistcount>0)
+			return "Scategory already exist";
+		
 		logger.info("같은 이름의 카테고리 없음");
 		categorySDao.create(project_key, categoryM_pk, Scategory);
 
 		return "200";
 	}
-	
+
 	/** 대분류 삭제 */
 	@RequestMapping(value = "/deleteLcategory", method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteLcategory(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("project_name") String project_name, @RequestParam("Lcategory") String Lcategory) {
-		logger.info("registerLcategory pages");
-
-		String project_key = "";
+			@RequestParam("Lcategory") String Lcategory) {
+		logger.info("deleteLcategory pages");
 
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
-		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
-		int member_pk = member.getPk();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
-		
-		for (int i = 0; i < projectlist.size(); i++) {
-			if (projectlist.get(i).getProject_name().equals(project_name)) {
-				project_key = projectlist.get(i).getPk();
-				logger.info("project_key = " + project_key);
-			}
-		}
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "1";
 
-		// 프로젝트가 존재하지 않는 경우
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "1";
+			return "2";
 		if (project_key.isEmpty())
-			return "1";
+			return "2";
 
-		logger.info("프로젝트 존재");
-		// 카테고리명이 정상적으로 들어오지 않은 경우
+		// 대분류명 존재 X
 		if (Lcategory == null)
-			return "2";
-		if (Lcategory.isEmpty())
-			return "2";
+			return "3";
 
-		logger.info("카테고리명 존재");
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-		int categoryLlistcount = categoryLlist.size();
-
-		for (int i = 0; i < categoryLlistcount; i++) {
-			// 같은 이름의 카테고리 존재하는 경우
-			if (categoryLlist.get(i).getCategoryL().equals(Lcategory))
-				return "3";
-		}
-
-		logger.info("같은 이름의 카테고리 없음");
-		categoryLDao.create(project_key, Lcategory);
+		categoryLDao.delete(project_key, Lcategory);
 
 		return "200";
 	}
-	
-	
+
+	/** 중분류 삭제 */
+	@RequestMapping(value = "/deleteMcategory", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteMcategory(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("Lcategory") String Lcategory, @RequestParam("Mcategory") String Mcategory) {
+		logger.info("deleteMcategory pages");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "Project Not Found";
+		if (project_key.isEmpty())
+			return "Project Not Found";
+
+		logger.info("프로젝트 존재");
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "Enter Lcategory";
+		if (Lcategory.isEmpty())
+			return "Enter Lcategory";
+		logger.info("대분류 존재");
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "Enter Mcategory";
+		if (Mcategory.isEmpty())
+			return "Enter Mcategory";
+		logger.info("중분류 존재");
+
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
+		int categoryL_pk = -1;
+		
+		//카테고리가 존재하지않을 때
+		if(categoryLlist == null) return "error";
+		
+		categoryL_pk = categoryLlist.get(0).getPk();
+
+		logger.info("categoryL_pk = "+categoryL_pk);
+		categoryMDao.delete(project_key, categoryL_pk, Mcategory);
+
+		return "200";
+	}
+
+	/** 소분류 삭제 */
+	@RequestMapping(value = "/deleteScategory", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteScategory(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("Lcategory") String Lcategory, @RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory) {
+		logger.info("deleteScategory pages");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "Project Not Found";
+		if (project_key.isEmpty())
+			return "Project Not Found";
+
+		logger.info("프로젝트 존재");
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "Enter Lcategory";
+		if (Lcategory.isEmpty())
+			return "Enter Lcategory";
+		logger.info("대분류 존재");
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "Enter Mcategory";
+		if (Mcategory.isEmpty())
+			return "Enter Mcategory";
+		logger.info("중분류 존재");
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+			return "Enter Scategory";
+		if (Scategory.isEmpty())
+			return "Enter Scategory";
+		logger.info("소분류 존재");
+
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
+		int categoryL_pk = -1;
+		
+		//카테고리가 존재하지않을 때
+		if(categoryLlist == null) return "error";
+		
+		categoryL_pk = categoryLlist.get(0).getPk();
+
+		logger.info("categoryL_pk = "+categoryL_pk);
+
+		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
+		int categoryM_pk = -1;
+		
+		//카테고리가 존재하지 않을 때
+		if(categoryMlist == null) return "error";
+		categoryM_pk = categoryMlist.get(0).getPk();
+		
+		//소분류 삭제
+		categorySDao.delete(project_key, categoryM_pk, Scategory);
+
+		return "200";
+	}
 }

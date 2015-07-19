@@ -48,6 +48,19 @@ public class CategoryLDao implements CategoryLIDao{
 		    });
 	}
 
+	public List<CategoryLInfo> select(String key, String categoryl) {
+		return jdbcTemplate.query("select * from categoryl where project_key = ? and categoryl = ?",
+		    	new Object[] { key, categoryl }, new RowMapper<CategoryLInfo>() {
+		    	public CategoryLInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new CategoryLInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("categoryl")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+	}
 	public void delete(String key, String categoryL) {
 		jdbcTemplate.update("delete from categoryl where project_key = ? AND categoryl = ?",
 		        new Object[] { key, categoryL });		
