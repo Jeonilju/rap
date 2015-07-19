@@ -276,6 +276,7 @@ public class RAP_APIsController {
 	//////////											////////////
 	////////////////////////////////////////////////////////////////
 	
+	/** 대분류를 통해 아이탬 검색 */
 	@RequestMapping(value = "/APIs/getIAP_CategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryL(HttpServletRequest request
@@ -283,11 +284,13 @@ public class RAP_APIsController {
 			, @RequestParam("CategoryL") String CategoryL) {
 		logger.info("APIs Tab");
 
+		CategoryL = StringPattern.parseUTF(CategoryL);
 		String json = new Gson().toJson(iapSDao.select(project_key, CategoryL));
 		
 		return json;
 	}
 	
+	/** 중분류를 통해 아이탬 검색 */
 	@RequestMapping(value = "/APIs/getIAP_CategoryM", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryM(HttpServletRequest request
@@ -296,11 +299,15 @@ public class RAP_APIsController {
 			, @RequestParam("CategoryM") String CategoryM) {
 		logger.info("APIs Tab");
 
+		CategoryL = StringPattern.parseUTF(CategoryL);
+		CategoryM = StringPattern.parseUTF(CategoryM);
+		
 		String json = new Gson().toJson(iapSDao.select(project_key, CategoryL, CategoryM));
 		
 		return json;
 	}
 	
+	/** 소분류를 통해 아이탬 검색 */
 	@RequestMapping(value = "/APIs/getIAP_CategoryS", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryS(HttpServletRequest request
@@ -308,10 +315,11 @@ public class RAP_APIsController {
 			, @RequestParam("CategoryL") String CategoryL
 			, @RequestParam("CategoryM") String CategoryM
 			, @RequestParam("CategoryS") String CategoryS) {
-		logger.info("APIs Tab");
-
+		CategoryL = StringPattern.parseUTF(CategoryL);
+		CategoryM = StringPattern.parseUTF(CategoryM);
+		CategoryS = StringPattern.parseUTF(CategoryS);
+		logger.info("아이템 반환: " + CategoryL + ", " + CategoryM + ", " + CategoryS);
 		String json = new Gson().toJson(iapSDao.select(project_key, CategoryL, CategoryM, CategoryS));
-		
 		return json;
 	}
 	

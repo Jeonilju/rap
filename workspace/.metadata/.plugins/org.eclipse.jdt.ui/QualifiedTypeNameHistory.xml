@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.sql.Timestamp"/>
 <fullyQualifiedTypeName name="com.rap.R.id"/>
 <fullyQualifiedTypeName name="android.widget.ListView"/>
 <fullyQualifiedTypeName name="android.widget.AdapterView.OnItemClickListener"/>
 <fullyQualifiedTypeName name="com.rap.connect.RAPAPIs"/>
-<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 <fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="android.support.annotation.MainThread"/>
 <fullyQualifiedTypeName name="com.rap.example.RAP_MainActivity"/>
@@ -13,7 +11,6 @@
 <fullyQualifiedTypeName name="com.klt.activity.Setting2Activity"/>
 <fullyQualifiedTypeName name="android.widget.Spinner"/>
 <fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_User"/>
-<fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_Mypage"/>
 <fullyQualifiedTypeName name="com.klt.connectior.KLTAPIs_Point"/>
 <fullyQualifiedTypeName name="java.util.Calendar"/>
@@ -35,10 +32,8 @@
 <fullyQualifiedTypeName name="android.media.Ringtone"/>
 <fullyQualifiedTypeName name="android.telephony.TelephonyManager"/>
 <fullyQualifiedTypeName name="com.rap.activity.RAPBaseActivity"/>
-<fullyQualifiedTypeName name="com.rap.R"/>
 <fullyQualifiedTypeName name="com.rap.R.drawable"/>
 <fullyQualifiedTypeName name="android.os.Handler"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
@@ -52,4 +47,15 @@
 <fullyQualifiedTypeName name="org.apache.http.message.BasicNameValuePair"/>
 <fullyQualifiedTypeName name="com.klt.activity.MainActivity"/>
 <fullyQualifiedTypeName name="com.klt.activity.SigninActivity"/>
+<fullyQualifiedTypeName name="com.rap.iap.RAPIapInfo"/>
+<fullyQualifiedTypeName name="com.rap.R"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="android.widget.EditText"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="jxl.write.DateTime"/>
+<fullyQualifiedTypeName name="java.sql.Timestamp"/>
+<fullyQualifiedTypeName name="java.sql.Date"/>
+<fullyQualifiedTypeName name="android.widget.Button"/>
+<fullyQualifiedTypeName name="android.widget.ImageView"/>
+<fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
 </qualifiedTypeNameHistroy>

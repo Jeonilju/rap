@@ -1,9 +1,0 @@
-package com.rap.iap;
-
-import java.sql.Timestamp;
-
-public class RAPCategoryM {
-	private int pk;
-	private String categoryM;
-	private Timestamp regDate;
-}
