@@ -58,7 +58,6 @@ public class RAP_AnalysisController {
 		  
 		String project_key=currentproject.getPk();
 		
-		logger.info("project_key to get sex"+project_key);
 	      if (project_key == null)
 	          return "2";
 	       if (project_key.isEmpty())
@@ -69,8 +68,144 @@ public class RAP_AnalysisController {
 		int man= userDao.countSex(project_key,1);
 		jObject.put("woman", woman);
 		jObject.put("man", man);
-		logger.info("sex returnb"+jObject.toString());
 		return jObject.toString();
 	}
+	
+	
+	@RequestMapping(value = "/age_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String Age_get(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("Age_db Tab");
+		
+		JSONObject jObject= new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject=(ProjectInfo)session.getAttribute("currentproject");
+		
+		if(currentproject ==null)
+			return "1";//세션에 프로젝트 없는 경우
+		String project_key=currentproject.getPk();
+		
+	      if (project_key == null)
+	          return "2";
+	       if (project_key.isEmpty())
+	          return "2";
+	       
+
+			logger.info("basdgag");
+			int baby= userDao.countAge(project_key,"baby");
+
+			logger.info("baby : "+baby);
+		
+			int ten= userDao.countAge(project_key,"ten");
+			int twenty= userDao.countAge(project_key,"twenty");
+			int thirty= userDao.countAge(project_key,"thirty");
+			int forty= userDao.countAge(project_key,"forty");
+			int old= userDao.countAge(project_key,"old");
+
+		
+
+			jObject.put("baby", baby);
+			jObject.put("ten",ten );
+			jObject.put("twenty", twenty);
+			jObject.put("thirty", thirty);
+			jObject.put("forty", forty);
+			jObject.put("old",old);
+			
+		return jObject.toString();
+	}
+	
+	
+	
+	
+	
+	/*@RequestMapping(value = "/operation_count_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String operation_count_Get(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("operation_count Tab");
+		
+		JSONObject jObject= new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject=(ProjectInfo)session.getAttribute("currentproject");
+		
+		if(currentproject ==null)
+			return "1";//세션에 프로젝트 없는 경우
+		
+		  
+		String project_key=currentproject.getPk();
+		
+	      if (project_key == null)
+	          return "2";
+	       if (project_key.isEmpty())
+	          return "2";
+	       
+	       
+		int woman= userDao.countoperation_count(project_key,0);
+		int man= userDao.countoperation_count(project_key,1);
+		
+		
+		jObject.put("woman", woman);
+		jObject.put("man", man);
+		
+		
+		
+		
+		return jObject.toString();
+	}*/
+	
+	
+	
+	@RequestMapping(value = "/device_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String Device_Get(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("Device_db Tab");
+		
+		JSONObject jObject= new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject=(ProjectInfo)session.getAttribute("currentproject");
+		
+		if(currentproject ==null)
+			return "1";//세션에 프로젝트 없는 경우
+		
+		  
+		String project_key=currentproject.getPk();
+		
+	      if (project_key == null)
+	          return "2";
+	       if (project_key.isEmpty())
+	          return "2";
+	       
+		jObject.put("Device", userDao.countDevice(project_key));
+		return jObject.toString();
+	}
+	
+	
+	@RequestMapping(value = "/os_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String OS_Get(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("OS_db Tab");
+		
+		JSONObject jObject= new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject=(ProjectInfo)session.getAttribute("currentproject");
+		
+		if(currentproject ==null)
+			return "1";//세션에 프로젝트 없는 경우
+		
+		  
+		String project_key=currentproject.getPk();
+		
+	      if (project_key == null)
+	          return "2";
+	       if (project_key.isEmpty())
+	          return "2";
+	       
+	       
+	
+		
+		
+		jObject.put("OS", userDao.countOS(project_key));
+		return jObject.toString();
+	}
+	
 	
 }
