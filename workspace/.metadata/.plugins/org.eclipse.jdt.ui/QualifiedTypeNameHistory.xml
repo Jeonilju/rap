@@ -37,7 +37,6 @@
 <fullyQualifiedTypeName name="org.json.JSONArray"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="android.widget.ArrayAdapter"/>
-<fullyQualifiedTypeName name="com.rap.example.IAPSampleActivity"/>
 <fullyQualifiedTypeName name="java.net.URLEncoder"/>
 <fullyQualifiedTypeName name="org.apache.http.params.HttpParams"/>
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
@@ -58,4 +57,7 @@
 <fullyQualifiedTypeName name="android.widget.Button"/>
 <fullyQualifiedTypeName name="android.widget.ImageView"/>
 <fullyQualifiedTypeName name="android.view.View.OnClickListener"/>
+<fullyQualifiedTypeName name="com.rap.example.IAPAdapter"/>
+<fullyQualifiedTypeName name="com.rap.example.IAPSampleActivity"/>
+<fullyQualifiedTypeName name="android.os.Environment"/>
 </qualifiedTypeNameHistroy>

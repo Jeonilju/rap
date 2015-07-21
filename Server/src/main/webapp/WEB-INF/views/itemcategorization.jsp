@@ -13,260 +13,9 @@
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
-
-<script type="text/javaScript">
-
-$(document).ready(function(){getLcategory()});
-
-function getLcategory()
-{
-	$('#Lcategory1').html("<option value='' selected>해당없음</option>");
-	$('#Lcategory2').html("<option value='' selected>해당없음</option>");
-	$('#Lcategory3').html("<option value='' selected>해당없음</option>");
-	
-	$.ajax({
-		url : "Lcategory_db",
-		type : "POST",
-		dataType : "JSON",
-		success : function(data) {
-			
-			if(data!=null || data!="")
-			{
-				var list = data.categoryLlist;
-				var listLen = list.length;
-				
-				for(var i=0;i<listLen;i++)
-				{
-					$('#Lcategory1').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					$('#Lcategory2').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					$('#Lcategory3').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					
-				}
-			}
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-}
-function getMcategory(id)
-{
-	$('#Mcategory'+id).html("<option value='' selected>해당없음</option>");
-	$('#Scategory'+id).html("<option value='' selected>해당없음</option>");
-	
-	var param = "categoryL=" + document.getElementById('Lcategory'+id).value;
-	
-	$.ajax({
-		url : "Mcategory_db",
-		type : "POST",
-		data : param,
-		dataType : "JSON",
-		success : function(data) {
-			
-			if(data!=null || data!="")
-			{
-				var list = data.categoryMlist;
-				var listLen = list.length;
-				
-				for(var i=0;i<listLen;i++)
-				{
-					$('#Mcategory'+id).append("<option value='"+list[i].categoryM+"'>"+list[i].categoryM+"</option>");
-				}
-			}
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-}
-function getScategory(id)
-{
-	$('#Scategory'+id).html("<option value='' selected>해당없음</option>");
-	
-	var param = "categoryM=" + document.getElementById('Mcategory'+id).value;
-	
-	$.ajax({
-		url : "Scategory_db",
-		type : "POST",
-		data : param,
-		dataType : "JSON",
-		success : function(data) {
-			
-			if(data!=null || data!="")
-			{
-				var list = data.categorySlist;
-				var listLen = list.length;
-				
-				for(var i=0;i<listLen;i++)
-				{
-					$('#Scategory'+id).append("<option value='"+list[i].categoryS+"'>"+list[i].categoryS+"</option>");
-				}
-			}
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-	
-}
-
-function registerLcategory() {
-
-	var project_name = "<%= currentprojectname %>";
-	var Lcategory = document.getElementById('CategoryL');
-	
-	var param = "project_name" + "=" + project_name + "&" 
-				+ "Lcategory" + "=" + Lcategory.value;
-	
-	$.ajax({
-		url : "registerLcategory",
-		type : "POST",
-		data : param,
-		success : function(data) {
-			if(data == "200")
-				alert("대분류가 추가되었습니다.");
-			else if(data == "2")
-				alert("대분류명을 입력해주세요");
-			else if(data == "3")
-				alert("이미 같은 이름의 카테고리가 존재합니다.");
-			else
-				alert("에러가 발생했습니다.");
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-	
-}
-
-function registerMcategory() {
-
-	var project_name = "<%= currentprojectname %>";
-	var Mcategory = document.getElementById('CategoryM');
-	var Lcategory = document.getElementById('Lcategory2');
-	
-	var param = "project_name" + "=" + project_name + "&" 
-				+ "Lcategory" + "=" + Lcategory.value + "&" 
-				+ "Mcategory" + "=" + Mcategory.value;
-	
-	$.ajax({
-		url : "registerMcategory",
-		type : "POST",
-		data : param,
-		success : function(data) {
-			if(data == "200")
-				alert("중분류가 추가되었습니다.");
-			else if(data == "2")
-				alert("대분류명을 입력해주세요");
-			else if(data == "3")
-				alert("중분류명을 입력해주세요");
-			else if(data == "4")
-				alert("이미 같은 이름의 카테고리가 존재합니다.");
-			else
-				alert("에러가 발생했습니다.");
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-	
-}
-
-function registerScategory() {
-
-	var project_name = "<%= currentprojectname %>";
-	var Scategory = document.getElementById('CategoryS');
-	var Mcategory = document.getElementById('Mcategory3');
-	var Lcategory = document.getElementById('Lcategory3');
-	
-	var param = "project_name" + "=" + project_name + "&" 
-				+ "Scategory" + "=" + Scategory.value + "&" 
-				+ "Lcategory" + "=" + Lcategory.value + "&" 
-				+ "Mcategory" + "=" + Mcategory.value;
-	
-	$.ajax({
-		url : "registerScategory",
-		type : "POST",
-		data : param,
-		success : function(data) {
-			if(data == "200")
-			{
-				alert("소분류가 추가되었습니다.");
-			}			
-			else if(data == "2")
-				alert("대분류명을 입력해주세요");
-			else if(data == "3")
-				alert("중분류명을 입력해주세요");
-			else if(data == "4")
-				alert("소분류명을 입력해주세요");
-			else if(data == "5")
-				alert("이미 같은 이름의 카테고리가 존재합니다.");
-			else
-				alert("에러가 발생했습니다.");
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-	
-}
-
-
-function deleteLcategory() {
-
-	var project_name = "<%= currentprojectname %>";
-	var Lcategory = document.getElementById('Lcategory1');
-	
-	var param = "project_name" + "=" + project_name + "&" 
-				+ "Lcategory" + "=" + Lcategory.value;
-	
-	$.ajax({
-		url : "deleteLcategory",
-		type : "POST",
-		data : param,
-		success : function(data) {
-			if(data == "200")
-				alert("대분류가 추가되었습니다.");
-			else if(data == "2")
-				alert("대분류명을 입력해주세요");
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-	
-}
-
-
-</script>
+<script src="./resources/js/itemcategorization.js"></script>
+<link rel="stylesheet" href="./resources/css/bootstrap-select.css">
+<script src="./resources/js/bootstrap-select.js"></script>
 
 <body id="page-top" class="index">
 	<div class="container">
@@ -316,16 +65,16 @@ function deleteLcategory() {
 							<!-- Large Category -->
 							<div>
 								<div class="form-group" style="padding:20px">
-									<label>Large Category</label> 
+									
 									<input type="text"
 										class="form-control" placeholder="Large Category"
 										id="CategoryL" required
-										data-validation-required-message="Please enter Large Category." style="width:300px">
+										data-validation-required-message="Please enter Large Category." style="width:200px">
 									<button class="btn" onclick="registerLcategory()">Register</button>
 									
-									<select id="Lcategory1" name="Lcategory1">
+									<select id="Lcategory1" name="Lcategory1" class="selectpicker show-tick" style="width:200px">
 									</select>
-									<button class="btn" onclick="deleteLcategory()">Delete</button>
+									<button class="btn" onclick="deleteLcategory('Lcategory1')">Delete</button>
 								</div>
 								
 								
@@ -336,18 +85,17 @@ function deleteLcategory() {
 							<div>
 								
 								<div class="form-group" style="padding:20px">
-									<label>Medium Category</label> 
-									<select id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
+									<select id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')" class="selectpicker show-tick">
 									</select>
 									<input type="text"
 										class="form-control" placeholder="Medium Category"
 										id="CategoryM" required
-										data-validation-required-message="Please enter Medium Category." style="width:300px">
+										data-validation-required-message="Please enter Medium Category." style="width:200px">
 									<button class="btn" onclick="registerMcategory()">Register</button>
-									<select id="Mcategory2" name="Mcategory2">
+									<select id="Mcategory2" name="Mcategory2" class="selectpicker show-tick">
 										<option value='' selected>해당없음</option>
 									</select>
-									<button class="btn" onclick="deleteMcategory()">Delete</button>
+									<button class="btn" onclick="deleteMcategory('Mcategory2')">Delete</button>
 								</div>
 							</div>
 							<br>
@@ -355,21 +103,20 @@ function deleteLcategory() {
 							<!-- Small Category -->
 							<div>
 								<div class="form-group" style="padding:20px">
-									<label>Small Category</label> 
-									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')">
+									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')" class="selectpicker show-tick">
 									</select>
-									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')">
+									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')" class="selectpicker show-tick">
 										<option value='' selected>해당없음</option>
 									</select>
 									<input type="text"
 										class="form-control" placeholder="Small Category"
 										id="CategoryS" required
-										data-validation-required-message="Please enter Small Category." style="width:300px">
+										data-validation-required-message="Please enter Small Category." style="width:200px">
 									<button class="btn" onclick="registerScategory()">Register</button>
-									<select id="Scategory3" name="Scategory3" >
+									<select id="Scategory3" name="Scategory3" class="selectpicker show-tick">
 										<option value="" selected>해당없음</option>
 									</select>
-									<button class="btn" onclick="deleteScategory()">Delete</button>
+									<button class="btn" onclick="deleteScategory('Scategory3')">Delete</button>
 								</div>
 							</div>
 							<br>

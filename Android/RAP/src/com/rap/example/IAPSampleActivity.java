@@ -33,11 +33,14 @@ public class IAPSampleActivity extends RAPBaseActivity{
 	private Spinner sp_categoryL, sp_categoryM, sp_categoryS;
 	private ListView lv_items;
 
+	private IAPAdapter itemAdapter;
+	
+	
 	private ArrayList<String> categoryLList;
 	private ArrayList<String> categoryMList;
 	private ArrayList<String> categorySList;
 	
-	private ArrayAdapter<String> adapterL;// = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, arraylist); 
+	private ArrayAdapter<String> adapterL; 
 	private ArrayAdapter<String> adapterM;
 	private ArrayAdapter<String> adapterS;
 	
@@ -68,6 +71,8 @@ public class IAPSampleActivity extends RAPBaseActivity{
 		categoryLList = new ArrayList<String>();
 		categoryMList = new ArrayList<String>();
 		categorySList = new ArrayList<String>();
+		
+		//itemAdapter = new IAPAdapter(IAPSampleActivity.this, list);
 	}
 	
 	private void initEvent(){
@@ -285,7 +290,7 @@ public class IAPSampleActivity extends RAPBaseActivity{
 					switch (status) {
 					case 200:
 						JSONArray list = new JSONArray(json.getString("res"));
-						
+						Log.i(TAG, "¿¿¥‰: " + json.getString("res"));
 						
 						break;
 					default:

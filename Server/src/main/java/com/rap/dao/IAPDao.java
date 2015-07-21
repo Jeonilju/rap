@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.rap.idao.IAPIDao;
-import com.rap.models.CategoryLInfo;
 import com.rap.models.IAPInfo;
 
 @Repository
@@ -48,7 +47,7 @@ public class IAPDao implements IAPIDao{
 		    				, resultSet.getInt("price_sub")
 		    				, resultSet.getInt("using_type")
 		    				, resultSet.getString("image")
-		    				, resultSet.getString("discription")
+		    				, resultSet.getString("description")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("categoryl")
 		    				, resultSet.getString("categorym")
@@ -70,7 +69,7 @@ public class IAPDao implements IAPIDao{
 		    				, resultSet.getInt("price_sub")
 		    				, resultSet.getInt("using_type")
 		    				, resultSet.getString("image")
-		    				, resultSet.getString("discription")
+		    				, resultSet.getString("description")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("categoryl")
 		    				, resultSet.getString("categorym")
@@ -92,7 +91,7 @@ public class IAPDao implements IAPIDao{
 		    				, resultSet.getInt("price_sub")
 		    				, resultSet.getInt("using_type")
 		    				, resultSet.getString("image")
-		    				, resultSet.getString("discription")
+		    				, resultSet.getString("description")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("categoryl")
 		    				, resultSet.getString("categorym")
@@ -115,7 +114,7 @@ public class IAPDao implements IAPIDao{
 		    				, resultSet.getInt("price_sub")
 		    				, resultSet.getInt("using_type")
 		    				, resultSet.getString("image")
-		    				, resultSet.getString("discription")
+		    				, resultSet.getString("description")
 		    				, resultSet.getTimestamp("reg_date")
 		    				, resultSet.getString("categoryl")
 		    				, resultSet.getString("categorym")

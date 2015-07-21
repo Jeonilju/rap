@@ -62,7 +62,20 @@ public class CategoryMDao implements CategoryMIDao{
              }
           });
    }
-
+   public List<CategoryMInfo> select(String key, int categoryL_pk, String categoryM){
+	      return jdbcTemplate.query("select * from categorym where categoryL_pk = ? and project_key = ? and categoryM = ?",
+	             new Object[] { categoryL_pk,key,categoryM }, new RowMapper<CategoryMInfo>() {
+	             public CategoryMInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	             {
+	                return new CategoryMInfo(
+	                      resultSet.getInt("pk")
+	                      , resultSet.getString("project_key")
+	                      , resultSet.getString("categoryM")
+	                      , resultSet.getTimestamp("reg_date")
+	                      , resultSet.getInt("categoryL_pk"));
+	             }
+	          });
+	   }
    
    public List<CategoryMInfo> select(String key, String categoryL){
       return jdbcTemplate.query("select * from categorym where categoryL_pk = (select categoryl.pk from categoryl where project_key = ? and categoryl = ?)",

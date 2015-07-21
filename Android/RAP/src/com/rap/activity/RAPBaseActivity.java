@@ -118,6 +118,9 @@ public class RAPBaseActivity extends Activity{
 	}
 	
 	public static Context getLastContext(){
-		return activityList.get(getActivityCount() - 1);
+		if(getActivityCount() > 0)
+			return activityList.get(getActivityCount() - 1);
+		else
+			return null;
 	}
 }
