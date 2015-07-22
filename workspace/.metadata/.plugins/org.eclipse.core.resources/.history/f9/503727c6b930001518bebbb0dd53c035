@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notice_list_row"
+    android:layout_width="fill_parent"
+    android:layout_height="80dp">
+    
+    <!-- Hidden Location Row -->
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="visible">
+    
+        <ImageView 
+            android:id="@+id/iap_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"/>
+        
+    	<TextView
+	        android:id="@+id/iap_name"
+	        android:layout_width="100dp"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:layout_toRightOf="@id/iap_image"
+	        android:layout_centerVertical="true"
+	        android:text="아이템 이름" />
+
+    	<Button 
+    	    android:id="@+id/iap_buy"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="구매"
+    	    android:layout_margin="10dp"
+    	   	android:layout_alignParentRight="true"/>
+    	
+    </RelativeLayout>
+
+</RelativeLayout>

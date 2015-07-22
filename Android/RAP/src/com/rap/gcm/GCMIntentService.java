@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import android.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,13 +13,11 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
-import com.rap.R;
 import com.rap.RAPSetting;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
@@ -93,7 +92,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				.setContentTitle(title)
 				.setContentText(contents)
 				.setAutoCancel(true)
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setSmallIcon(R.drawable.ic_dialog_email)
 				.setTicker("test")
 				.setContentIntent(pIntent).build();
 

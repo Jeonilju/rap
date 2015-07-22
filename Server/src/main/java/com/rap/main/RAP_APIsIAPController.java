@@ -2,6 +2,8 @@ package com.rap.main;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.dao.Virtual_MainDao;
 import com.rap.dao.Virtual_SubDao;
+import com.rap.models.UserInfo;
 
 @Controller
 public class RAP_APIsIAPController {
@@ -174,27 +177,30 @@ public class RAP_APIsIAPController {
 	/**
 	 * 사용자의 Main 가상화폐 조회
 	 * */
-	@RequestMapping(value = "/APIs/GetVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/GetVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User) {
-		logger.info("APIs Tab");
+		logger.info("Main 가상화폐 조회: " + project_key + ", " + User);
 
-		String json = new Gson().toJson(userDao.selectUser(project_key, User));
-		return json;
+		UserInfo userInfo = userDao.selectUser(project_key, User);
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.accumulate("point", userInfo.getVirtual_main());
+		
+		return jsonObj.toString();
 	}
 	
 	/**
 	 * 사용자의 Main 가상화폐 사용
 	 * */
-	@RequestMapping(value = "/APIs/UseVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/UseVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String UseVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
-		logger.info("APIs Tab");
+		logger.info("Main 가상화폐 사용");
 
 		userDao.useVirtual_main(project_key, User, money);
 		
@@ -204,13 +210,13 @@ public class RAP_APIsIAPController {
 	/**
 	 * 사용자의 Main 가상화폐 추가
 	 * */
-	@RequestMapping(value = "/APIs/TakeVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/TakeVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String TakeVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
-		logger.info("APIs Tab");
+		logger.info("Main 가상화폐 추가");
 
 		userDao.getVirtual_main(project_key, User, money);
 		
@@ -220,27 +226,30 @@ public class RAP_APIsIAPController {
 	/**
 	 * 사용자의 Sub 가상화폐 조회
 	 * */
-	@RequestMapping(value = "/APIs/GetVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/GetVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String GetVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User) {
-		logger.info("APIs Tab");
+		logger.info("Sub 가상화폐 조회" + project_key + ", " + User);
 
-		String json = new Gson().toJson(userDao.selectUser(project_key, User));
-		return json;
+		UserInfo userInfo = userDao.selectUser(project_key, User);
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.accumulate("point", userInfo.getVirtual_sub());
+		
+		return jsonObj.toString();
 	}
 	
 	/**
 	 * 사용자의 Sub 가상화폐 사용
 	 * */
-	@RequestMapping(value = "/APIs/UseVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/UseVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String UseVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
-		logger.info("APIs Tab");
+		logger.info("Sub 가상화폐 사용");
 
 		userDao.useVirtual_sub(project_key, User, money);
 		
@@ -250,14 +259,13 @@ public class RAP_APIsIAPController {
 	/**
 	 * 사용자의 Sub 가상화폐 추가
 	 * */
-	@RequestMapping(value = "/APIs/TakeVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/TakeVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String TakeVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
-		logger.info("APIs Tab");
-
+		logger.info("Sub 가상화폐 추가");
 		userDao.getVirtual_sub(project_key, User, money);
 		
 		return "";

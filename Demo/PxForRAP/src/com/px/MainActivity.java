@@ -1,73 +1,202 @@
 package com.px;
 
-import android.app.Activity;
+import java.io.IOException;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 
-public class MainActivity extends Activity {
+import com.px.tool.BackPressCloseHandler;
+import com.rap.RAPSetting;
+import com.rap.activity.RAPBaseActivity;
+import com.rap.connect.RAPAPIs;
+import com.rap.connect.RAPHttpClient;
 
-	private ListView mylist;
-	private ArrayAdapter<String> adapter;
+public class MainActivity extends RAPBaseActivity {
+
+	private static final String TAG = "MainActivity";
+	
+	private BackPressCloseHandler backPressCloseHandler;
+	
+	private Button buy, point, charge, buylist;
+
+	public static int Main_point = 0;
+	public static int Sub_point = 0;
+	
+	public static String mainName = "Main 화폐";
+	public static String subName = "Sub 화폐";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		RAPSetting.setRAPKey("1");
+		//RAPSetting.setGCMProjectId("1065883592772");
+		//RAPGcmManager.registerGcm(this);
 		
 		initResourse();
 		initEvent();
-		
+
+		backPressCloseHandler = new BackPressCloseHandler(this);
 	}
-	 
-	private void initResourse(){
-		adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1);
-		adapter.add("음료");
-		adapter.add("빵");
-		adapter.add("라면");
-		adapter.add("스넥");
-		adapter.add("아이스크림");
-		
-		mylist = (ListView) findViewById(R.id.main_list);
-		mylist.setAdapter(adapter);
+
+	private void initResourse() {
+		buy = (Button) findViewById(R.id.main_btn_buy);
+		point = (Button) findViewById(R.id.main_btn_point);
+		charge = (Button) findViewById(R.id.main_btn_charge);
+		buylist = (Button) findViewById(R.id.main_btn_buylist);
+
 	}
-	
-	private void initEvent(){
-		mylist.setOnItemClickListener(new OnItemClickListener() {
+
+	private void initEvent() {
+		buy.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-//				Intent intent = new Intent(MainActivity.this, CameraActivity.class);
-//				intent.putExtra("type", adapterList.get(position).getArea());
-//				intent.putExtra("isUsed", adapterList.get(position).isUsed());
-//				startActivity(intent);
-//				finish();
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, BuyActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		point.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				try {
+					HttpRequestBase req = RAPAPIs.GetVirtual_Sub();
+					RAPHttpClient.getInstance().background(req, getSubMoney);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		charge.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		buylist.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
 			}
 		});
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	public void onBackPressed() {
+		backPressCloseHandler.onBackPressed();
 	}
+	
+	Handler getSubMoney = new Handler(){
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(MainActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject point = new JSONObject(json.getString("res"));
+						Sub_point = point.getInt("point");
+						
+						try {
+							HttpRequestBase req2 = RAPAPIs.GetVirtual_Main();
+							RAPHttpClient.getInstance().background(req2, getMainMoney);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
 		}
-		return super.onOptionsItemSelected(item);
+	};
+	
+	Handler getMainMoney = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(MainActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject point = new JSONObject(json.getString("res"));
+						Main_point = point.getInt("point");
+						
+						printPoint();
+						
+						break;
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	private void printPoint() {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+		alt_bld.setMessage("현재 보유하고 계신 포인트는 다음과 같습니다. \n\n" 
+				+ mainName + ": " + Main_point + "\n"
+				+ subName + ": " + Sub_point)
+				.setCancelable(false)
+				.setPositiveButton("확인",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+
+		alert.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				finish();
+			}
+		});
+
+		alert.setTitle("");
+		alert.show();
 	}
 }

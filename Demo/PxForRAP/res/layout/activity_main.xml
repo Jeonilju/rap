@@ -20,11 +20,44 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"/>
     
-    <ListView 
-        android:id="@+id/main_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/main_title"/>
-        
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/main_title"
+        android:layout_centerHorizontal="true" >
 
+        <Button
+            android:id="@+id/main_btn_buy"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="10dp"
+            android:text="물건 구매하기" />
+
+        <Button
+            android:id="@+id/main_btn_point"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@id/main_btn_buy"
+            android:text="잔여 포인트 \n조회" />
+
+        <Button
+            android:id="@+id/main_btn_charge"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@id/main_btn_buy"
+            android:layout_margin="10dp"
+            android:text="포인트 충전" />
+
+        <Button
+            android:id="@+id/main_btn_buylist"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@id/main_btn_buy"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@id/main_btn_charge"
+            android:text="구매 내역" />
+        
+    </RelativeLayout>
+    
 </RelativeLayout>
