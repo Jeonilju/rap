@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page
-	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
+	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo, com.rap.models.CategoryLInfo"%>
 <%
 	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
 	String currentprojectname = "";
@@ -17,7 +17,7 @@
 <!-- <link rel="stylesheet" href="./resources/css/bootstrap-select.css">-->
 <!-- <script src="./resources/js/bootstrap-select.js"></script>-->
 <script type="text/javascript">
-$(document).ready(function(){getAllLcategory()});
+//$(document).ready(function(){getAllLcategory()});
 function getAllLcategory()
 {
 	var id = ['#Lcategory1','#Lcategory2','#Lcategory3'];
@@ -80,6 +80,15 @@ function getAllLcategory()
 									<button class="btn" onclick="registerLcategory()">Register</button>
 									
 									<select id="Lcategory1" name="Lcategory1">
+									<%
+										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>)request.getAttribute("categoryLlist");
+										int categoryLlistcount = categoryLlist.size();
+										
+										for(int i =0;i<categoryLlistcount;i++)
+										{
+											out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
+										}
+									%>
 									</select>
 									<button class="btn" onclick="deleteLcategory('Lcategory1')">Delete</button>
 								</div>

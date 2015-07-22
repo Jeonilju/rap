@@ -20,14 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.dao.CategoryLDao;
-import com.rap.dao.CategoryMDao;
-import com.rap.dao.CategorySDao;
 import com.rap.dao.MemberDao;
 import com.rap.dao.ProjectDao;
 import com.rap.dao.PromotionDao;
 import com.rap.models.CategoryLInfo;
-import com.rap.models.CategoryMInfo;
-import com.rap.models.CategorySInfo;
 import com.rap.models.MemberInfo;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
@@ -47,6 +43,9 @@ public class RAP_MainController {
 
 	@Autowired
 	private PromotionDao promotionDao;
+	
+	@Autowired
+	private CategoryLDao categoryLDao;
 
 	/** RAP 홈 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
@@ -80,7 +79,17 @@ public class RAP_MainController {
 	@RequestMapping(value = "/projectregister", method = RequestMethod.GET)
 	public String MainController_projectregister(HttpServletRequest request) {
 		logger.info("projectregister Page");
-
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
+		
+		if(member != null)
+		{
+			int member_pk = member.getPk();
+	
+			List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+			request.setAttribute("projectcount", projectlist.size());
+		}
 		return "projectregister";
 	}
 
@@ -159,6 +168,34 @@ public class RAP_MainController {
 
 		return "0";
 
+	}
+	
+	/** 프로젝트 삭제 */
+	@RequestMapping(value = "/projectdelete", method = RequestMethod.POST)
+	@ResponseBody
+	public String MainController_projectdelete(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam("projectname") String projectname) {
+		logger.info("projectdelete Page");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
+		int member_pk = member.getPk();
+		
+		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+		int projectlistcount = projectlist.size();
+		
+		for(int i=0;i<projectlistcount;i++)
+		{
+			if(projectlist.get(i).getProject_name().equals(projectname))
+			{
+				projectDao.delete(projectlist.get(i).getPk());
+				return "200";
+			}
+		}
+		
+		return "error";
 	}
 
 	/** 프로젝트 홈 */
@@ -285,6 +322,26 @@ public class RAP_MainController {
 	public String MainController_itemcategorization(HttpServletRequest request) {
 		logger.info("itemcategorization Page");
 
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+		
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "Project Not Found";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "Project Not Found";
+		if (project_key.isEmpty())
+			return "Project Not Found";
+
+		// 대분류 리스트
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+
+		request.setAttribute("categoryLlist", categoryLlist);
+		
 		return "itemcategorization";
 	}
 

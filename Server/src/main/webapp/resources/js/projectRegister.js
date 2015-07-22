@@ -6,7 +6,7 @@ function registerProject(){
 	
 	
 	$.ajax({
-		url : "register_db",
+		url : "projectregister_db",
 		type : "POST",
 		data : param,
 		cache : false,

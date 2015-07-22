@@ -86,9 +86,7 @@ public class RAP_CategoryController {
 
 		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-
-		request.setAttribute("categoryLlist", categoryLlist);
-
+		
 		jObject.put("categoryLlist", categoryLlist);
 		logger.info("Lcategory_db Page - "+jObject.toString());
 
@@ -255,7 +253,8 @@ public class RAP_CategoryController {
 		logger.info("같은 이름의 카테고리 없음");
 		categoryLDao.create(project_key, Lcategory);
 
-		return "200";
+		logger.info("대분류 등록");
+		return "success";
 	}
 
 	/** 중분류 추가 */

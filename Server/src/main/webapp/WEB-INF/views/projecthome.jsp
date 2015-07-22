@@ -6,14 +6,63 @@
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
+<script>
 
+function deleteProject(projectname)
+{
+	if(confirm(projectname+' 프로젝트를 삭제하시겠습니까?'))
+	{
+		var param = "projectname" + "=" + projectname;
+		$.ajax({
+			url : "projectdelete",
+			type : "POST",
+			data : param,
+			cache : false,
+			async : false,
+			dataType : "text",
+	
+			success : function(response) {								
+				if(response=='200')
+				{
+					alert('삭제가 완료되었습니다.');
+					location.href='projecthome';
+				}
+				else
+				{
+					alert("에러")
+					return false;
+				}	
+			},
+			error : function(request, status, error) {
+				if (request.status != '0') {
+					alert("code : " + request.status + "\r\nmessage : "
+							+ request.reponseText + "\r\nerror : " + error);
+				}
+			}
+	
+		});
+	}
+	else
+	{
+		alert('삭제가 취소되었습니다.');
+		return;
+	}
+}
+</script>
 
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
 		<div id="wrapper">
 			<!-- sidebar-wrapper -->
-			<jsp:include page="projecthomenav.jsp" flush="false" />
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					<li><br> <br> <br></li>
+					<li class="sidebar-brand"><a href="#"> Project </a></li>
+					<li role="presentation"><a role="menuitem" href="projecthome">Project Home</a></li>
+					<li role="presentation"><a role="menuitem" href="projectregister">Register</a></li>
+				</ul>
+			</div>
 			<!-- /#sidebar-wrapper -->
 
 			<!-- page-content-wrapper -->
@@ -60,8 +109,8 @@
 					<div class="panel panel-default">
 						<div class="panel-heading clearfix">
 							<h3 class="panel-title pull-left"><a href="projectsettings?currentprojectname=<%= projectlist.get(i).getProject_name() %>"><%= projectlist.get(i).getProject_name() %></a></h3>
-							<i class="fa fa-trash pull-right"></i> <i
-								class="fa fa-edit pull-right" style="margin-right: 4px;"></i>
+							<a onclick="deleteProject('<%= projectlist.get(i).getProject_name() %>')"><i class="fa fa-trash pull-right"></i></a>
+							<a><i class="fa fa-edit pull-right" style="margin-right: 4px;"></i></a>
 
 						</div>
 						<div class="panel-body">
