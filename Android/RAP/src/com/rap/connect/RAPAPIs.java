@@ -499,7 +499,7 @@ public class RAPAPIs {
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * 
+	 * Promotion 반응하기
 	 * */
 	public static HttpRequestBase Promotion_send(int promotion_pk) throws UnsupportedEncodingException{
 		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/promotion");
@@ -511,7 +511,7 @@ public class RAPAPIs {
 		
 		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
 		httpPost.setEntity(entityRequest);
-		//httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 		
 		return httpPost;
 	}

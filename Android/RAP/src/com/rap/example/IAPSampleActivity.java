@@ -26,6 +26,7 @@ import com.rap.R;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
+import com.rap.iap.RAPIapInfo;
 
 public class IAPSampleActivity extends RAPBaseActivity{
 
@@ -34,7 +35,7 @@ public class IAPSampleActivity extends RAPBaseActivity{
 	private ListView lv_items;
 
 	private IAPAdapter itemAdapter;
-	
+	private ArrayList<RAPIapInfo> itemList;
 	
 	private ArrayList<String> categoryLList;
 	private ArrayList<String> categoryMList;
@@ -292,6 +293,28 @@ public class IAPSampleActivity extends RAPBaseActivity{
 						JSONArray list = new JSONArray(json.getString("res"));
 						Log.i(TAG, "¿¿¥‰: " + json.getString("res"));
 						
+						itemList = new ArrayList<RAPIapInfo>();
+						for(int n=0;n < list.length();n++){
+							
+							//int pk, String Name, int PriceReal, int PriceMain, int PriceSub, int type, String google_id, String imagePath,
+							//String categoryL, String categoryM, String categoryS
+							itemList.add(new RAPIapInfo(
+									list.getJSONObject(n).getInt("pk"),
+									list.getJSONObject(n).getString("name"),
+									list.getJSONObject(n).getInt("price_real"),
+									list.getJSONObject(n).getInt("price_main"),
+									list.getJSONObject(n).getInt("price_sub"),
+									list.getJSONObject(n).getInt("using_type"),
+									list.getJSONObject(n).getString("google_id"),
+									list.getJSONObject(n).getString("imagePath"),
+									list.getJSONObject(n).getString("categoryl"),
+									list.getJSONObject(n).getString("categorym"),
+									list.getJSONObject(n).getString("categorys")
+									));
+						}
+						
+						itemAdapter = new IAPAdapter(IAPSampleActivity.this, itemList);
+						lv_items.setAdapter(itemAdapter);
 						break;
 					default:
 						break;
