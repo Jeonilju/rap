@@ -14,9 +14,16 @@
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
 <script src="./resources/js/itemcategorization.js"></script>
-<link rel="stylesheet" href="./resources/css/bootstrap-select.css">
-<script src="./resources/js/bootstrap-select.js"></script>
-
+<!-- <link rel="stylesheet" href="./resources/css/bootstrap-select.css">-->
+<!-- <script src="./resources/js/bootstrap-select.js"></script>-->
+<script type="text/javascript">
+$(document).ready(function(){getAllLcategory()});
+function getAllLcategory()
+{
+	var id = ['#Lcategory1','#Lcategory2','#Lcategory3'];
+	getLcategory(id);
+}
+</script>
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
@@ -72,7 +79,7 @@
 										data-validation-required-message="Please enter Large Category." style="width:200px">
 									<button class="btn" onclick="registerLcategory()">Register</button>
 									
-									<select id="Lcategory1" name="Lcategory1" class="selectpicker show-tick" style="width:200px">
+									<select id="Lcategory1" name="Lcategory1">
 									</select>
 									<button class="btn" onclick="deleteLcategory('Lcategory1')">Delete</button>
 								</div>
@@ -85,14 +92,14 @@
 							<div>
 								
 								<div class="form-group" style="padding:20px">
-									<select id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')" class="selectpicker show-tick">
+									<select id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
 									</select>
 									<input type="text"
 										class="form-control" placeholder="Medium Category"
 										id="CategoryM" required
 										data-validation-required-message="Please enter Medium Category." style="width:200px">
 									<button class="btn" onclick="registerMcategory()">Register</button>
-									<select id="Mcategory2" name="Mcategory2" class="selectpicker show-tick">
+									<select id="Mcategory2" name="Mcategory2">
 										<option value='' selected>해당없음</option>
 									</select>
 									<button class="btn" onclick="deleteMcategory('Mcategory2')">Delete</button>
@@ -103,9 +110,9 @@
 							<!-- Small Category -->
 							<div>
 								<div class="form-group" style="padding:20px">
-									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')" class="selectpicker show-tick">
+									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')">
 									</select>
-									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')" class="selectpicker show-tick">
+									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')">
 										<option value='' selected>해당없음</option>
 									</select>
 									<input type="text"
@@ -113,7 +120,7 @@
 										id="CategoryS" required
 										data-validation-required-message="Please enter Small Category." style="width:200px">
 									<button class="btn" onclick="registerScategory()">Register</button>
-									<select id="Scategory3" name="Scategory3" class="selectpicker show-tick">
+									<select id="Scategory3" name="Scategory3">
 										<option value="" selected>해당없음</option>
 									</select>
 									<button class="btn" onclick="deleteScategory('Scategory3')">Delete</button>

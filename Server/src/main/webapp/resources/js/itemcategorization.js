@@ -1,14 +1,13 @@
 /**
  * 
  */
-$(document).ready(function(){getLcategory()});
-
-function getLcategory()
+function getLcategory(id)
 {
-	$('#Lcategory1').html("<option value='' selected>해당없음</option>");
-	$('#Lcategory2').html("<option value='' selected>해당없음</option>");
-	$('#Lcategory3').html("<option value='' selected>해당없음</option>");
-	
+	var idLen = id.length;
+	for(var i=0;i<idLen;i++)
+		{
+			$(id[i]).html("<option value='' selected>해당없음</option>");
+		}
 	$.ajax({
 		url : "Lcategory_db",
 		type : "POST",
@@ -22,10 +21,10 @@ function getLcategory()
 				
 				for(var i=0;i<listLen;i++)
 				{
-					$('#Lcategory1').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					$('#Lcategory2').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					$('#Lcategory3').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					
+					for(var j=0;j<idLen;j++)
+					{
+					$(id[j]).append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
+					}
 				}
 			}
 		},

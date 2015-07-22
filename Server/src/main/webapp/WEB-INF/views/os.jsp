@@ -11,7 +11,7 @@
 ${demo.css}
 		</style>
 		<script type="text/javascript">
-		$(function () {
+		$(function (oslen) {
 		    // Create the chart
 		    $('#container').highcharts({
 		        chart: {
@@ -36,7 +36,8 @@ ${demo.css}
 		            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
 		            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
 		        },
-		        series: [{
+		        series: [
+		                 {
 		            name: "Brands",
 		            colorByPoint: true,
 		            data: [{

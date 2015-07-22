@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,19 +18,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
 import com.rap.dao.CategorySDao;
+import com.rap.dao.IAPDao;
 import com.rap.dao.MemberDao;
 import com.rap.dao.ProjectDao;
+import com.rap.dao.Virtual_MainDao;
+import com.rap.dao.Virtual_SubDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.CategoryMInfo;
 import com.rap.models.CategorySInfo;
-import com.rap.models.MemberInfo;
+import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
+import com.rap.models.Virtual_MainInfo;
+import com.rap.models.Virtual_SubInfo;
 
 import net.sf.json.JSONObject;
 
 @Controller
-public class RAP_CetegoryController {
-	private static final Logger logger = LoggerFactory.getLogger(RAP_CetegoryController.class);
+public class RAP_CategoryController {
+	private static final Logger logger = LoggerFactory.getLogger(RAP_CategoryController.class);
 
 	@Autowired
 	private CategoryLDao categoryLDao;
@@ -43,13 +47,22 @@ public class RAP_CetegoryController {
 	private CategorySDao categorySDao;
 
 	@Autowired
+	private IAPDao iapDao;
+	
+	@Autowired
 	private ProjectDao projectDao;
 
 	@Autowired
 	private MemberDao memberDao;
+	
+	@Autowired
+	private Virtual_MainDao virtual_MainDao;
+
+	@Autowired
+	private Virtual_SubDao virtual_SubDao;
 
 	/** 대분류 리스트 */
-	@RequestMapping(value = "/Lcategory_db", method = RequestMethod.POST)
+	@RequestMapping(value = "/Lcategory_db", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
 	@ResponseBody
 	public String MainController_Lcategory_db(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("Lcategory_db Page");
@@ -77,12 +90,13 @@ public class RAP_CetegoryController {
 		request.setAttribute("categoryLlist", categoryLlist);
 
 		jObject.put("categoryLlist", categoryLlist);
-		logger.info(jObject.toString());
+		logger.info("Lcategory_db Page - "+jObject.toString());
 
 		return jObject.toString();
 
 	}
 
+	//중분류 리스트
 	@RequestMapping(value = "/Mcategory_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String MainController_Mcategory_db(HttpServletRequest request, HttpServletResponse response,
@@ -537,5 +551,234 @@ return "error";}
 		categorySDao.delete(project_key, categoryM_pk, Scategory);
 
 		return "200";
+	}
+	
+	/** 아이템 추가 */
+	@RequestMapping(value = "/registerItem", method = RequestMethod.POST)
+	@ResponseBody
+	public String registerItem(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("ItemName") String ItemName, 
+			@RequestParam("ItemDescription") String ItemDescription,
+			@RequestParam("GoogleID") String GoogleID,
+			@RequestParam("ItemPrice") String ItemPrice, 
+			@RequestParam("Lcategory") String Lcategory,
+			@RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory,
+			@RequestParam("Coin") String Coin) {
+		
+		logger.info("registerItem pages");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 = "+project_key);
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "Lcategory";
+		if (Lcategory.isEmpty())
+			return "Lcategory";
+		logger.info("대분류 = "+Lcategory);
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "Mcategory";
+		if (Mcategory.isEmpty())
+			return "Mcategory";
+		logger.info("중분류 = "+Mcategory);
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+			return "Scategory";
+		if (Scategory.isEmpty())
+			return "Scategory";
+		logger.info("소분류 = "+Scategory);
+
+		// 아이템명이 정상적으로 들어오지 않은 경우
+		if (ItemName == null)
+			return "ItemName";
+		if (ItemName.isEmpty())
+			return "ItemName";
+		logger.info("ItemName = "+ItemName);
+		
+		// 아이템명이 정상적으로 들어오지 않은 경우
+		if (ItemDescription == null)
+			return "ItemDescription";
+		if (ItemDescription.isEmpty())
+			return "ItemDescription";
+		logger.info("ItemDescription = "+ItemDescription);
+
+		//가격 입력값 검증
+		String temp;
+		for(int i=0;i<ItemPrice.length();i++)
+		{
+			temp=ItemPrice.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "ItemPrice";
+		}
+		logger.info("ItemPrice = "+ItemPrice);
+		
+		//화폐가 정상적으로 입력되지 않은 경우
+		if (Coin == null)
+			return "Coin";
+		if (Coin.isEmpty())
+			return "Coin";
+
+		logger.info("Coin = "+Coin);
+		int price_real=-1;
+		int price_main=-1;
+		int price_sub=-1;
+		
+		//화폐목록
+		if(Coin.equals("실제결제"))
+		{
+			//실제 결제인데 구글아이디가 입력되지 않은 경우
+			if (GoogleID == null)
+				return "GoogleID";
+			if (GoogleID.isEmpty())
+				return "GoogleID";
+			logger.info("GoogleID = "+GoogleID);
+			
+			price_real = Integer.parseInt(ItemPrice);
+		}
+		else
+		{
+			//주화폐 리스트
+			List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key, Coin);
+			
+			//해당 이름의 주화폐까 없는 경우
+			if(mainlist.isEmpty())
+			{
+				//부화폐 리스트
+				List<Virtual_MainInfo> sublist = virtual_MainDao.select(project_key, Coin);
+				//항목이 없으면 에러
+				if(sublist.isEmpty())
+					return "error";
+				else
+					price_sub = Integer.parseInt(ItemPrice);
+			}
+			else
+				price_main = Integer.parseInt(ItemPrice);
+		}
+		
+		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, -1, "", ItemDescription, Lcategory, Mcategory, Scategory);
+		
+		return "200";
+	}
+	
+	/** 아이템 리스트 */
+	@RequestMapping(value = "/itemlist_db", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String itemlist_db(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("Lcategory") String Lcategory, 
+			@RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory) {
+		logger.info("itemlist_db pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "Lcategory";
+		if (Lcategory.isEmpty())
+			return "Lcategory";
+		logger.info("대분류 존재");
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "Mcategory";
+		if (Mcategory.isEmpty())
+			return "Mcategory";
+		logger.info("중분류 존재");
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+			return "Scategory";
+		if (Scategory.isEmpty())
+			return "Scategory";
+		logger.info("소분류 존재");
+
+		List<IAPInfo> itemlist = iapDao.select(project_key, Lcategory, Mcategory, Scategory);
+		
+		JSONObject jObject = new JSONObject();
+				
+		jObject.put("itemlist", itemlist);
+		logger.info(jObject.toString());
+
+		return jObject.toString();
+	}
+
+	/** 화폐 리스트 */
+	@RequestMapping(value = "/coinlist_db", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String itemlist_db(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("coinlist_db pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key);
+		List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key);
+		JSONObject jObject = new JSONObject();
+				
+		jObject.put("mainlist", mainlist);
+		jObject.put("sublist", sublist);
+		logger.info(jObject.toString());
+
+		return jObject.toString();
 	}
 }

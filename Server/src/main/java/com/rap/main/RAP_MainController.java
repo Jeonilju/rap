@@ -175,13 +175,13 @@ public class RAP_MainController {
 		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
 		int projectcount = projectlist.size();
 
-		logger.info("projectcount = " + projectcount);
+		logger.info("projectsettings Page - projectcount = " + projectcount);
 
 		for (int i = 0; i < projectcount; i++) {
 			if (projectlist.get(i).getProject_name().equals(currentprojectname)) {
 				session.setAttribute("currentproject", projectlist.get(i));
 				logger.info(
-						"currentproject = " + ((ProjectInfo) session.getAttribute("currentproject")).getProject_name());
+						"projectsettings Page - currentproject = " + ((ProjectInfo) session.getAttribute("currentproject")).getProject_name());
 			}
 		}
 
@@ -274,7 +274,7 @@ public class RAP_MainController {
 		return "logout";
 	}
 
-	@RequestMapping(value = "/itemmanagement", method = RequestMethod.GET)
+	@RequestMapping(value = "/itemmanagement", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
 	public String MainController_itemmanagement(HttpServletRequest request) {
 		logger.info("itemmanagement Page");
 
