@@ -40,7 +40,7 @@ public class IAPDao implements IAPIDao{
 		    	{
 		    		return new IAPInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("iap")
 		    				, resultSet.getInt("price_real")
 		    				, resultSet.getInt("price_main")
@@ -63,7 +63,7 @@ public class IAPDao implements IAPIDao{
 		    	{
 		    		return new IAPInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("iap")
 		    				, resultSet.getInt("price_real")
 		    				, resultSet.getInt("price_main")
@@ -86,7 +86,7 @@ public class IAPDao implements IAPIDao{
 		    	{
 		    		return new IAPInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("iap")
 		    				, resultSet.getInt("price_real")
 		    				, resultSet.getInt("price_main")
@@ -110,7 +110,7 @@ public class IAPDao implements IAPIDao{
 		    	{
 		    		return new IAPInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("iap")
 		    				, resultSet.getInt("price_real")
 		    				, resultSet.getInt("price_main")

@@ -4,21 +4,21 @@ import java.sql.Timestamp;
 
 public class Virtual_SubInfo {
 	private int pk;
-	private int key;
+	private String key;
 	private String name;
 	private int price;
 	private String image;
-	private String discription;
+	private String description;
 	private Timestamp reg_date;
 	
-	public Virtual_SubInfo( int pk, int key, String name, int price, String image, String discription, Timestamp reg_date)
+	public Virtual_SubInfo( int pk, String key, String name, int price, String image, String description, Timestamp reg_date)
 	{
 		this.pk = pk;
 		this.key = key;
 		this.name = name;
 		this.price = price;
 		this.image = image;
-		this.discription = discription;
+		this.description = description;
 		this.reg_date = reg_date;
 	}
 	
@@ -28,10 +28,10 @@ public class Virtual_SubInfo {
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
-	public int getKey() {
+	public String getKey() {
 		return key;
 	}
-	public void setKey(int key) {
+	public void setKey(String key) {
 		this.key = key;
 	}
 	public String getName() {
@@ -52,11 +52,11 @@ public class Virtual_SubInfo {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public String getDiscription() {
-		return discription;
+	public String getDescription() {
+		return description;
 	}
-	public void setDiscription(String discription) {
-		this.discription = discription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public Timestamp getReg_date() {
 		return reg_date;

@@ -29,30 +29,46 @@ public class Virtual_MainDao implements Virtual_MainIDao{
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
 	public void create(String project_key, String name, int price, String image, String description) {
-		jdbcTemplate.update("insert into virsual_main (project_key, name, price, image, description) values (?, ?, ?, ?, ?)"
+		jdbcTemplate.update("insert into virtual_main (project_key, name, price, image, description) values (?, ?, ?, ?, ?)"
 				, new Object[] { project_key, name, price, image, description});
 	}
 	public List<Virtual_MainInfo> select(String project_key) {
-		return jdbcTemplate.query("select * from virsual_main where project_key = ?",
+		return jdbcTemplate.query("select * from virtual_main where project_key = ?",
 		    	new Object[] { project_key }, new RowMapper<Virtual_MainInfo>() {
 		    	public Virtual_MainInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
 		    		return new Virtual_MainInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("name")
 		    				, resultSet.getInt("price")
 		    				, resultSet.getString("image")
-		    				, resultSet.getString("discription")
+		    				, resultSet.getString("description")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+	}
+	public List<Virtual_MainInfo> select(String project_key, String name) {
+		return jdbcTemplate.query("select * from virtual_main where project_key = ? and name = ?",
+		    	new Object[] { project_key,name }, new RowMapper<Virtual_MainInfo>() {
+		    	public Virtual_MainInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new Virtual_MainInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("name")
+		    				, resultSet.getInt("price")
+		    				, resultSet.getString("image")
+		    				, resultSet.getString("description")
 		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 	}
 	public void deleteAll() {
-		jdbcTemplate.update("delete from virsual_main");
+		jdbcTemplate.update("delete from virtual_main");
 	}
 	public void delete(String project_key) {
-		jdbcTemplate.update("delete from virsual_main where project_key = ?", new Object[] { project_key });
+		jdbcTemplate.update("delete from virtual_main where project_key = ?", new Object[] { project_key });
 	}
 
 }

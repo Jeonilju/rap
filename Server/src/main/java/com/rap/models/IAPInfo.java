@@ -4,23 +4,23 @@ import java.sql.Timestamp;
 
 public class IAPInfo {
 	private int pk;
-	private int key;
 	private String name;
+	private String key;
 	private int price_real;
 	private int price_main;
 	private int price_sub;
 	private int using_type;
 	private String google_id;
 	private String imagePath;
-	private String discription;
+	private String description;
 	private Timestamp reg_date;
 	private String categoryl;
 	private String categorym;
 	private String categorys;
 	
-	public IAPInfo(int pk, int key, String iap
+	public IAPInfo(int pk, String key, String iap
 			, int price_real, int price_main, int price_sub, int using_type, String google_id
-			, String imagePath, String discription, Timestamp reg_date
+			, String imagePath, String description, Timestamp reg_date
 			, String categoryl, String categorym, String categorys) {
 		this.pk = pk;
 		this.key = key;
@@ -31,7 +31,7 @@ public class IAPInfo {
 		this.google_id = google_id;
 		this.using_type = using_type;
 		this.imagePath = imagePath;
-		this.discription = discription;
+		this.description = description;
 		this.reg_date = reg_date;
 		this.categoryl = categoryl;
 		this.categorym = categorym;
@@ -44,10 +44,10 @@ public class IAPInfo {
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
-	public int getKey() {
+	public String getKey() {
 		return key;
 	}
-	public void setKey(int key) {
+	public void setKey(String key) {
 		this.key = key;
 	}
 	public String getIap() {
@@ -86,11 +86,11 @@ public class IAPInfo {
 	public void setImage(String image) {
 		this.imagePath = image;
 	}
-	public String getDiscription() {
-		return discription;
+	public String getDescription() {
+		return description;
 	}
-	public void setDiscription(String discription) {
-		this.discription = discription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public Timestamp getReg_date() {
 		return reg_date;
@@ -123,6 +123,22 @@ public class IAPInfo {
 
 	public void setGoogle_id(String google_id) {
 		this.google_id = google_id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 	
 }

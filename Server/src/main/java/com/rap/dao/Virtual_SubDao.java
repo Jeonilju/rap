@@ -39,11 +39,27 @@ public class Virtual_SubDao implements Virtual_SubIDao{
 		    	{
 		    		return new Virtual_SubInfo(
 		    				resultSet.getInt("pk")
-		    				, resultSet.getInt("project_key")
+		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("name")
 		    				, resultSet.getInt("price")
 		    				, resultSet.getString("image")
-		    				, resultSet.getString("discription")
+		    				, resultSet.getString("description")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+	}
+	public List<Virtual_MainInfo> select(String project_key, String name) {
+		return jdbcTemplate.query("select * from virtual_main where project_key = ? and name = ?",
+		    	new Object[] { project_key,name }, new RowMapper<Virtual_MainInfo>() {
+		    	public Virtual_MainInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new Virtual_MainInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("name")
+		    				, resultSet.getInt("price")
+		    				, resultSet.getString("image")
+		    				, resultSet.getString("description")
 		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
