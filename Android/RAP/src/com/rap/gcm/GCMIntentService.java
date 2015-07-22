@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -64,19 +65,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String title = intent.getStringExtra("title");
 		String contents = intent.getStringExtra("contents");
 		String className = intent.getStringExtra("class");
-		int promotion_pk = intent.getIntExtra("promotion_pk", -1);
+		String promotion_pk_str = intent.getStringExtra("promotion_pk");
+		int promotion_pk = Integer.parseInt(promotion_pk_str);
 		
 		// target Activity ¼³Á¤
 		Intent targetActivity;
 		PendingIntent pIntent = null;
 		try {
 			targetActivity = new Intent(this, Class.forName(className));
-			targetActivity.putExtra("RAP_GCM_time", true);
+			
+			targetActivity.setData(Uri.parse("" + promotion_pk));
+			
+			targetActivity.putExtra("RAP_GCM_time", false);
 			targetActivity.putExtra("promotion_pk", promotion_pk);
 			pIntent = PendingIntent.getActivity(getApplicationContext()
 	                   , 0
 	                   , targetActivity
-	                   , Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+	                   , PendingIntent.FLAG_UPDATE_CURRENT);
 		} 
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();

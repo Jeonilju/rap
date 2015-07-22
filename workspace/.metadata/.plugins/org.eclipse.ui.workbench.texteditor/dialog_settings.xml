@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="KLTExcelParser" key="selection"/>
+		<item value="Promotion_send" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="Promotion_send"/>
+			<item value="FLAG_ACTIVITY_CLEAR_TOP"/>
+			<item value="RAP_GCM_time"/>
 			<item value="KLTExcelParser"/>
 			<item value="path"/>
 			<item value="OrderInfo"/>
 			<item value="View"/>
 			<item value="날짜"/>
-			<item value="orderer_commission"/>
-			<item value=".SignUp("/>
-			<item value=".SignUp"/>
 		</list>
 		<list key="replacehistory">
 		</list>

@@ -41,6 +41,7 @@
             </intent-filter>
         </activity>
         
+        <activity android:name="com.rap.activity.RAPBaseActivity"></activity>
         <activity android:name="com.rap.example.IAPSampleActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.rap.example.SampleActivity1" android:screenOrientation="portrait"></activity>
         <activity android:name="com.rap.example.SampleActivity2" android:screenOrientation="portrait"></activity>

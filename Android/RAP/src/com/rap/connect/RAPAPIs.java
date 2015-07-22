@@ -502,7 +502,6 @@ public class RAPAPIs {
 	 * 
 	 * */
 	public static HttpRequestBase Promotion_send(int promotion_pk) throws UnsupportedEncodingException{
-		
 		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/promotion");
 		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();

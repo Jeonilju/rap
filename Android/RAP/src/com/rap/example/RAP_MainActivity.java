@@ -35,6 +35,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Intent intent = getIntent();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rap__main);
 		
@@ -227,5 +228,11 @@ public class RAP_MainActivity extends RAPBaseActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
 	}
 }

@@ -35,21 +35,26 @@ public class RAPBaseActivity extends Activity{
 	
 	/** Activity 스텍 */
 	private static List<Activity> activityList;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		Intent intent = getIntent();
-		if(intent.getBooleanExtra("RAP_GCM_time", false)){
-			int promotion_pk = intent.getIntExtra("promotion_pk", -1);
-			if(promotion_pk != -1){
-				try {
-					HttpRequestBase req = RAPAPIs.Promotion_send(promotion_pk);
-					RAPHttpClient.getInstance().background(req, null);
-				} catch (IOException e) {
-					e.printStackTrace();
+		
+		if(intent.getData() != null){
+			try{
+				int promotion_pk = Integer.parseInt(intent.getDataString());
+				if(promotion_pk !=  -1){
+					try {
+						HttpRequestBase req = RAPAPIs.Promotion_send(promotion_pk);
+						RAPHttpClient.getInstance().background(req, null);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
+			}catch(Exception e){
+				Log.e(TAG, "관리자에게 문의하세요.");
 			}
 		}
 		
@@ -138,4 +143,12 @@ public class RAPBaseActivity extends Activity{
 		else
 			return null;
 	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+	}
+	
+	
 }

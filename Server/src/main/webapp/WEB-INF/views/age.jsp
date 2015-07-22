@@ -19,7 +19,7 @@ demo
 
 <script type="text/javascript">
 
-		$(document).ready(getSex());
+		$(document).ready(getAge());
 
 		function getAge() {
 			$.ajax({
@@ -90,7 +90,7 @@ demo
 		                ['10s', ten],
 		                ['20s', twenty],
 		                ['30s', thirty],
-		                ['40s', forty]
+		                ['40s', forty],
 		                ['over 50s', old]
 		            ],
 		            dataLabels: {

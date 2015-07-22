@@ -11,130 +11,81 @@
 ${demo.css}
 		</style>
 		<script type="text/javascript">
-		$(function () {
+		$(document).ready(getDevice());
+
+		function getDevice() {
+			$.ajax({
+				url : "device_db",
+				type : "POST",
+				dataType : "JSON",
+				success : function(data) {
+
+					if (data != null || data != "") {
+
+						var device = data.Device;
+						var devicelen = device.length;
+						modify_chart(device,devicelen);
+
+					}
+				},
+
+				error : function(request, status, error) {
+					if (request.status != '0') {
+						alert("code : " + request.status + "\r\nmessage : "
+								+ request.reponseText + "\r\nerror : " + error);
+					}
+				}
+			});
+		}
+
+
+
+		function modify_chart(device,devicelen) {
 		    // Create the chart
-		    $('#container').highcharts({
-		        chart: {
-		            type: 'pie'
-		        },
-		        title: {
-		            text: ' '
-		        },
-		        subtitle: {
-		            text: ' '
-		        },
-		        plotOptions: {
-		            series: {
-		                dataLabels: {
-		                    enabled: true,
-		                    format: '{point.name}: {point.y:.1f}%'
-		                }
-		            }
-		        },
-
-		        tooltip: {
-		            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-		            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-		        },
-		        series: [{
-		            name: "Brands",
-		            colorByPoint: true,
-		            data: [{
-		                name: "Samsung",
-		                y: 56.33,
-		                drilldown: "Samsung"
-		            }, {
-		                name: "Nokia",
-		                y: 24.030000000000005,
-		                drilldown: "Nokia"
-		            }, {
-		                name: "Apple",
-		                y: 10.38,
-		                drilldown: "Apple"
-		            }, {
-		                name: "LG",
-		                y: 4.77,
-		                drilldown: "LG"
-		            }, {
-		                name: "Xiaomi",
-		                y: 0.9100000000000001,
-		                drilldown: "Xiaomi"
-		            }, {
-		                name: "Proprietary or Undetectable",
-		                y: 0.2,
-		                drilldown: null
-		            }]
-		        }],
-		        drilldown: {
-		            series: [{
-		                name: "Samsung",
-		                id: "Samsung",
-		                data: [
-		                    ["v4.4", 24.13],
-		                    ["v4.0", 17.2],
-		                    ["v3.0", 8.11],
-		                    ["v2.3", 5.33],
-		                    ["v2.0", 1.06],
-		                    ["v1.0", 0.5]
-		                ]
-		            }, {
-		                name: "Nokia",
-		                id: "Nokia",
-		                data: [
-		                    ["v40.0", 5],
-		                    ["v41.0", 4.32],
-		                    ["v42.0", 3.68],
-		                    ["v39.0", 2.96],
-		                    ["v36.0", 2.53],
-		                    ["v43.0", 1.45],
-		                    ["v31.0", 1.24],
-		                    ["v35.0", 0.85],
-		                    ["v38.0", 0.6],
-		                    ["v32.0", 0.55],
-		                    ["v37.0", 0.38],
-		                    ["v33.0", 0.19],
-		                    ["v34.0", 0.14],
-		                    ["v30.0", 0.14]
-		                ]
-		            }, {
-		                name: "Apple",
-		                id: "Apple",
-		                data: [
-		                    ["v35", 2.76],
-		                    ["v36", 2.32],
-		                    ["v37", 2.31],
-		                    ["v34", 1.27],
-		                    ["v38", 1.02],
-		                    ["v31", 0.33],
-		                    ["v33", 0.22],
-		                    ["v32", 0.15]
-		                ]
-		            }, {
-		                name: "LG",
-		                id: "LG",
-		                data: [
-		                    ["v8.0", 2.56],
-		                    ["v7.1", 0.77],
-		                    ["v5.1", 0.42],
-		                    ["v5.0", 0.3],
-		                    ["v6.1", 0.29],
-		                    ["v7.0", 0.26],
-		                    ["v6.2", 0.17]
-		                ]
-		            }, {
-		                name: "Xiaomi",
-		                id: "Xiaomi",
-		                data: [
-		                    ["v12.x", 0.34],
-		                    ["v28", 0.24],
-		                    ["v27", 0.17],
-		                    ["v29", 0.16]
-		                ]
-		            }]
-		        }
-		    });
-		});
-
+		 
+		    
+			$('#container')
+			.highcharts(
+					{
+						chart : {
+							plotBackgroundColor : null,
+							plotBorderWidth : null,
+							plotShadow : false,
+							type : 'pie'
+						},
+						title : {
+							text : 'title'
+						},
+						tooltip : {
+							pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+						},
+						plotOptions : {
+							pie : {
+								allowPointSelect : true,
+								cursor : 'pointer',
+								dataLabels : {
+									enabled : true,
+									format : '<b>{point.name}</b>: {point.percentage:.1f} %',
+									style : {
+										color : (Highcharts.theme && Highcharts.theme.contrastTextColor)
+												|| 'black'
+									}
+								}
+							}
+						},
+				        series:  [{
+				            name: "Brands",
+				            colorByPoint: true,
+				            data:device
+				            
+				            
+				        }]
+					});
+}
+		
+		
+		
+	
 
 		</script>
 	</head>

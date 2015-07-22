@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.rap.R.id"/>
 <fullyQualifiedTypeName name="android.widget.ListView"/>
 <fullyQualifiedTypeName name="android.widget.AdapterView.OnItemClickListener"/>
 <fullyQualifiedTypeName name="com.rap.connect.RAPAPIs"/>
-<fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="android.support.annotation.MainThread"/>
 <fullyQualifiedTypeName name="com.rap.example.RAP_MainActivity"/>
 <fullyQualifiedTypeName name="com.klt.setting.Preference"/>
@@ -48,7 +46,6 @@
 <fullyQualifiedTypeName name="com.klt.activity.SigninActivity"/>
 <fullyQualifiedTypeName name="com.rap.iap.RAPIapInfo"/>
 <fullyQualifiedTypeName name="com.rap.R"/>
-<fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="android.widget.EditText"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="jxl.write.DateTime"/>
@@ -60,4 +57,7 @@
 <fullyQualifiedTypeName name="com.rap.example.IAPAdapter"/>
 <fullyQualifiedTypeName name="com.rap.example.IAPSampleActivity"/>
 <fullyQualifiedTypeName name="android.os.Environment"/>
+<fullyQualifiedTypeName name="android.content.Intent"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="android.os.Bundle"/>
 </qualifiedTypeNameHistroy>

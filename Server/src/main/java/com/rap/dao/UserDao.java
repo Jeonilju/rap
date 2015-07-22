@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.rap.idao.UserIDao;
+import com.rap.models.DeviceInfo;
+import com.rap.models.OSInfo;
 import com.rap.models.UserInfo;
 
 @Repository
@@ -231,6 +233,121 @@ public class UserDao implements UserIDao{
 		    	}
 		    });
 		return result.size();
+	}		
+	
+	public int countAge(String project_key, String age){
+		logger.info("count sex");
+		int floor=0,ceiling=0;
+		
+		if(age.equals("baby")){
+			floor=0;ceiling=10;
+		}
+		else if(age.equals("ten")){
+			floor=10;ceiling=20;
+		}
+		else if(age.equals("twenty")){
+			floor=20;ceiling=30;
+		}
+		else if(age.equals("thirty")){
+			floor=30;ceiling=40;
+		}
+		else if(age.equals("forty")){
+			floor=40;ceiling=50;
+		}
+		else if(age.equals("old")){
+			floor=50;ceiling=2147483647;			
+			List<UserInfo> result = jdbcTemplate.query("select * from user where project_key=? AND age >= ? ",
+			    	new Object[] { project_key, floor }, new RowMapper<UserInfo>() {
+			    	public UserInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+			    	{
+			    		return new UserInfo(resultSet.getInt("pk")
+			    				, resultSet.getString("project_key")
+			    				,resultSet.getString("gcm_id")
+			    				, resultSet.getInt("grade_time")
+			    				, resultSet.getInt("grade_money")
+			    				, resultSet.getDouble("position_let")
+			    				, resultSet.getDouble("position_lon")
+			    				, resultSet.getInt("sex")
+			    				, resultSet.getString("os_version")
+			    				, resultSet.getString("device_version")
+			    				, resultSet.getInt("age")
+			    				, resultSet.getInt("count")
+			    				, resultSet.getInt("virtual_main")
+			    				, resultSet.getInt("virtual_sub")
+			    				, resultSet.getTimestamp("reg_date"));
+			    	}
+			    });
+			return result.size();
+		}
+	
+			
+		
+		
+		List<UserInfo> result = jdbcTemplate.query("select * from user where project_key=? AND age >= ? AND age < ?",
+		    	new Object[] { project_key, floor, ceiling }, new RowMapper<UserInfo>() {
+		    	public UserInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new UserInfo(resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				,resultSet.getString("gcm_id")
+		    				, resultSet.getInt("grade_time")
+		    				, resultSet.getInt("grade_money")
+		    				, resultSet.getDouble("position_let")
+		    				, resultSet.getDouble("position_lon")
+		    				, resultSet.getInt("sex")
+		    				, resultSet.getString("os_version")
+		    				, resultSet.getString("device_version")
+		    				, resultSet.getInt("age")
+		    				, resultSet.getInt("count")
+		    				, resultSet.getInt("virtual_main")
+		    				, resultSet.getInt("virtual_sub")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		return result.size();
+		
 	}	
+	
+	
+	
+
+	
+	
+	
+	public List<DeviceInfo> countDevice(String project_key){
+		logger.info("count device");
+		//SELECT DISTINCT email FROM table;
+
+		List<DeviceInfo> Device_version = jdbcTemplate.query("select count(*),device_version from user where project_key=? group by device_version",
+		    	new Object[] { project_key}, new RowMapper<DeviceInfo>() {
+		    	public DeviceInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new DeviceInfo(resultSet.getInt("count(*)")
+		    				, resultSet.getString("device_version"));
+		    	}
+		    });	
+		
+		return Device_version;
+	}		
+	
+	
+	
+
+	
+	public List<OSInfo> countOS(String project_key){
+		logger.info("count os");
+		//SELECT DISTINCT email FROM table;
+
+		List<OSInfo> OS_version = jdbcTemplate.query("select count(*),os_version from user where project_key=? group by os_version",
+		    	new Object[] { project_key}, new RowMapper<OSInfo>() {
+		    	public OSInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new OSInfo(resultSet.getInt("count(*)")
+		    				, resultSet.getString("os_version"));
+		    	}
+		    });	
+		
+		return OS_version;
+	}		
 	
 }
