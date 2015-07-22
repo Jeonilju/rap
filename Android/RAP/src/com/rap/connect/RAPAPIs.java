@@ -1,7 +1,6 @@
 package com.rap.connect;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -491,5 +490,30 @@ public class RAPAPIs {
 		String url = (RAPHttpClient.getBaseURL() + "/APIs/TakeVirtualSub?project_key=" + RAPSetting.getRAPKey() + "&User=" + RAPUser.getUserId() + "&money=" + money);
 		HttpGet httpGet = new HttpGet(url);
 		return httpGet;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////														////////////////////////
+	///////////////////////						Promotion 보내기					////////////////////////
+	///////////////////////														////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * 
+	 * */
+	public static HttpRequestBase Promotion_send(int promotion_pk) throws UnsupportedEncodingException{
+		
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/promotion");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("promotion_pk", "" + promotion_pk));
+		
+		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+		httpPost.setEntity(entityRequest);
+		//httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		
+		return httpPost;
 	}
 }

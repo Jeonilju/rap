@@ -64,12 +64,15 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String title = intent.getStringExtra("title");
 		String contents = intent.getStringExtra("contents");
 		String className = intent.getStringExtra("class");
+		int promotion_pk = intent.getIntExtra("promotion_pk", -1);
 		
 		// target Activity ¼³Á¤
 		Intent targetActivity;
 		PendingIntent pIntent = null;
 		try {
 			targetActivity = new Intent(this, Class.forName(className));
+			targetActivity.putExtra("RAP_GCM_time", true);
+			targetActivity.putExtra("promotion_pk", promotion_pk);
 			pIntent = PendingIntent.getActivity(getApplicationContext()
 	                   , 0
 	                   , targetActivity

@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -38,6 +39,20 @@ public class RAPBaseActivity extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Intent intent = getIntent();
+		if(intent.getBooleanExtra("RAP_GCM_time", false)){
+			int promotion_pk = intent.getIntExtra("promotion_pk", -1);
+			if(promotion_pk != -1){
+				try {
+					HttpRequestBase req = RAPAPIs.Promotion_send(promotion_pk);
+					RAPHttpClient.getInstance().background(req, null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		
 		if(activityList == null){
 			activityList = new ArrayList<Activity>();
