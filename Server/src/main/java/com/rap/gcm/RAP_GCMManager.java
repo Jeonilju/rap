@@ -35,12 +35,13 @@ public class RAP_GCMManager {
 	 * @param content
 	 * @param userList
 	 * */
-	public void sendPush(String title, String content, String className, List<UserInfo> userList) {
+	public void sendPush(int promotion_pk, String title, String content, String className, List<UserInfo> userList) {
 		Sender sender = new Sender("AIzaSyCE2Hy_AvqYduWKT4YiZWoIrGH4iYlu12I");  //구글 코드에서 발급받은 서버 키
 		Message msg = new Message.Builder()
 							.addData("title", title)  //데이터 추가
 							.addData("contents", content)  //데이터 추가
 							.addData("class", className)
+							.addData("promotion_pk", "" + promotion_pk)
 							.build();
 
 		for(UserInfo user : userList){

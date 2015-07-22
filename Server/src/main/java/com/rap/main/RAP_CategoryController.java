@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,6 @@ import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
 import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
-
-import net.sf.json.JSONObject;
 
 @Controller
 public class RAP_CategoryController {
@@ -551,6 +551,7 @@ return "error";}
 
 		return "200";
 	}
+<<<<<<< HEAD:Server/src/main/java/com/rap/main/RAP_CategoryController.java
 	
 	/** 아이템 추가 */
 	@RequestMapping(value = "/registerItem", method = RequestMethod.POST)
@@ -781,3 +782,6 @@ return "error";}
 		return jObject.toString();
 	}
 }
+=======
+}
+>>>>>>> 753b9e794d5897f88a0fb0dd7668c890a0c3a992:Server/src/main/java/com/rap/main/RAP_CetegoryController.java

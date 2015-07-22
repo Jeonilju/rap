@@ -33,11 +33,14 @@ public class IAPSampleActivity extends RAPBaseActivity{
 	private Spinner sp_categoryL, sp_categoryM, sp_categoryS;
 	private ListView lv_items;
 
+	private IAPAdapter itemAdapter;
+	
+	
 	private ArrayList<String> categoryLList;
 	private ArrayList<String> categoryMList;
 	private ArrayList<String> categorySList;
 	
-	private ArrayAdapter<String> adapterL;// = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, arraylist); 
+	private ArrayAdapter<String> adapterL; 
 	private ArrayAdapter<String> adapterM;
 	private ArrayAdapter<String> adapterS;
 	
@@ -68,6 +71,8 @@ public class IAPSampleActivity extends RAPBaseActivity{
 		categoryLList = new ArrayList<String>();
 		categoryMList = new ArrayList<String>();
 		categorySList = new ArrayList<String>();
+		
+		//itemAdapter = new IAPAdapter(IAPSampleActivity.this, list);
 	}
 	
 	private void initEvent(){
@@ -118,7 +123,16 @@ public class IAPSampleActivity extends RAPBaseActivity{
 
 			@Override
 			public void onClick(View v) {
-
+				String categoryLName = sp_categoryL.getSelectedItem().toString();
+				String categoryMName = sp_categoryM.getSelectedItem().toString();
+				String categorySName = sp_categoryS.getSelectedItem().toString();
+				
+				try {
+					HttpRequestBase req = RAPAPIs.getIAP_CategoryS(categoryLName, categoryMName, categorySName);
+					RAPHttpClient.getInstance().background(req, getIAPs);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -246,6 +260,37 @@ public class IAPSampleActivity extends RAPBaseActivity{
 						
 						adapterS = new ArrayAdapter<String>(IAPSampleActivity.this, android.R.layout.simple_spinner_dropdown_item, categorySList);
 						sp_categoryS.setAdapter(adapterS);
+						
+						break;
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		
+	};
+	
+	Handler getIAPs = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(IAPSampleActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONArray list = new JSONArray(json.getString("res"));
+						Log.i(TAG, "응답: " + json.getString("res"));
 						
 						break;
 					default:

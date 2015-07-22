@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import com.rap.models.CategorySInfo;
 
 public interface CategorySIDao {
+
    void setDataSource(DataSource ds);
    void create(String Key, int categoryM_pk, String categoryS);
    

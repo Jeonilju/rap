@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.rap.idao.IAPIDao;
-import com.rap.models.CategoryLInfo;
 import com.rap.models.IAPInfo;
 
 @Repository
