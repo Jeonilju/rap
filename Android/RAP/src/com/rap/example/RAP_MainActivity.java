@@ -12,8 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -35,6 +33,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Intent intent = getIntent();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rap__main);
 		
@@ -208,24 +207,14 @@ public class RAP_MainActivity extends RAPBaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RAP_MainActivity.this, IAPSampleActivity.class);
-				startActivity(intent);
+				//Intent intent = new Intent(RAP_MainActivity.this, IAPSampleActivity.class);
+				//startActivity(intent);
 			}
 		});
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.rap__main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
 	}
 }

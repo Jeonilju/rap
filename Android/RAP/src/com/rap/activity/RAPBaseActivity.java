@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -34,10 +35,29 @@ public class RAPBaseActivity extends Activity{
 	
 	/** Activity 스텍 */
 	private static List<Activity> activityList;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Intent intent = getIntent();
+		
+		if(intent.getData() != null){
+			try{
+				int promotion_pk = Integer.parseInt(intent.getDataString());
+				if(promotion_pk !=  -1){
+					try {
+						HttpRequestBase req = RAPAPIs.Promotion_send(promotion_pk);
+						RAPHttpClient.getInstance().background(req, null);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}catch(Exception e){
+				Log.e(TAG, "관리자에게 문의하세요.");
+			}
+		}
+		
 		
 		if(activityList == null){
 			activityList = new ArrayList<Activity>();
@@ -118,6 +138,17 @@ public class RAPBaseActivity extends Activity{
 	}
 	
 	public static Context getLastContext(){
-		return activityList.get(getActivityCount() - 1);
+		if(getActivityCount() > 0)
+			return activityList.get(getActivityCount() - 1);
+		else
+			return null;
 	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+	}
+	
+	
 }

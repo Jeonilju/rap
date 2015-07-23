@@ -1,14 +1,13 @@
 /**
  * 
  */
-$(document).ready(function(){getLcategory()});
-
-function getLcategory()
+function getLcategory(id)
 {
-	$('#Lcategory1').html("<option value='' selected>해당없음</option>");
-	$('#Lcategory2').html("<option value='' selected>해당없음</option>");
-	$('#Lcategory3').html("<option value='' selected>해당없음</option>");
-	
+	var idLen = id.length;
+	for(var i=0;i<idLen;i++)
+		{
+			$(id[i]).html("<option value='' selected>해당없음</option>");
+		}
 	$.ajax({
 		url : "Lcategory_db",
 		type : "POST",
@@ -22,10 +21,10 @@ function getLcategory()
 				
 				for(var i=0;i<listLen;i++)
 				{
-					$('#Lcategory1').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					$('#Lcategory2').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					$('#Lcategory3').append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
-					
+					for(var j=0;j<idLen;j++)
+					{
+					$(id[j]).append("<option value='"+list[i].categoryL+"'>"+list[i].categoryL+"</option>");
+					}
 				}
 			}
 		},
@@ -109,27 +108,29 @@ function getScategory(id)
 }
 
 function registerLcategory() {
-
-	var Lcategory = document.getElementById('CategoryL');
-	
-	var param = "Lcategory" + "=" + Lcategory.value;
 	
 	$.ajax({
 		url : "registerLcategory",
 		type : "POST",
-		data : param,
+		data : 
+		{
+			Lcategory: document.getElementById('CategoryL').value
+		},
 		dataType : "text",
-		success : function(data) {
-			if(data == "200")
+		success : function(response) {
+			if(response == 'success')
+				{
 				alert("대분류가 추가되었습니다.");
-			else if(data == "Project Not Found")
+				getAllLcategory()
+				}
+			else if(response == 'Project Not Found')
 				alert("프로젝트가 존재하지 않습니다.");
-			else if(data == "Enter Lcategory")
+			else if(response == 'Enter Lcategory')
 				alert("대분류명을 입력해주세요.");
-			else if(data == "Lcategory already exist")
+			else if(response == 'Lcategory already exist')
 				alert("이미 같은 이름의 카테고리가 존재합니다.");
 			else
-				alert("에러가 발생했습니다.");
+				alert('에러가 발생했습니다.');
 		},
 
 		error : function(request, status, error) {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.List, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
 
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
@@ -14,7 +15,14 @@
 		<!-- wrapper -->
 		<div id="wrapper">
 			<!-- sidebar-wrapper -->
-			<jsp:include page="projecthomenav.jsp" flush="false" />
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					<li><br> <br> <br></li>
+					<li class="sidebar-brand"><a href="#"> Project </a></li>
+					<li role="presentation"><a role="menuitem" href="projecthome">Project Home</a></li>
+					<li role="presentation"><a role="menuitem" href="projectregister">Register</a></li>
+				</ul>
+			</div>
 			<!-- /#sidebar-wrapper -->
 
 			<!-- page-content-wrapper -->
@@ -44,23 +52,28 @@
 		                                    <i class="fa fa-tasks fa-5x"></i>
 		                                </div>
 		                                <div class="col-xs-9 text-right">
-		                                <%
-		                                	String email = (String)session.getAttribute("email");
-		                                	Integer projectcount = (Integer)session.getAttribute("projectcount");
-                                		
-		                                	if(email == null || email.isEmpty())
-		                                	{
-		                                		out.println("<div>로그인해주세요.</div>");	
-		                                	}
-		                                	else{
-		                                		
-		                                		out.println("<div>User Projects</div>");
-		                                		if(projectcount == null)
-		                                			out.println("<div style='font-size: 40px;'>0/3</div>");
-		                                		else
-		                                		out.println("<div style='font-size: 40px;'>"+projectcount.intValue()+"/3</div>");
-		                                	}
-		                                %>
+										<%
+										MemberInfo member = (MemberInfo)session.getAttribute("currentmember");
+										String email = "";
+									
+										if(member != null) email = member.getEmail();
+									
+										if(email == null || email.isEmpty())
+										{
+											out.println("<div>로그인해주세요.</div>");	
+										}
+										else
+										{
+											ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
+											Integer projectcount = (Integer) request.getAttribute("projectcount");
+											out.println("<div>User Projects</div>");
+											
+											if(projectcount == null)
+					                			out.println("<div style='font-size: 40px;'>0/3</div>");
+					                		else
+					                			out.println("<div style='font-size: 40px;'>"+projectcount.intValue()+"/3</div>");
+					                	
+										%>
 		                                </div>
 		                            </div>
 		                        </div>
@@ -69,19 +82,13 @@
 	                </div>
 	                
 	                <%
-	                //로그인 상태일때
-	                if(email != null)
-                	{
-	                	if(!email.isEmpty())
-	                	{
-		                	//프로젝트 개수가 3개 이하일 경우 폼 활성화
-		                	if(projectcount !=null && projectcount.intValue()<3)
-		                	{
+	                	if(projectcount !=null && projectcount.intValue()<3)
+		                {
 	                %>
 					<div class="row">
 						<div class="col-lg-8 col-lg-offset-2">
 							<!-- form -->
-							<form action="register_db" method="POST" name="AppRegister"
+							<form action="projectregister_db" method="POST" name="AppRegister"
 								id="AppRegister" novalidate>
 								<!-- Application Name -->
 								<div class="row control-group">
@@ -132,7 +139,7 @@
 					</div>
 					
 					<%
-		                	}
+		                	
                 		}
                 	}
 					%>

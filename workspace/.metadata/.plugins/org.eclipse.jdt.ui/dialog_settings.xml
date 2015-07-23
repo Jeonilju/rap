@@ -39,6 +39,54 @@
 		<item value="600" key="width"/>
 		<item value="400" key="height"/>
 	</section>
+	<section name="javadoc">
+		<item value="-locale ko_KR -encoding UTF-8 -charset UTF-8 -docencoding UTF-8" key="vmparam"/>
+		<item value="public" key="access"/>
+		<item value="false" key="noindex"/>
+		<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Android\RAP\javadoc.xml" key="antpath"/>
+		<item value="false" key="nodeprecatedlist"/>
+		<item value="true" key="use"/>
+		<item value="true" key="author"/>
+		<item value="false" key="nodeprecated"/>
+		<item value="false" key="nonavbar"/>
+		<item value="" key="docletpath"/>
+		<item value="C:\Program Files\Java\jdk1.8.0_31\bin\javadoc.exe" key="javadoc_command_history"/>
+		<item value="1.6" key="source"/>
+		<item value="true" key="version"/>
+		<item value="" key="docletname"/>
+		<item value="true" key="splitindex"/>
+		<item value="true" key="fromStandard"/>
+		<item value="false" key="notree"/>
+		<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Android\RAP\doc" key="destdir"/>
+		<item value="false" key="openinbrowser"/>
+		<section name="projects">
+			<section name="RAP">
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Android\RAP\javadoc.xml" key="antpath"/>
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Android\RAP\doc" key="destdir"/>
+				<item value="" key="href"/>
+			</section>
+			<section name="KLT_Club">
+				<item value="F:\GitHub\KLT_Club\javadoc.xml" key="antpath"/>
+				<item value="F:\GitHub\KLT_Club\doc" key="destdir"/>
+				<item value="" key="href"/>
+			</section>
+			<section name="DangzicForRAP">
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Demo\DangzicForRAP\javadoc.xml" key="antpath"/>
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Demo\DangzicForRAP\doc" key="destdir"/>
+				<item value="" key="href"/>
+			</section>
+			<section name="android-support-v7-appcompat">
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Android\appcompat_v7\javadoc.xml" key="antpath"/>
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Android\appcompat_v7\doc" key="destdir"/>
+				<item value="" key="href"/>
+			</section>
+			<section name="PxForRAP">
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Demo\PxForRAP\javadoc.xml" key="antpath"/>
+				<item value="F:\SW memberShip\창과\RAP\SourseCode\rap\Demo\PxForRAP\doc" key="destdir"/>
+				<item value="" key="href"/>
+			</section>
+		</section>
+	</section>
 	<section name="SourceActionDialog.methods">
 		<item value="false" key="SynchronizedModifier"/>
 		<item value="false" key="Comments"/>
@@ -51,6 +99,13 @@
 	<section name="RenameInformationPopup">
 	</section>
 	<section name="quick_assist_proposal_size">
+	</section>
+	<section name="JavadocWizardDialog">
+		<item value="616" key="DIALOG_WIDTH"/>
+		<item value="1|맑은 고딕|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕" key="DIALOG_FONT_NAME"/>
+		<item value="567" key="DIALOG_HEIGHT"/>
+		<item value="383" key="DIALOG_X_ORIGIN"/>
+		<item value="8" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="completion_proposal_size">
 	</section>

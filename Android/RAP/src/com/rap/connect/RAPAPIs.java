@@ -1,7 +1,6 @@
 package com.rap.connect;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -441,36 +440,87 @@ public class RAPAPIs {
 	 * 사용자의 Main 가상화폐를 가져옵니다.
 	 * */
 	public static HttpRequestBase GetVirtual_Main() {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/GetVirtualMain?project_key=" + RAPSetting.getRAPKey() + "&User=" + RAPUser.getUserId());
-		HttpGet httpGet = new HttpGet(url);
-		return httpGet;
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/GetVirtualMain");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
 	}
 	
 	/**
 	 * 사용자의 Main 가상화폐를 사용합니다
 	 * */
 	public static HttpRequestBase UseVirtual_Main(int money) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/UseVirtualMain?project_key=" + RAPSetting.getRAPKey()  + "&User=" + RAPUser.getUserId() + "&money=" + money);
-		HttpGet httpGet = new HttpGet(url);
-		return httpGet;
+		
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/UseVirtualMain");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("money", "" + money));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
 	}
 	
 	/**
 	 * 사용자의 Main 가상화폐를 추가합니다
 	 * */
 	public static HttpRequestBase TakeVirtual_Main(int money) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/TakeVirtualMain?project_key=" + RAPSetting.getRAPKey()  + "&User=" + RAPUser.getUserId() + "&money=" + money);
-		HttpGet httpGet = new HttpGet(url);
-		return httpGet;
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/TakeVirtualMain");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("money", "" + money));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
 	}
 	
 	/**
 	 * 사용자의 Sub 가상화폐를 가져옵니다.
 	 * */
 	public static HttpRequestBase GetVirtual_Sub() {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/GetVirtualSub?project_key=" + RAPSetting.getRAPKey() + RAPSetting.getRAPKey() + "&User=" + RAPUser.getUserId());
-		HttpGet httpGet = new HttpGet(url);
-		return httpGet;
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/GetVirtualSub");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
 	}
 	
 	/**
@@ -478,9 +528,22 @@ public class RAPAPIs {
 	 * 
 	 * */
 	public static HttpRequestBase UseVirtual_Sub(int money) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/UseVirtualSub?project_key=" + RAPSetting.getRAPKey() + "&User=" + RAPUser.getUserId() + "&money=" + money);
-		HttpGet httpGet = new HttpGet(url);
-		return httpGet;
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/UseVirtualSub");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("money", "" + money));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
 	}
 	
 	/**
@@ -488,8 +551,45 @@ public class RAPAPIs {
 	 * 
 	 * */
 	public static HttpRequestBase TakeVirtual_Sub(int money) {
-		String url = (RAPHttpClient.getBaseURL() + "/APIs/TakeVirtualSub?project_key=" + RAPSetting.getRAPKey() + "&User=" + RAPUser.getUserId() + "&money=" + money);
-		HttpGet httpGet = new HttpGet(url);
-		return httpGet;
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/TakeVirtualSub");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("money", "" + money));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////														////////////////////////
+	///////////////////////						Promotion 보내기					////////////////////////
+	///////////////////////														////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Promotion 반응하기
+	 * */
+	public static HttpRequestBase Promotion_send(int promotion_pk) throws UnsupportedEncodingException{
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/promotion");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("promotion_pk", "" + promotion_pk));
+		
+		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+		httpPost.setEntity(entityRequest);
+		httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		
+		return httpPost;
 	}
 }

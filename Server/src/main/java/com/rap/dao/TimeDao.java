@@ -49,7 +49,7 @@ public class TimeDao implements TimeIDao{
 	}
 	
 	public List<TimeInfo> select(int project_key, Timestamp start, Timestamp end){
-		return jdbcTemplate.query("select * from log_time where project_key = ? AND start = ? AND end = ?",
+		return jdbcTemplate.query("select * from log_time where project_key = ? AND start >= ? AND end <= ?",
 		    	new Object[] { project_key, start, end }, new RowMapper<TimeInfo>() {
 		    	public TimeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{

@@ -1,8 +1,13 @@
 package com.rap;
 
+import android.util.Log;
+
+import com.rap.connect.RAPHttpClient;
 import com.rap.status.RAPNetworkConnection;
 
 public class RAPSetting {
+	
+	private static final String TAG = "RAPSetting";
 	
 	/** 프로젝트 Key */
 	private static String		RAPKey;
@@ -97,6 +102,11 @@ public class RAPSetting {
 	}
 
 	public static String getRAPKey() {
+		if(RAPKey == null){
+			Log.e(TAG, "프로젝트 Key값을 등록한 후 사용해주세요.");
+			Log.e(TAG, "프로젝트 Key는 데쉬보드에서 발급받으실 수 있습니다.");
+			Log.e(TAG, "" + RAPHttpClient.getBaseURL() + "/index" + "로 접속해주세요.");
+		}
 		return RAPKey;
 	}
 

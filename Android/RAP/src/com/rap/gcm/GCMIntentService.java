@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
+import android.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,11 +14,10 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Vibrator;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
-import com.rap.R;
 import com.rap.RAPSetting;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
@@ -64,16 +64,23 @@ public class GCMIntentService extends GCMBaseIntentService {
 		String title = intent.getStringExtra("title");
 		String contents = intent.getStringExtra("contents");
 		String className = intent.getStringExtra("class");
+		String promotion_pk_str = intent.getStringExtra("promotion_pk");
+		int promotion_pk = Integer.parseInt(promotion_pk_str);
 		
 		// target Activity ¼³Á¤
 		Intent targetActivity;
 		PendingIntent pIntent = null;
 		try {
 			targetActivity = new Intent(this, Class.forName(className));
+			
+			targetActivity.setData(Uri.parse("" + promotion_pk));
+			
+			targetActivity.putExtra("RAP_GCM_time", false);
+			targetActivity.putExtra("promotion_pk", promotion_pk);
 			pIntent = PendingIntent.getActivity(getApplicationContext()
 	                   , 0
 	                   , targetActivity
-	                   , Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+	                   , PendingIntent.FLAG_UPDATE_CURRENT);
 		} 
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -85,7 +92,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				.setContentTitle(title)
 				.setContentText(contents)
 				.setAutoCancel(true)
-				.setSmallIcon(R.drawable.ic_launcher)
+				.setSmallIcon(R.drawable.ic_dialog_email)
 				.setTicker("test")
 				.setContentIntent(pIntent).build();
 
