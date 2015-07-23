@@ -103,9 +103,9 @@
 							<!-- Small Category -->
 							<div>
 								<div class="form-group" style="padding:20px">
-									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')" class="selectpicker show-tick">
+									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')">
 									</select>
-									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')" class="selectpicker show-tick">
+									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')">
 										<option value='' selected>해당없음</option>
 									</select>
 									<input type="text"
@@ -113,7 +113,7 @@
 										id="CategoryS" required
 										data-validation-required-message="Please enter Small Category." style="width:200px">
 									<button class="btn" onclick="registerScategory()">Register</button>
-									<select id="Scategory3" name="Scategory3" class="selectpicker show-tick">
+									<select id="Scategory3" name="Scategory3">
 										<option value="" selected>해당없음</option>
 									</select>
 									<button class="btn" onclick="deleteScategory('Scategory3')">Delete</button>

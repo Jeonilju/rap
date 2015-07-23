@@ -424,7 +424,12 @@ public class RAP_MainController {
 
 		return "os";
 	}
+	@RequestMapping(value = "/new_member", method = RequestMethod.GET)
+	public String MainController_new_member(HttpServletRequest request) {
+		logger.info("new_member Page");
 
+		return "new_member";
+	}
 	@RequestMapping(value = "/device", method = RequestMethod.GET)
 	public String MainController_device(HttpServletRequest request) {
 		logger.info("device Page");

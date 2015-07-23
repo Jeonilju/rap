@@ -81,8 +81,6 @@ function getOS() {
 					            name: "Brands",
 					            colorByPoint: true,
 					            data:os
-					            
-					            
 					        }]
 					});
 		    
