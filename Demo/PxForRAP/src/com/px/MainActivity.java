@@ -8,18 +8,18 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.px.tool.BackPressCloseHandler;
-import com.rap.RAPSetting;
+import com.px.tool.Preference;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
@@ -43,10 +43,8 @@ public class MainActivity extends RAPBaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		RAPSetting.setRAPKey("1");
 		//RAPSetting.setGCMProjectId("1065883592772");
 		//RAPGcmManager.registerGcm(this);
-		
 		initResourse();
 		initEvent();
 
@@ -59,6 +57,8 @@ public class MainActivity extends RAPBaseActivity {
 		charge = (Button) findViewById(R.id.main_btn_charge);
 		buylist = (Button) findViewById(R.id.main_btn_buylist);
 
+		mainName = Preference.getString(MainActivity.this, Preference.PREF_MAIN);
+		subName = Preference.getString(MainActivity.this, Preference.PREF_SUB);
 	}
 
 	private void initEvent() {
@@ -88,7 +88,8 @@ public class MainActivity extends RAPBaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				
+				Intent intent = new Intent(MainActivity.this, ChargeActivity.class);
+				startActivity(intent);
 			}
 		});
 		
@@ -121,6 +122,7 @@ public class MainActivity extends RAPBaseActivity {
 					
 					switch (status) {
 					case 200:
+						Log.i(TAG, json.getString("res"));
 						JSONObject point = new JSONObject(json.getString("res"));
 						Sub_point = point.getInt("point");
 						
@@ -158,6 +160,7 @@ public class MainActivity extends RAPBaseActivity {
 					switch (status) {
 					case 200:
 						JSONObject point = new JSONObject(json.getString("res"));
+						Log.i(TAG, json.getString("res"));
 						Main_point = point.getInt("point");
 						
 						printPoint();
@@ -187,16 +190,7 @@ public class MainActivity extends RAPBaseActivity {
 						});
 
 		AlertDialog alert = alt_bld.create();
-
-		alert.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				finish();
-			}
-		});
-
-		alert.setTitle("");
+		alert.setTitle("ÀÜ¾× Á¶È¸");
 		alert.show();
 	}
 }

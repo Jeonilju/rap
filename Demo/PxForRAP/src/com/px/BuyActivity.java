@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -140,7 +142,8 @@ public class BuyActivity extends RAPBaseActivity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
+				RAPIapInfo item = itemList.get(position);
+				ShowItemInfo(item);
 			}
 		});
 	}
@@ -234,7 +237,6 @@ public class BuyActivity extends RAPBaseActivity{
 		}
 		
 	};
-	
 	Handler getCategoryS = new Handler(){
 
 		@Override
@@ -272,7 +274,6 @@ public class BuyActivity extends RAPBaseActivity{
 		}
 		
 	};
-	
 	Handler getIAPs = new Handler(){
 
 		@Override
@@ -307,7 +308,8 @@ public class BuyActivity extends RAPBaseActivity{
 									list.getJSONObject(n).getString("imagePath"),
 									list.getJSONObject(n).getString("categoryl"),
 									list.getJSONObject(n).getString("categorym"),
-									list.getJSONObject(n).getString("categorys")
+									list.getJSONObject(n).getString("categorys"),
+									list.getJSONObject(n).getString("description")
 									));
 						}
 						
@@ -325,4 +327,24 @@ public class BuyActivity extends RAPBaseActivity{
 		}
 		
 	};
+
+	private void ShowItemInfo(RAPIapInfo item) {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(BuyActivity.this);
+		alt_bld.setMessage("이름: " + item.getName()
+				+ "\n대분류: " + item.getCategoryL()
+				+ "\n중분류: " + item.getCategoryM()
+				+ "\n소분류: " + item.getCategoryS()
+				+ "\n\n설명: " + item.getDescription()
+				+ "")
+				.setCancelable(false)
+				.setPositiveButton("확인",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle(item.getName());
+		alert.show();
+	}
 }

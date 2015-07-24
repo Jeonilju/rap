@@ -64,6 +64,7 @@ public class IAPAdapter extends BaseAdapter{
 			
 			@Override
 			public void onClick(View v) {
+				// 아이템 결제
 				
 			}
 		});

@@ -15,6 +15,7 @@ public class RAPIapInfo {
 	private String categoryl;
 	private String categorym;
 	private String categorys;
+	private String description;
 	private Timestamp reg_date;
 	
 	/**
@@ -30,9 +31,10 @@ public class RAPIapInfo {
 	 * @param categoryL		대분류
 	 * @param categoryM		중분류
 	 * @param categoryS		소분류
+	 * @param description	세부 설명
 	 * */
 	public RAPIapInfo(int pk, String Name, int PriceReal, int PriceMain, int PriceSub, int type, String google_id, String imagePath,
-			String categoryL, String categoryM, String categoryS){
+			String categoryL, String categoryM, String categoryS, String description){
 		this.pk = pk;
 		this.Name = Name;
 		this.price_real = PriceReal;
@@ -44,6 +46,7 @@ public class RAPIapInfo {
 		this.categoryl = categoryL;
 		this.categorym = categoryM;
 		this.categorys = categoryS;
+		this.description = description;
 	}
 	
 	public int getPk() {
@@ -126,4 +129,13 @@ public class RAPIapInfo {
 	public void setGoogle_id(String google_id) {
 		this.google_id = google_id;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }

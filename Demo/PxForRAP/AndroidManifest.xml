@@ -33,6 +33,7 @@
         <activity android:name="com.px.MainActivity"></activity>
         <activity android:name="com.px.BuyActivity"></activity>
         <activity android:name="com.px.BuyListActivity"></activity>
+        <activity android:name="com.px.ChargeActivity"></activity>
         
     </application>
 

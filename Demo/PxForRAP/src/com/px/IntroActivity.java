@@ -1,8 +1,12 @@
 package com.px;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,18 +14,34 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.px.tool.Preference;
+import com.rap.RAPSetting;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
+import com.rap.iap.RAPIapInfo;
 
 public class IntroActivity extends RAPBaseActivity{
 
+	private static final String TAG = "IntroActivity";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
+		RAPSetting.setRAPKey("1");
+		
+		RAPAPIs.GetVirtual_Main();
+		try {
+			HttpRequestBase req = RAPAPIs.CheckVirtual_Main();
+			RAPHttpClient.getInstance().background(req, getMainHandler);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -42,11 +62,11 @@ public class IntroActivity extends RAPBaseActivity{
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Handler h = new Handler();		
-		h.postDelayed(nextIntro, 100);
+		//Handler h = new Handler();		
+		//h.postDelayed(nextIntro, 100);
 		
-		Handler h2 = new Handler();		
-		h2.postDelayed(moveNext, 100*2);
+		//Handler h2 = new Handler();		
+		//h2.postDelayed(moveNext, 100*2);
 	}
 
 	Runnable nextIntro = new Runnable() {
@@ -110,4 +130,83 @@ public class IntroActivity extends RAPBaseActivity{
 		alert.setTitle("");
 		alert.show();
 	}
+
+	Handler getMainHandler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(IntroActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject list = new JSONObject(json.getString("res"));
+						Log.i(TAG, "응답: " + json.getString("res"));
+						
+						JSONObject mainInfo = new JSONObject(json.getString("res"));
+						Preference.putString(IntroActivity.this, Preference.PREF_MAIN, mainInfo.getString("name"));
+						
+						try {
+							HttpRequestBase req = RAPAPIs.CheckVirtual_Sub();
+							RAPHttpClient.getInstance().background(req, getSubHandler);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						break;
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		
+	};
+	
+	Handler getSubHandler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(IntroActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						JSONObject list = new JSONObject(json.getString("res"));
+						Log.i(TAG, "응답: " + json.getString("res"));
+						
+						JSONObject subInfo = new JSONObject(json.getString("res"));
+						Preference.putString(IntroActivity.this, Preference.PREF_SUB, subInfo.getString("name"));
+						
+						Handler h2 = new Handler();		
+						h2.postDelayed(moveNext, 100);
+						break;
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		
+	};
+	
+	
 }
