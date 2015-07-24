@@ -1,0 +1,165 @@
+package com.klt.db;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceFragment;
+import android.util.Log;
+import jxl.Sheet;
+import jxl.Workbook;
+
+public class KLTExcelParser {
+
+	private static KLTAddressDBManager dbAdapter;
+
+	private static final String VERSION_NAME = "Excel_VERSION";
+
+	public static final int Excel_VERSION = 20150206;
+	public static final String EXTENSION = ".xls";
+
+	private static final String TAG = "KLTExcelParser";
+
+	// private static final String location[] = { "강원도", "경기도", "경상남도", "경상북도",
+	// "광주광역시", "대구광역시", "대전광역시", "부산광역시", "서울특별시", "세종특별시", "울산광역시",
+	// "인천광역시", "전라남도", "전라북도", "제주특별자치도", "충청남도", "충청북도" };
+
+	private static final String location[] = { "1", "2", "3", "4", "5", "6",
+			"7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" };
+
+	//public static ArrayList<AddressInfo> contentsList = null;
+
+	public KLTExcelParser(Context mContext, Handler callback) {
+		this.dbAdapter = new KLTAddressDBManager(mContext);
+
+		int version = Preference.getInt(mContext, VERSION_NAME);
+		
+		//updateAddressData(mContext);
+		//Preference.putInt(mContext, VERSION_NAME, Excel_VERSION);
+		
+		if (Excel_VERSION > version) {
+			// 버전업
+			updateAddressData(mContext, callback);
+			Preference.putInt(mContext, VERSION_NAME, Excel_VERSION);
+			
+			Preference.putBoolean(mContext, Conf.PREFERENCE_ALARM, true);
+			Preference.putBoolean(mContext, Conf.PREFERENCE_ALARM_SOUND, true);
+			Preference.putBoolean(mContext, Conf.PREFERENCE_ALARM_VIB, true);
+			
+		} else {
+			// 정상버전
+			//callback.sendEmptyMessage(1);
+		}
+		
+		callback.sendEmptyMessage(1);
+	}
+	
+	private void updateAddressData(Context mContext, Handler callback) {
+		
+		dbAdapter.open();
+		dbAdapter.dropTable();
+		dbAdapter.close();
+		
+		int totalSize = location.length;
+		int currentIndex = 0;
+		for (String name : location) {
+			Message msg = new Message();
+			msg.arg1 = totalSize;
+			msg.arg2 = currentIndex;
+			callback.sendMessage(msg);
+			
+			readExcelFile(mContext, Excel_VERSION + "_" + name + EXTENSION);
+			currentIndex++;
+		}
+	}
+
+	private void readExcelFile(Context mContext, String name) {
+		Workbook workbook = null;
+		Sheet sheet = null;
+		
+		Log.i(TAG, "엑셀파일 읽는중 " + name);
+		
+		try {
+			InputStream is = mContext.getResources().getAssets().open(name);
+			workbook = Workbook.getWorkbook(is);
+
+			if (workbook != null) {
+				sheet = workbook.getSheet(0);
+
+				if (sheet != null) {
+
+					int nRowStartIndex = 1;
+					int nRowEndIndex = sheet.getColumn(0).length;
+					int nColumnStartIndex = 0;
+
+					dbAdapter.open();
+
+					for (int nRow = nRowStartIndex; nRow < nRowEndIndex; nRow++) {
+
+						String city = sheet.getCell(nColumnStartIndex, nRow)
+								.getContents();
+						String county = sheet.getCell(nColumnStartIndex + 1,
+								nRow).getContents();
+						String town = sheet
+								.getCell(nColumnStartIndex + 2, nRow)
+								.getContents();
+						String dong = sheet
+								.getCell(nColumnStartIndex + 3, nRow)
+								.getContents();
+						String villages = sheet.getCell(nColumnStartIndex + 4,
+								nRow).getContents();
+
+						dbAdapter.createAddress(city, county, town, dong,
+								villages);
+					}
+					dbAdapter.close();
+				} else {
+					Log.e(TAG, "Sheet is null!!");
+					System.out.println("Sheet is null!!");
+				}
+			} else {
+				Log.e(TAG, "WorkBook is null!!");
+				System.out.println("WorkBook is null!!");
+			}
+		} catch (Exception e) {
+			Log.e(TAG, "엑셀파일 읽는중 에러");
+			e.printStackTrace();
+		} finally {
+			if (workbook != null) {
+				workbook.close();
+			}
+		}
+	}
+	
+	/** 도시 이름 가져오기 */
+	public static ArrayList<String> getCityList(){
+		dbAdapter.open();
+		ArrayList<String> result = dbAdapter.getCityList();
+		dbAdapter.close();
+		
+		return result;
+	}
+	
+	/** 시 군 가져오기 */
+	public static ArrayList<String> getTownList(String cityName){
+		dbAdapter.open();
+		ArrayList<String> result = dbAdapter.getTownList(cityName);
+		dbAdapter.close();
+		
+		return result;
+	}
+	
+	/** 동 읍 리 가져오기 */
+	public static ArrayList<String> getSubList(String cityName, String townName){
+		dbAdapter.open();
+		ArrayList<String> result = dbAdapter.getSubList(cityName, townName);
+		dbAdapter.close();
+		
+		return result;
+	}
+}
