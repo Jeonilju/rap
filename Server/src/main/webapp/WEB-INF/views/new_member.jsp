@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html>
-<!-- ÃÂ¬ÃÂÃÂÃÂ«ÃÂÃÂ¨ ÃÂ«ÃÂÃÂ¤ÃÂ«ÃÂ¹ÃÂÃÂªÃÂ²ÃÂÃÂ¬ÃÂÃÂ´ÃÂ¬ÃÂÃÂ ÃÂ«ÃÂ°ÃÂ ÃÂ¬ÃÂÃÂ¸ÃÂ­ÃÂÃÂ´ÃÂ«ÃÂ£ÃÂ¨ÃÂ«ÃÂÃÂ -->
+<!-- Ã¬ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ Ã«Â°Â Ã¬ÂÂ¸Ã­ÂÂ´Ã«Â£Â¨Ã«ÂÂ -->
 <jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -20,7 +20,7 @@ function getoperation_count() {
 				"&start=" + document.getElementById('Start').value;
 	
 	$.ajax({
-		url : "operation_count_db",
+		url : "new_member_db",
 		type : "POST",
 		data : param,
 		dataType : "JSON",
@@ -60,7 +60,7 @@ function getoperation_count() {
 		        yAxis: {
 		            min: 0,
 		            title: {
-		                text: 'Total operations counts'
+		                text: 'Total new member counts'
 		            },
 		            stackLabels: {
 		                enabled: true,
@@ -163,7 +163,7 @@ function getoperation_count() {
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>Operation Count</h2>
+								<h2>New member</h2>
 							</div>
 						</div>
 						<div class="row">

@@ -212,8 +212,6 @@ ${demo.css}
 					            name: "Brands",
 					            colorByPoint: true,
 					            data:os
-					            
-					            
 					        }]
 					});
 		    
