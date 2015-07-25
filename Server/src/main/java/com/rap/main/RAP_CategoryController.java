@@ -6,8 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.sf.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +21,7 @@ import com.rap.dao.CategorySDao;
 import com.rap.dao.IAPDao;
 import com.rap.dao.MemberDao;
 import com.rap.dao.ProjectDao;
+import com.rap.dao.SettingDao;
 import com.rap.dao.Virtual_MainDao;
 import com.rap.dao.Virtual_SubDao;
 import com.rap.models.CategoryLInfo;
@@ -30,8 +29,11 @@ import com.rap.models.CategoryMInfo;
 import com.rap.models.CategorySInfo;
 import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
+import com.rap.models.SettingInfo;
 import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
+
+import net.sf.json.JSONObject;
 
 @Controller
 public class RAP_CategoryController {
@@ -60,6 +62,9 @@ public class RAP_CategoryController {
 
 	@Autowired
 	private Virtual_SubDao virtual_SubDao;
+	
+	@Autowired
+	private SettingDao settingDao;
 
 	/** 대분류 리스트 */
 	@RequestMapping(value = "/Lcategory_db", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
@@ -961,5 +966,310 @@ return "error";}
 		logger.info("부화폐 삭제");
 
 		return "200";
+	}
+	/** 사용금액 등급 등록 */
+	@RequestMapping(value = "/registerGradeMoney", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String registerGradeMoney(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("grade_moneyL") String grade_moneyL, 
+			@RequestParam("grade_moneyM") String grade_moneyM, 
+			@RequestParam("grade_moneyS") String grade_moneyS) {
+		logger.info("registerGradeMoney pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 존재 X
+		if (grade_moneyL == null)
+			return "grade_moneyL";
+		if (grade_moneyL.isEmpty())
+			return "grade_moneyL";
+
+		// 존재 X
+		if (grade_moneyM == null)
+			return "grade_moneyM";
+		if (grade_moneyM.isEmpty())
+			return "grade_moneyM";
+		
+		// 존재 X
+		if (grade_moneyS == null)
+			return "grade_moneyS";
+		if (grade_moneyS.isEmpty())
+			return "grade_moneyS";
+		
+		logger.info("정상적으로 입력");
+		//입력값 검증
+		String temp;
+		for(int i=0;i<grade_moneyL.length();i++)
+		{
+			temp=grade_moneyL.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "Not Number";
+		}
+		for(int i=0;i<grade_moneyM.length();i++)
+		{
+			temp=grade_moneyM.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "Not Number";
+		}
+		for(int i=0;i<grade_moneyS.length();i++)
+		{
+			temp=grade_moneyS.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "Not Number";
+		}
+		
+		int grade_moneyl = Integer.parseInt(grade_moneyL);
+		int grade_moneym = Integer.parseInt(grade_moneyM);
+		int grade_moneys = Integer.parseInt(grade_moneyS);
+		
+		if(grade_moneyl <= grade_moneym) return "Not Greater";
+		if(grade_moneym <= grade_moneys) return "Not Greater";
+		
+		settingDao.updateGradeMoney(grade_moneyl, grade_moneym, grade_moneys, project_key);
+		logger.info("업데이트 성공");
+		
+		return "200";
+	}
+	
+	/** 구매 등급 금액 */
+	@RequestMapping(value = "/getGradeMoney", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String getGradeMoney(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam("grade_money") String grade_money) {
+		logger.info("getGradeMoney pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 프로젝트 키 존재 X
+		if (grade_money == null)
+			return "grade_money";
+		if (grade_money.isEmpty())
+			return "grade_money";
+		
+		List<SettingInfo> setting = settingDao.selectFromProject(project_key);
+		if(setting.size() == 0)
+			return "error";
+		
+		int result =0;
+		if(grade_money.equals("L"))
+		{
+			result = setting.get(0).getGrade_moneyl();
+		}
+		else if(grade_money.equals("M"))
+		{
+			result = setting.get(0).getGrade_moneym();
+		}
+		else if(grade_money.equals("S"))
+		{
+			result = setting.get(0).getGrade_moneys();
+		}
+		else
+			return "error";
+		
+		logger.info("result : "+result);
+		return Integer.toString(result);
+	}
+	
+	/** 사용시간 등급 등록 */
+	@RequestMapping(value = "/registerGradeTime", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String registerGradeTime(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("grade_timeL") String grade_timeL, 
+			@RequestParam("grade_timeM") String grade_timeM, 
+			@RequestParam("grade_timeS") String grade_timeS) {
+		logger.info("registerGradeTime pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 존재 X
+		if (grade_timeL == null)
+			return "grade_timeL";
+		if (grade_timeL.isEmpty())
+			return "grade_timeL";
+
+		// 존재 X
+		if (grade_timeM == null)
+			return "grade_timeM";
+		if (grade_timeM.isEmpty())
+			return "grade_timeM";
+		
+		// 존재 X
+		if (grade_timeS == null)
+			return "grade_timeS";
+		if (grade_timeS.isEmpty())
+			return "grade_timeS";
+		
+		logger.info("정상적으로 입력");
+		//입력값 검증
+		String temp;
+		for(int i=0;i<grade_timeL.length();i++)
+		{
+			temp=grade_timeL.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "Not Number";
+		}
+		for(int i=0;i<grade_timeM.length();i++)
+		{
+			temp=grade_timeM.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "Not Number";
+		}
+		for(int i=0;i<grade_timeS.length();i++)
+		{
+			temp=grade_timeS.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "Not Number";
+		}
+		
+		int grade_timel = Integer.parseInt(grade_timeL);
+		int grade_timem = Integer.parseInt(grade_timeM);
+		int grade_times = Integer.parseInt(grade_timeS);
+		
+		if(grade_timel <= grade_timem) return "Not Greater";
+		if(grade_timem <= grade_times) return "Not Greater";
+		
+		settingDao.updateGradeTime(grade_timel, grade_timem, grade_times, project_key);
+		logger.info("업데이트 성공");
+		
+		return "200";
+	}
+	
+	/** 구매 등급 금액 */
+	@RequestMapping(value = "/getGradeTime", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String getGradeTime(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam("grade_time") String grade_time) {
+		logger.info("getGradeTime pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 프로젝트 키 존재 X
+		if (grade_time == null)
+			return "grade_time";
+		if (grade_time.isEmpty())
+			return "grade_time";
+		
+		List<SettingInfo> setting = settingDao.selectFromProject(project_key);
+		if(setting.size() == 0)
+			return "error";
+		
+		int result =0;
+		if(grade_time.equals("L"))
+		{
+			result = setting.get(0).getGrade_timel();
+		}
+		else if(grade_time.equals("M"))
+		{
+			result = setting.get(0).getGrade_timem();
+		}
+		else if(grade_time.equals("S"))
+		{
+			result = setting.get(0).getGrade_times();
+		}
+		else
+			return "error";
+		
+		logger.info("result : "+result);
+		return Integer.toString(result);
 	}
 }

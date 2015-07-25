@@ -31,7 +31,15 @@ public class SettingDao implements SettingIDao{
 	public void create(String project_key, int grade_moneyl, int grade_moneym, int grade_moneys, int grade_timel, int grade_timem, int grade_times, String google_project_num ) {
 		jdbcTemplate.update("insert into setting (project_key, grade_moneyl, grade_moneym, grade_moneys, grade_timel, grade_timem, grade_times, google_project_num ) values (?, ?, ?, ?, ?, ?, ?, ?)", new Object[] {project_key, grade_moneyl, grade_moneym, grade_moneys, grade_timel, grade_timem, grade_times, google_project_num });
 	}
-
+	
+	public void updateGradeTime(int grade_timel,int grade_timem,int grade_times,String project_key){
+		jdbcTemplate.update("update setting set grade_timel=?,grade_timem=?,grade_times=? where project_key=?", new Object[] {grade_timel, grade_timem, grade_times, project_key });
+	}
+	
+	public void updateGradeMoney(int grade_moneyl,int grade_moneym,int grade_moneys,String project_key){
+		jdbcTemplate.update("update setting set grade_moneyl=?,grade_moneym=?,grade_moneys=? where project_key=?", new Object[] {grade_moneyl, grade_moneym, grade_moneys, project_key });
+	}
+	
 	public List<SettingInfo> selectFromProject(String project_key){
 		return jdbcTemplate.query("select * from setting where project_key = ?",
 		    	new Object[] { project_key }, new RowMapper<SettingInfo>() {

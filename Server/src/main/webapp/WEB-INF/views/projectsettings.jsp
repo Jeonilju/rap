@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page
-	import="java.util.List, com.rap.models.ProjectInfo, com.rap.models.MemberInfo, com.rap.models.CategoryLInfo, com.rap.models.Virtual_MainInfo, com.rap.models.Virtual_SubInfo"%>
+	import="java.util.List, com.rap.models.ProjectInfo, com.rap.models.MemberInfo, com.rap.models.CategoryLInfo, com.rap.models.Virtual_MainInfo, com.rap.models.Virtual_SubInfo, com.rap.models.SettingInfo"%>
 
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
@@ -185,6 +185,145 @@ function coinlist_db()
 	$('#virtual_sub').selectpicker('refresh');
 }
 
+function registerGradeMoney()
+{
+	$.ajax({
+		url : "registerGradeMoney",
+		type : "POST",
+		data :
+			{
+			grade_moneyL: document.getElementById('grade_moneyL').value,
+			grade_moneyM: document.getElementById('grade_moneyM').value,
+			grade_moneyS: document.getElementById('grade_moneyS').value
+			},
+		dataType : "text",
+		success : function(response) {
+			if(response == "200")
+			{
+				alert("구매등급이 등록되었습니다.");
+			}
+			else if(response == "Not Number")
+				alert("숫자만 입력 가능합니다.");
+			else if(response == "Not Greater")
+				alert("크기순으로 등급기준을 입력해주세요.");
+			else if(response == "grade_moneyL")
+				alert("상을 입력해주세요.");
+			else if(response == "grade_moneyM")
+				alert("중을 입력해주세요.");
+			else if(response == "grade_moneyS")
+				alert("하를 입력해주세요.");
+			else
+				alert("에러가 발생했습니다.");
+		},
+
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+}
+function getGradeMoney()
+{
+	$.ajax({
+	url : "getGradeMoney",
+	type : "POST",
+	data :
+		{
+		grade_money : document.getElementById('grade_money').value
+		},
+	dataType : "text",
+	success : function(response) {
+		if(response == "grade_money")
+			alert("구매등급을 선택해주세요.");
+		else if(response == "error")
+			alert("에러가 발생했습니다.");
+		else
+		{
+			document.getElementById('grade_money_input').placeholder = response;
+		}
+	},
+
+	error : function(request, status, error) {
+		if (request.status != '0') {
+			alert("code : " + request.status + "\r\nmessage : "
+					+ request.reponseText + "\r\nerror : " + error);
+		}
+	}
+});
+
+}
+
+function registerGradeTime()
+{
+	$.ajax({
+		url : "registerGradeTime",
+		type : "POST",
+		data :
+			{
+			grade_timeL: document.getElementById('grade_timeL').value,
+			grade_timeM: document.getElementById('grade_timeM').value,
+			grade_timeS: document.getElementById('grade_timeS').value
+			},
+		dataType : "text",
+		success : function(response) {
+			if(response == "200")
+			{
+				alert("사용등급이 등록되었습니다.");
+			}
+			else if(response == "Not Number")
+				alert("숫자만 입력 가능합니다.");
+			else if(response == "Not Greater")
+				alert("크기순으로 등급기준을 입력해주세요.");
+			else if(response == "grade_timeL")
+				alert("상을 입력해주세요.");
+			else if(response == "grade_timeM")
+				alert("중을 입력해주세요.");
+			else if(response == "grade_timeS")
+				alert("하를 입력해주세요.");
+			else
+				alert("에러가 발생했습니다.");
+		},
+
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+}
+function getGradeTime()
+{
+	$.ajax({
+	url : "getGradeTime",
+	type : "POST",
+	data :
+		{
+		grade_time : document.getElementById('grade_time').value
+		},
+	dataType : "text",
+	success : function(response) {
+		if(response == "grade_time")
+			alert("사용등급을 선택해주세요.");
+		else if(response == "error")
+			alert("에러가 발생했습니다.");
+		else
+		{
+			document.getElementById('grade_time_input').placeholder = response;
+		}
+	},
+
+	error : function(request, status, error) {
+		if (request.status != '0') {
+			alert("code : " + request.status + "\r\nmessage : "
+					+ request.reponseText + "\r\nerror : " + error);
+		}
+	}
+});
+
+}
 </script>
 <body id="page-top" class="index">
 	<div class="container">
@@ -201,7 +340,6 @@ function coinlist_db()
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<BR> <BR> <BR> <BR> <BR>
-							<h2>Project settings</h2>
 						</div>
 					</div>
 					<%
@@ -235,7 +373,6 @@ function coinlist_db()
 					<!-- project list 존재하는 경우 -->
 					<div class="row">
 						<div class="panel-body">
-							<div>수정가능하게 바꾸기~~~~~~~~~~~</div>
 							<div>
 								projectname :
 								<%=projectname%></div>
@@ -414,17 +551,17 @@ function coinlist_db()
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
-							<label>Money</label>
-							<input type="text" class="form-control" placeholder="상" id="grade_moneyL" style="width: 80px">
-							<input type="text" class="form-control" placeholder="중" id="grade_moneyM" style="width: 80px">
-							<input type="text" class="form-control" placeholder="하" id="grade_moneyS" style="width: 80px">
+							<label style="padding:5px">Money</label>
+							<input type="text" class="form-control" placeholder="상" id="grade_moneyL" style="width: 70px">
+							<input type="text" class="form-control" placeholder="중" id="grade_moneyM" style="width: 70px">
+							<input type="text" class="form-control" placeholder="하" id="grade_moneyS" style="width: 70px">
 							<button class="btn" onclick="registerGradeMoney()">Register</button>
 						</form>
 						</div>
 						
-						<div class="col-lg-6">
+						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
 							<select class="selectpicker" id="grade_money" name="grade_money" onchange="getGradeMoney()">
 								<option value='' selected>과금액</option>
@@ -432,11 +569,36 @@ function coinlist_db()
 								<option value='M'>중</option>
 								<option value='S'>하</option>
 							</select> <input type="text" class="form-control"
-								placeholder="Time" id="grade_money_input" style="width: 100px">
+								placeholder="" id="grade_money_input" style="width: 100px">
 							<button class="btn" onclick="EditGradeTime()">Edit</button>
 						</form>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-lg-6" style="padding: 5px">
+						<form class="form-inline">
+							<label style="padding:5px">Time</label>
+							<input type="text" class="form-control" placeholder="상" id="grade_timeL" style="width: 70px">
+							<input type="text" class="form-control" placeholder="중" id="grade_timeM" style="width: 70px">
+							<input type="text" class="form-control" placeholder="하" id="grade_timeS" style="width: 70px">
+							<button class="btn" onclick="registerGradeTime()">Register</button>
+						</form>
+						</div>
+						
+						<div class="col-lg-6" style="padding: 5px">
+						<form class="form-inline">
+							<select class="selectpicker" id="grade_time" name="grade_time" onchange="getGradeTime()">
+								<option value='' selected>사용시간</option>
+								<option value='L'>상</option>
+								<option value='M'>중</option>
+								<option value='S'>하</option>
+							</select> <input type="text" class="form-control"
+								placeholder="" id="grade_time_input" style="width: 100px">
+							<button class="btn" onclick="EditGradeTime()">Edit</button>
+						</form>
+						</div>
+					</div>
+					<br><br>
 					<%
 						}
 					%>

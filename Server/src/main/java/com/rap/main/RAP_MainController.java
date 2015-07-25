@@ -29,6 +29,7 @@ import com.rap.models.CategoryLInfo;
 import com.rap.models.MemberInfo;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
+import com.rap.models.SettingInfo;
 import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
 
@@ -254,15 +255,15 @@ public class RAP_MainController {
 			return "projectsettings";
 		}
 		
-		
+		String project_key = currentproject.getPk();
 		// 대분류 리스트
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(currentproject.getPk());
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
 		
 		// 주화폐 리스트
-		List<Virtual_MainInfo> mainlist = virtual_MainDao.select(currentproject.getPk());
+		List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key);
 		
 		// 부화폐 리스트
-		List<Virtual_SubInfo> sublist = virtual_SubDao.select(currentproject.getPk());
+		List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key);
 		
 		request.setAttribute("categoryLlist", categoryLlist);
 		request.setAttribute("mainlist", mainlist);
