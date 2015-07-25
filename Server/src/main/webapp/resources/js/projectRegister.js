@@ -1,14 +1,14 @@
 function registerProject(){
 	
-	var param = "project_name" + "=" + $("#project_name").val()
-	 + "&" + "summary" + "=" + $("#summary").val()
-	 + "&" + "description" + "=" + $("#description").val();
-	
-	
 	$.ajax({
 		url : "projectregister_db",
 		type : "POST",
-		data : param,
+		data : 
+		{
+			project_name:$("#project_name").val(),
+			summary:$("#summary").val(),
+			description:$("#description").val()
+		},
 		cache : false,
 		async : false,
 		dataType : "text",

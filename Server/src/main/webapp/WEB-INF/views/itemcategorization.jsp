@@ -14,16 +14,6 @@
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
 <script src="./resources/js/itemcategorization.js"></script>
-<!-- <link rel="stylesheet" href="./resources/css/bootstrap-select.css">-->
-<!-- <script src="./resources/js/bootstrap-select.js"></script>-->
-<script type="text/javascript">
-//$(document).ready(function(){getAllLcategory()});
-function getAllLcategory()
-{
-	var id = ['#Lcategory1','#Lcategory2','#Lcategory3'];
-	getLcategory(id);
-}
-</script>
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
@@ -80,6 +70,7 @@ function getAllLcategory()
 									<button class="btn" onclick="registerLcategory()">Register</button>
 									
 									<select id="Lcategory1" name="Lcategory1">
+										<option value='' selected>해당없음</option>
 									<%
 										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>)request.getAttribute("categoryLlist");
 										int categoryLlistcount = categoryLlist.size();
@@ -102,6 +93,13 @@ function getAllLcategory()
 								
 								<div class="form-group" style="padding:20px">
 									<select id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
+										<option value='' selected>해당없음</option>
+									<%
+										for(int i =0;i<categoryLlistcount;i++)
+										{
+											out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
+										}
+									%>
 									</select>
 									<input type="text"
 										class="form-control" placeholder="Medium Category"
@@ -120,6 +118,13 @@ function getAllLcategory()
 							<div>
 								<div class="form-group" style="padding:20px">
 									<select id="Lcategory3" name="Lcategory3" onchange="getMcategory('3')">
+										<option value='' selected>해당없음</option>
+									<%	
+										for(int i =0;i<categoryLlistcount;i++)
+										{
+											out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
+										}
+									%>
 									</select>
 									<select id="Mcategory3" name="Mcategory3" onchange="getScategory('3')">
 										<option value='' selected>해당없음</option>

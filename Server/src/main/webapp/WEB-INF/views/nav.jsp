@@ -75,8 +75,6 @@ function idCheck(){
 	var text = $("#email").val();
 	
     var regexp = /[0-9a-zA-Z]/; // 숫자,영문,특수문자
-    // var regexp = /[0-9]/; // 숫자만
-//     var regexp = /[a-zA-Z]/; // 영문만
     
     for(var i=0; i<text.length; i++){
         if(text.charAt(i) != " " && regexp.test(text.charAt(i)) == false ){
@@ -87,8 +85,6 @@ function idCheck(){
     
     count=1;
     overlapCheck();
-    
-    
 }
 
 function overlapCheck(){
@@ -135,70 +131,67 @@ function overlapCheck(){
 	});
 }
 
-function formCheck() {
-	var email = document.getElementById('email');
-	var password = document.getElementById('password');
-	var password_check = document.getElementById('password_check');
 
-    count=1;
-	if (email.value == '' || email.value == null) {
-		alert('email를 입력하세요');
-		focus.email;
-		return false;
-	}
+function signup_db() {
 
-	if (password.value == '' || password.value == null) {
-		alert('비밀번호를 입력하세요');
-		focus.password;
-		return false;
-	}
-	
-	if (password_check.value == '' || password_check.value == null) {
-		alert('비밀번호확인란을 입력하세요');
-		//focus.password_hint;
-		return false;
-	}
-	
-	/*비밀번호와 비밀번호확인란 같은지 확인*/
-	if (password.value != password_check.value){
-		alert("비밀번호와 비밀번호 확인란이 다릅니다.");
-		focus.passowrd;
-		return false;
-	}
-	
-	if(count == 0)
+	if(count==0)
 	{
-		alert("중복확인을 눌러주세요");
+		alert('중복확인을 눌러주세요');
 		return false;
 	}
-	else{
-		save();
-		//signupsuccess();
-	}
 	
-	
-}
+	$.ajax({
+		url : "signup_db",
+		type : "POST",
+		data : 
+		{
+			email : document.getElementById('email').value,
+			password : document.getElementById('password').value,
+			password_check : document.getElementById('password_check').value
+		},
+		cache : false,
+		async : false,
+		dataType : "text",
 
+		success : function(response) {								
+			if(response=='success')
+			{
+				location.href='index';
+				alert('회원가입이 완료되었습니다.');
+			}
+			else if(response=='email')
+			{
+				alert('email을 입력해주세요.');
+			}
+			else if(response=='password')
+			{
+				alert('password를 입력해주세요.');
+			}
+			else if(response=='password_check')
+			{
+				alert('password confirm을 입력해주세요.');
+			}
+			else if(response=='password equality')
+			{
+				alert('패스워드가 일치하지 않습니다.');
+			}
+			else if(response=='overlap')
+			{
+				alert('이메일이 중복됩니다.');
+			}
+			else if(response=='error')
+			{
+				alert('에러가 발생했습니다.');
+			}
+		},
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
 
-function init(){
-	count=0;
-}
-
-function signupsuccess(){
-	history.go(0);
-
-}
-
-function save() {
-	var str3 = document.getElementById("joinForm");
-	str3.submit();
-	alert("가입이 완료되었습니다. 재로그인해주세요");
-}
-
-function countCheck(){
-	if(count==1){
-		count=0;
-	}
+	});
 }
 
 
@@ -220,7 +213,8 @@ function countCheck(){
 						<label for="email" cond="">Email Address</label> <input
 							name="email" id="email" type="email" required cond=""
 							class="form-control" placeholder="Email Address" />
-						<input type="button" value="중복확인" onclick='idCheck()'>
+						<input type="button" class="btn pull-right"  value="중복확인" onclick='idCheck()'>
+						<br>
 					</div>
 					<div class="form-group">
 						<label for="password" cond="">Password</label> <input
@@ -237,13 +231,10 @@ function countCheck(){
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">
 						Close</button>											
-					<button type="button"  class="btn btn-primary" onclick="javascript:formCheck();">Sign Up</button>
+					<button type="button"  class="btn btn-primary" onclick="signup_db()">Sign Up</button>
 						
 				</div>
 			</form>
-
-
-
 
 
 		</div>

@@ -2,7 +2,7 @@ package com.rap.models;
 
 public class SettingInfo {
 	private int pk;
-	private int key;
+	private String key;
 	private int grade_moneyl;
 	private int grade_moneym;
 	private int grade_moneys;
@@ -10,16 +10,29 @@ public class SettingInfo {
 	private int grade_timem;
 	private int grade_times;
 	private String google_project_num;
+	public SettingInfo(int pk, String key, int grade_moneyl, int grade_moneym, int grade_moneys, int grade_timel,
+			int grade_timem, int grade_times, String google_project_num) {
+		super();
+		this.pk = pk;
+		this.key = key;
+		this.grade_moneyl = grade_moneyl;
+		this.grade_moneym = grade_moneym;
+		this.grade_moneys = grade_moneys;
+		this.grade_timel = grade_timel;
+		this.grade_timem = grade_timem;
+		this.grade_times = grade_times;
+		this.google_project_num = google_project_num;
+	}
 	public int getPk() {
 		return pk;
 	}
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
-	public int getKey() {
+	public String getKey() {
 		return key;
 	}
-	public void setKey(int key) {
+	public void setKey(String key) {
 		this.key = key;
 	}
 	public int getGrade_moneyl() {

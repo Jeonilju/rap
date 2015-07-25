@@ -12,6 +12,9 @@
 
 <%
 	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
+	String project_name;
+	if(currentproject == null) project_name = "";
+	else project_name = (String)currentproject.getProject_name();
 %>
 <script type="text/javaScript">
 
@@ -19,7 +22,7 @@ $(document).ready(function(){getpromotionlist()});
 
 function getpromotionlist()
 {
-	var param = "project_name" + "=" + "<%=(String)currentproject.getProject_name() %>";
+	var param = "project_name" + "=" + "<%=project_name %>";
 	
 	$.ajax({
 		url : "promotionlist_db",
@@ -171,7 +174,7 @@ function save() {
 	var PromotionSummary = document.getElementById('PromotionSummary');
 	var grade_time = document.promotionAddForm.grade_time.value;
 	var grade_using = document.promotionAddForm.grade_using.value;
-	var project_name = "<%=(String)currentproject.getProject_name() %>";
+	var project_name = "<%=project_name %>";
 	
 	var param = "project_name" + "=" + project_name + "&" 
 				+ "name" + "=" + PromotionName.value + "&" 
@@ -229,9 +232,9 @@ function save() {
 									id="PromotionSummary" name="PromotionSummary" required
 									data-validation-required-message="Please enter Promotion Description.">
 							</div>
-							<div class="row">
-								<label>사용횟수</label> <select size="1" id="grade_using"
-									name="grade_using">
+							<div class="row" style="padding:5px">
+								<label>사용횟수</label> 
+								<select class="selectpicker" id="grade_using" name="grade_using">
 									<option value="0" selected>해당없음</option>
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
@@ -239,9 +242,9 @@ function save() {
 									<option value="4">4 등급</option>
 								</select>
 							</div>
-							<div class="row">
-								<label>사용시간</label> <select size="1" id="grade_time"
-									name="grade_time">
+							<div class="row" style="padding:5px">
+								<label>사용시간</label> 
+								<select class="selectpicker" id="grade_time" name="grade_time">
 									<option value="0" selected>해당없음</option>
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>

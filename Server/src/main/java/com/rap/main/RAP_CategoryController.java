@@ -95,7 +95,7 @@ public class RAP_CategoryController {
 	}
 
 	//중분류 리스트
-	@RequestMapping(value = "/Mcategory_db", method = RequestMethod.POST)
+	@RequestMapping(value = "/Mcategory_db", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
 	@ResponseBody
 	public String MainController_Mcategory_db(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("categoryL") String categoryL) {
@@ -144,7 +144,7 @@ public class RAP_CategoryController {
 		return jObject.toString();
 	}
 
-	@RequestMapping(value = "/Scategory_db", method = RequestMethod.POST)
+	@RequestMapping(value = "/Scategory_db", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
 	@ResponseBody
 	public String MainController_Scategory_db(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("categoryL") String categoryL, @RequestParam("categoryM") String categoryM) {
@@ -254,7 +254,7 @@ public class RAP_CategoryController {
 		categoryLDao.create(project_key, Lcategory);
 
 		logger.info("대분류 등록");
-		return "success";
+		return "200";
 	}
 
 	/** 중분류 추가 */
@@ -425,6 +425,7 @@ return "error";}
 			return "3";
 
 		categoryLDao.delete(project_key, Lcategory);
+		logger.info("대분류 삭제");
 
 		return "200";
 	}
@@ -452,21 +453,17 @@ return "error";}
 		if (project_key.isEmpty())
 			return "Project Not Found";
 
-		logger.info("프로젝트 존재");
-
 		// 대분류가 정상적으로 들어오지 않은 경우
 		if (Lcategory == null)
 			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
 			return "Enter Lcategory";
-		logger.info("대분류 존재");
 
 		// 중분류가 정상적으로 들어오지 않은 경우
 		if (Mcategory == null)
 			return "Enter Mcategory";
 		if (Mcategory.isEmpty())
 			return "Enter Mcategory";
-		logger.info("중분류 존재");
 
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 		int categoryL_pk = -1;
@@ -476,8 +473,8 @@ return "error";}
 		
 		categoryL_pk = categoryLlist.get(0).getPk();
 
-		logger.info("categoryL_pk = "+categoryL_pk);
 		categoryMDao.delete(project_key, categoryL_pk, Mcategory);
+		logger.info("중분류 삭제");
 
 		return "200";
 	}
@@ -506,28 +503,23 @@ return "error";}
 		if (project_key.isEmpty())
 			return "Project Not Found";
 
-		logger.info("프로젝트 존재");
-
 		// 대분류가 정상적으로 들어오지 않은 경우
 		if (Lcategory == null)
 			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
 			return "Enter Lcategory";
-		logger.info("대분류 존재");
 
 		// 중분류가 정상적으로 들어오지 않은 경우
 		if (Mcategory == null)
 			return "Enter Mcategory";
 		if (Mcategory.isEmpty())
 			return "Enter Mcategory";
-		logger.info("중분류 존재");
 
 		// 소분류가 정상적으로 들어오지 않은 경우
 		if (Scategory == null)
 			return "Enter Scategory";
 		if (Scategory.isEmpty())
 			return "Enter Scategory";
-		logger.info("소분류 존재");
 
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 		int categoryL_pk = -1;
@@ -536,8 +528,6 @@ return "error";}
 		if(categoryLlist == null) return "error";
 		
 		categoryL_pk = categoryLlist.get(0).getPk();
-
-		logger.info("categoryL_pk = "+categoryL_pk);
 
 		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk, Mcategory);
 		int categoryM_pk = -1;
@@ -548,10 +538,11 @@ return "error";}
 		
 		//소분류 삭제
 		categorySDao.delete(project_key, categoryM_pk, Scategory);
+		logger.info("소분류 삭제");
+
 
 		return "200";
 	}
-<<<<<<< HEAD:Server/src/main/java/com/rap/main/RAP_CategoryController.java
 	
 	/** 아이템 추가 */
 	@RequestMapping(value = "/registerItem", method = RequestMethod.POST)
@@ -781,7 +772,194 @@ return "error";}
 
 		return jObject.toString();
 	}
+
+	/** 주화폐 등록 */
+	@RequestMapping(value = "/registerVirtualMain", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String registerVirtualMain(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("virtual_main_name") String virtual_main_name, 
+			@RequestParam("virtual_main_description") String virtual_main_description) {
+		logger.info("registerVirtualMain pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 이름 존재 X
+		if (virtual_main_name == null)
+			return "virtual_main_name";
+		if (virtual_main_name.isEmpty())
+			return "virtual_main_name";
+
+		// 설명 존재 X
+		if (virtual_main_description == null)
+			return "virtual_main_description";
+		if (virtual_main_description.isEmpty())
+			return "virtual_main_description";
+		
+		logger.info("정상적으로 입력");
+		
+		List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key);
+
+		if(mainlist.size() > 0) return "Already Exist";
+		
+		virtual_MainDao.create(project_key, virtual_main_name, 0, "", virtual_main_description);
+		logger.info("주화폐 생성");
+
+		return "200";
+	}
+
+	/** 주화폐 삭제 */
+	@RequestMapping(value = "/deleteVirtualMain", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String deleteVirtualMain(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("virtual_main_name") String virtual_main_name) {
+		logger.info("deleteVirtualMain pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 이름 존재 X
+		if (virtual_main_name == null)
+			return "virtual_main_name";
+		if (virtual_main_name.isEmpty())
+			return "virtual_main_name";
+
+		logger.info("정상적으로 입력");
+		
+		virtual_MainDao.delete(project_key);
+		logger.info("주화폐 삭제");
+
+		return "200";
+	}
+
+	/** 부화폐 등록 */
+	@RequestMapping(value = "/registerVirtualSub", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String registerVirtualSub(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("virtual_sub_name") String virtual_sub_name, 
+			@RequestParam("virtual_sub_description") String virtual_sub_description) {
+		logger.info("registerVirtualSub pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 이름 존재 X
+		if (virtual_sub_name == null)
+			return "virtual_sub_name";
+		if (virtual_sub_name.isEmpty())
+			return "virtual_sub_name";
+
+		// 설명 존재 X
+		if (virtual_sub_description == null)
+			return "virtual_sub_description";
+		if (virtual_sub_description.isEmpty())
+			return "virtual_sub_description";
+		
+		logger.info("정상적으로 입력");
+		
+		List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key);
+
+		if(sublist.size() > 0) return "Already Exist";
+		
+		virtual_SubDao.create(project_key, virtual_sub_name, 0, "", virtual_sub_description);
+		logger.info("부화폐 생성");
+
+		return "200";
+	}
+
+	/** 주화폐 삭제 */
+	@RequestMapping(value = "/deleteVirtualSub", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String deleteVirtualSub(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("virtual_sub_name") String virtual_sub_name) {
+		logger.info("deleteVirtualSub pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 존재");
+
+		// 이름 존재 X
+		if (virtual_sub_name == null)
+			return "virtual_main_name";
+		if (virtual_sub_name.isEmpty())
+			return "virtual_main_name";
+
+		logger.info("정상적으로 입력");
+		
+		virtual_SubDao.delete(project_key);
+		logger.info("부화폐 삭제");
+
+		return "200";
+	}
 }
-=======
-}
->>>>>>> 753b9e794d5897f88a0fb0dd7668c890a0c3a992:Server/src/main/java/com/rap/main/RAP_CetegoryController.java

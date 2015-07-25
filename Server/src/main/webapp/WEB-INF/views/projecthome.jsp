@@ -7,7 +7,30 @@
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
 <script>
+function selectProject(projectname){
+	
+	$.ajax({
+		url : "selectProject",
+		type : "POST",
+		data : {currentprojectname: projectname},
+		cache : false,
+		async : false,
+		dataType : "text",
 
+		success : function(response) {				
+			location.href='projectsettings';
+		},
+		
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+
+
+	});
+}
 function deleteProject(projectname)
 {
 	if(confirm(projectname+' 프로젝트를 삭제하시겠습니까?'))
@@ -100,7 +123,9 @@ function deleteProject(projectname)
 					else
 					{
 						List<ProjectInfo> projectlist = (List<ProjectInfo>) request.getAttribute("projectlist");
-						int projectcount = (Integer) request.getAttribute("projectcount");
+						int projectcount;
+						if(projectlist == null) projectcount = 0;
+						else projectcount = (Integer)request.getAttribute("projectcount");
 						
 						for(int i=0;i<projectcount;i++)
 						{
@@ -108,7 +133,9 @@ function deleteProject(projectname)
 					<!-- project list 존재하는 경우 -->
 					<div class="panel panel-default">
 						<div class="panel-heading clearfix">
-							<h3 class="panel-title pull-left"><a href="projectsettings?currentprojectname=<%= projectlist.get(i).getProject_name() %>"><%= projectlist.get(i).getProject_name() %></a></h3>
+							<h3 class="panel-title pull-left">
+							<a onclick="selectProject('<%= projectlist.get(i).getProject_name() %>')"><%= projectlist.get(i).getProject_name() %></a>
+							</h3>
 							<a onclick="deleteProject('<%= projectlist.get(i).getProject_name() %>')"><i class="fa fa-trash pull-right"></i></a>
 							<a><i class="fa fa-edit pull-right" style="margin-right: 4px;"></i></a>
 
