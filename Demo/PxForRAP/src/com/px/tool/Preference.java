@@ -11,6 +11,8 @@ public final class Preference {
     public static final String isFirst = "isFirst";
     
     public static final String PREF_GCM = "PREF_GCM";
+    public static final String PREF_MAIN = "Main_Currency";
+    public static final String PREF_SUB = "Sub_Currency";
 
     private Preference() {
         // not called

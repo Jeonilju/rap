@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/setting_btn_location_add"
+        android:layout_width="400dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/location_add" />
+
+    <ListView
+        android:id="@+id/setting_location_list"
+        android:layout_width="fill_parent"
+        android:layout_height="500dp"
+        android:layout_below="@id/setting_btn_location_add"
+        android:layout_margin="10dp" />
+
+</LinearLayout>

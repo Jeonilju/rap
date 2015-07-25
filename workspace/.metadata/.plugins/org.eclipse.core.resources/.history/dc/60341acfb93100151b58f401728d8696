@@ -1,0 +1,119 @@
+package com.klt.connectior;
+
+import java.io.UnsupportedEncodingException;
+
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
+
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.klt.data.UserInfo;
+
+public class KLTAPIs_User {
+
+	private static final String TAG = "KLTAPIs_User";
+	
+	/** 로그인 */
+	public static HttpRequestBase Login(String username, String password, String uuid)
+			throws UnsupportedEncodingException {
+
+		UserInfo aa = new UserInfo();
+		aa.password = password;
+		aa.username = username;
+		aa.uuid = uuid;
+
+		String json = new Gson().toJson(aa);
+
+		HttpPost httpPost = new HttpPost(KLTHttpClient.getBaseURL()
+				+ "/user/login/");
+		httpPost.setHeader("Content-Type", "application/json");
+		StringEntity entity = new StringEntity(json, "utf-8");
+		httpPost.setEntity(entity);
+
+		return httpPost;
+	}
+
+	/** 회원가입 */
+	public static HttpRequestBase SignUp(String name, String username,
+			String password, String car_num, int floor_min, int floor_max,
+			String telephone_num, String main_address, String detail_address,
+			String office, int office_location_id, String uuid, String bank,
+			String banking, int code) throws UnsupportedEncodingException {
+
+		UserInfo userObj = new UserInfo();
+		userObj.name = name;
+		userObj.username = username;
+		userObj.password = password;
+		userObj.uuid = uuid;
+		userObj.car_num = car_num;
+		userObj.floor_min = floor_min;
+		userObj.floor_max = floor_max;
+		userObj.main_address = main_address;
+		userObj.detail_address = detail_address;
+		userObj.office = office;
+		userObj.office_location_id = office_location_id;
+		userObj.interest_address = ""; // 현재 회원가입할 땐 체크하지 않음
+		userObj.bank = bank;
+		userObj.banking = banking;
+		userObj.banking = banking;
+		userObj.code = code;
+		userObj.telephone_num = telephone_num;
+
+		String json = new Gson().toJson(userObj);
+		Log.i(TAG, "json: " + json);
+		HttpPost httpPost = new HttpPost(KLTHttpClient.getBaseURL()
+				+ "/user/join/");
+		httpPost.setHeader("Content-Type", "application/json");
+		StringEntity entity = new StringEntity(json, HTTP.UTF_8);
+		httpPost.setEntity(entity);
+
+		return httpPost;
+	}
+
+	/**
+	 * 유저 존재 유무 가져오기
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	public static HttpRequestBase getUserExist(String username)
+			throws UnsupportedEncodingException {
+
+		UserInfo userObj = new UserInfo();
+		userObj.username = username;
+
+		String json = new Gson().toJson(userObj);
+		Log.i(TAG, "json: " + json);
+		HttpPost httpPost = new HttpPost(KLTHttpClient.getBaseURL()
+				+ "/user/exist/");
+		httpPost.setHeader("Content-Type", "application/json");
+		StringEntity entity = new StringEntity(json, HTTP.UTF_8);
+		httpPost.setEntity(entity);
+
+		return httpPost;
+	}
+	
+	///user/withdraw/
+	/**
+	 * 회원 탈퇴
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	public static HttpRequestBase signOut(String username)
+			throws UnsupportedEncodingException {
+
+		UserInfo userObj = new UserInfo();
+		userObj.username = username;
+
+		String json = new Gson().toJson(userObj);
+		HttpPost httpPost = new HttpPost(KLTHttpClient.getBaseURL()
+				+ "/user/exist/");
+		httpPost.setHeader("Content-Type", "application/json");
+		StringEntity entity = new StringEntity(json, HTTP.UTF_8);
+		httpPost.setEntity(entity);
+
+		return httpPost;
+	}
+}

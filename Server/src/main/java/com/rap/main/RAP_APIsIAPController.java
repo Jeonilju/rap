@@ -160,7 +160,7 @@ public class RAP_APIsIAPController {
 			, @RequestParam("project_key") String project_key) {
 		logger.info("/APIs/checkVirtualMain");
 
-		String json = new Gson().toJson(virtual_mainDao.select(project_key));
+		String json = new Gson().toJson(virtual_mainDao.selectOne(project_key));
 		return json;
 	}
 	
@@ -170,7 +170,7 @@ public class RAP_APIsIAPController {
 			, @RequestParam("project_key") String project_key) {
 		logger.info("APIs Tab");
 
-		String json = new Gson().toJson(virtual_subDao.select(project_key));
+		String json = new Gson().toJson(virtual_subDao.selectOne(project_key));
 		return json;
 	}
 	
@@ -267,6 +267,34 @@ public class RAP_APIsIAPController {
 			, @RequestParam("money") int money) {
 		logger.info("Sub 가상화폐 추가");
 		userDao.getVirtual_sub(project_key, User, money);
+		
+		return "";
+	}
+	
+	//TODO 미구현	
+	/** 아이템 main 화폐로 구매 */
+	@RequestMapping(value = "/APIs/BuyVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String BuyVirtualMain(HttpServletRequest request
+			, @RequestParam("project_key") String project_key
+			, @RequestParam("User") String User
+			, @RequestParam("item_pk") int item_pk) {
+		logger.info("Sub 가상화폐 추가");
+		//userDao.getVirtual_sub(project_key, User, money);
+		
+		return "";
+	}
+	
+	//TODO 미구현
+	/** 아이템 sub 화폐로 구매 */
+	@RequestMapping(value = "/APIs/BuyVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String BuyVirtualSub(HttpServletRequest request
+			, @RequestParam("project_key") String project_key
+			, @RequestParam("User") String User
+			, @RequestParam("item_pk") int item_pk) {
+		logger.info("Sub 가상화폐 추가");
+		//userDao.getVirtual_sub(project_key, User, money);
 		
 		return "";
 	}

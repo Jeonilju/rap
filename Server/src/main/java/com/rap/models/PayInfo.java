@@ -4,29 +4,40 @@ import java.sql.Timestamp;
 
 public class PayInfo {
 	private int pk;
-	private int key;
-	private int user_pk;
+	private String key;
+	private String username;
 	private int type;
 	private int price;
 	private int item_pk;
 	private Timestamp reg_date;
+	
+	public PayInfo(int pk, String key, String username, int type, int price, int item_pk, Timestamp reg_date){
+		this.pk = pk;
+		this.key = key;
+		this.username = username;
+		this.type = type;
+		this.price = price;
+		this.item_pk = item_pk;
+		this.reg_date = reg_date;
+	}
+	
 	public int getPk() {
 		return pk;
 	}
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
-	public int getKey() {
+	public String getKey() {
 		return key;
 	}
-	public void setKey(int key) {
+	public void setKey(String key) {
 		this.key = key;
 	}
-	public int getUser_pk() {
-		return user_pk;
+	public String getUserName() {
+		return username;
 	}
-	public void setUser_pk(int user_pk) {
-		this.user_pk = user_pk;
+	public void setUserName(String username) {
+		this.username = username;
 	}
 	public int getType() {
 		return type;
