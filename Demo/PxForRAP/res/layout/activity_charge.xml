@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+     
+    <LinearLayout 
+        android:id="@+id/charge_layout_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        
+        <Button 
+            android:id="@+id/charge_btn_main"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text=""/>
+        
+        <Button 
+            android:id="@+id/charge_btn_sub"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text=""/>
+        
+    </LinearLayout>
+        
+    <ListView 
+        android:id="@+id/charge_list_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/charge_layout_menu"
+        android:visibility="gone"/>
+    
+    <ListView 
+        android:id="@+id/charge_list_sub"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/charge_layout_menu"
+        android:visibility="gone"/>
+
+</RelativeLayout>

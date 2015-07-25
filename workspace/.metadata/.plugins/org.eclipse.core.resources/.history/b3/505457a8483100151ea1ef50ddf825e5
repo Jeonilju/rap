@@ -1,0 +1,121 @@
+package com.klt.activity;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+
+import com.klt.BaseActivity;
+import com.klt.R;
+import com.klt.db.KLTExcelParser;
+import com.klt.setting.Conf;
+import com.klt.setting.Preference;
+
+public class IntroActivity extends BaseActivity{
+
+	private static final String TAG = "IntroActivity";
+	private ProgressDialog dialog;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_intro);	// 첫번째 화면
+		getActionBar().hide();
+		
+		getMyPhoneNumber(this);
+		
+		dialog = ProgressDialog.show(IntroActivity.this, "", "데이터베이스 생성중입니다.\n잠시만 기다려주세요.\n( 최초 1회만 수행합니다. )", true);
+		
+		//TODO Test용
+		Preference.putString(IntroActivity.this, Conf.PREFERENCE_REGE_DATE, "월정액 만료일은 2015-05-12 입니다.");
+		
+		
+		//CompleteParser.sendEmptyMessage(1);
+	}
+
+	/** 내 전화번호 요청하기 */
+	private void getMyPhoneNumber(Context context){
+		TelephonyManager systemService = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		String PhoneNumber = systemService.getLine1Number();
+		PhoneNumber = PhoneNumber.substring(PhoneNumber.length()-10,PhoneNumber.length());
+		PhoneNumber="0"+PhoneNumber;
+		
+		// 010 4801 5914
+		if(PhoneNumber.length() > 10){
+			Preference.putString(context, Conf.PREFERENCE_PHONE1, PhoneNumber.substring(0, 3));
+			Preference.putString(context, Conf.PREFERENCE_PHONE2, PhoneNumber.substring(3, 7));
+			Preference.putString(context, Conf.PREFERENCE_PHONE3, PhoneNumber.substring(7, 11));
+		}
+		else if(PhoneNumber.length() == 10) {
+			Preference.putString(context, Conf.PREFERENCE_PHONE1, PhoneNumber.substring(0, 3));
+			Preference.putString(context, Conf.PREFERENCE_PHONE2, PhoneNumber.substring(3, 6));
+			Preference.putString(context, Conf.PREFERENCE_PHONE3, PhoneNumber.substring(6, 10));
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i(TAG,"intro) onResume1");
+//		Handler h = new Handler();		
+//		h.postDelayed(nextIntro, Conf.INTRO_DELAY_TIME);
+//		
+//		Handler h2 = new Handler();		
+//		h2.postDelayed(moveNext, Conf.INTRO_DELAY_TIME*2);
+//		Log.i(TAG,"intro) onResume2");
+	}
+	
+	Runnable nextIntro = new Runnable() {
+		public void run() {
+			//setContentView(R.layout.activity_intro2);	// 두번쨰 화면
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					KLTExcelParser parser = new KLTExcelParser(IntroActivity.this, CompleteParser);
+				}
+			}).start();
+			
+		}
+	};
+	
+	Runnable moveNext = new Runnable() {
+		public void run() {
+			Intent intent= new Intent(IntroActivity.this, MainActivity.class);
+			startActivity(intent);
+			finish();
+			//VersionChack();
+		}
+	};
+
+	private void VersionChack()
+	{
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				
+			}
+		}).start();
+	}
+	
+	Handler CompleteParser = new Handler(){
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == 1){
+				dialog.dismiss();
+				
+				Intent intent= new Intent(IntroActivity.this, MainActivity.class);
+				startActivity(intent);
+				finish();
+			}
+			else{
+				dialog.setMessage("데이터베이스 생성중입니다.\n잠시만 기다려주세요(" + msg.arg2 + "/" + msg.arg1 + ")");
+			}
+		}
+	};
+}

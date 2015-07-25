@@ -4,13 +4,14 @@ import java.sql.Timestamp;
 
 public class IAPInfo {
 	private int pk;
+	private String name;
 	private String key;
-	private String iap;
 	private int price_real;
 	private int price_main;
 	private int price_sub;
 	private int using_type;
-	private String image;
+	private String google_id;
+	private String imagePath;
 	private String description;
 	private Timestamp reg_date;
 	private String categoryl;
@@ -18,17 +19,18 @@ public class IAPInfo {
 	private String categorys;
 	
 	public IAPInfo(int pk, String key, String iap
-			, int price_real, int price_main, int price_sub, int using_type
-			, String image, String description, Timestamp reg_date
+			, int price_real, int price_main, int price_sub, int using_type, String google_id
+			, String imagePath, String description, Timestamp reg_date
 			, String categoryl, String categorym, String categorys) {
 		this.pk = pk;
 		this.key = key;
-		this.iap = iap;
+		this.name = iap;
 		this.price_real = price_real;
 		this.price_main = price_main;
 		this.price_sub = price_sub;
+		this.google_id = google_id;
 		this.using_type = using_type;
-		this.image = image;
+		this.imagePath = imagePath;
 		this.description = description;
 		this.reg_date = reg_date;
 		this.categoryl = categoryl;
@@ -49,10 +51,10 @@ public class IAPInfo {
 		this.key = key;
 	}
 	public String getIap() {
-		return iap;
+		return name;
 	}
 	public void setIap(String iap) {
-		this.iap = iap;
+		this.name = iap;
 	}
 	public int getPrice_real() {
 		return price_real;
@@ -79,10 +81,10 @@ public class IAPInfo {
 		this.using_type = using_type;
 	}
 	public String getImage() {
-		return image;
+		return imagePath;
 	}
 	public void setImage(String image) {
-		this.image = image;
+		this.imagePath = image;
 	}
 	public String getDescription() {
 		return description;
@@ -113,6 +115,30 @@ public class IAPInfo {
 	}
 	public void setCategorys(String categorys) {
 		this.categorys = categorys;
+	}
+
+	public String getGoogle_id() {
+		return google_id;
+	}
+
+	public void setGoogle_id(String google_id) {
+		this.google_id = google_id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 	
 }

@@ -48,12 +48,39 @@ public class Virtual_SubDao implements Virtual_SubIDao{
 		    	}
 		    });
 	}
-	public List<Virtual_MainInfo> select(String project_key, String name) {
-		return jdbcTemplate.query("select * from virtual_main where project_key = ? and name = ?",
-		    	new Object[] { project_key,name }, new RowMapper<Virtual_MainInfo>() {
-		    	public Virtual_MainInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+	public Virtual_SubInfo selectOne(String project_key) {
+		List<Virtual_SubInfo> result = jdbcTemplate.query("select * from virtual_sub where project_key = ?",
+		    	new Object[] { project_key }, new RowMapper<Virtual_SubInfo>() {
+		    	public Virtual_SubInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
-		    		return new Virtual_MainInfo(
+		    		return new Virtual_SubInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("name")
+		    				, resultSet.getInt("price")
+		    				, resultSet.getString("image")
+		    				, resultSet.getString("description")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		
+		if(result.size() == 1){
+			return result.get(0);
+		}
+		else if(result.size() > 1){
+			logger.info("가상화폐 main 정보 조회시 데이터 중복 버그");
+			return result.get(0);
+		}
+		else{
+			return null;
+		}
+	}
+	public List<Virtual_SubInfo> select(String project_key, String name) {
+		return jdbcTemplate.query("select * from virtual_sub where project_key = ? and name = ?",
+		    	new Object[] { project_key,name }, new RowMapper<Virtual_SubInfo>() {
+		    	public Virtual_SubInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new Virtual_SubInfo(
 		    				resultSet.getInt("pk")
 		    				, resultSet.getString("project_key")
 		    				, resultSet.getString("name")

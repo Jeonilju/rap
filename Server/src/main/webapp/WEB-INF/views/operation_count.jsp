@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html>
-<!-- Ã¬ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ Ã«Â°Â Ã¬ÂÂ¸Ã­ÂÂ´Ã«Â£Â¨Ã«ÂÂ -->
+<!-- ÃÂ¬ÃÂÃÂÃÂ«ÃÂÃÂ¨ ÃÂ«ÃÂÃÂ¤ÃÂ«ÃÂ¹ÃÂÃÂªÃÂ²ÃÂÃÂ¬ÃÂÃÂ´ÃÂ¬ÃÂÃÂ ÃÂ«ÃÂ°ÃÂ ÃÂ¬ÃÂÃÂ¸ÃÂ­ÃÂÃÂ´ÃÂ«ÃÂ£ÃÂ¨ÃÂ«ÃÂÃÂ -->
 <jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -11,14 +11,42 @@
 ${demo.css}
 		</style>
 		
+        
 		
-		
-		<script type="text/javascript">
+<script type="text/javascript">
 
+function getoperation_count() {
+	var param = "type=" + document.getElementById('Type').value+
+				"&start=" + document.getElementById('Start').value;
+	
+	$.ajax({
+		url : "operation_count_db",
+		type : "POST",
+		data : param,
+		dataType : "JSON",
+		success : function(data) {
+
+			if (data != null || data != "") {
+
+				var start_time=data.start_time;
+				var count=data.count;
+				//alert(start_time.toString());
+				modify_chart(start_time,count);
+
+			}
+		},
+
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+}
 
 		
-		
-		$(function () {
+		function modify_chart(start_time,count) {
 		    $('#container').highcharts({
 		        chart: {
 		            type: 'column'
@@ -27,7 +55,7 @@ ${demo.css}
 		            text: 'title'
 		        },
 		        xAxis: {
-		            categories: ['05/01', '05/02', '05/03', '05/04', '05/05']
+		            categories: start_time
 		        },
 		        yAxis: {
 		            min: 0,
@@ -76,16 +104,10 @@ ${demo.css}
 		        
 		        series: [{
 		            name: '1st class',
-		            data: [5, 3, 4, 7, 2]
-		        }, {
-		            name: '2nd class',
-		            data: [2, 2, 3, 2, 1]
-		        }, {
-		            name: '3rd class',
-		            data: [3, 4, 4, 2, 5]
+		            data: count
 		        }]
 		    });
-		});
+		}
 		
 		
 		
@@ -120,6 +142,10 @@ ${demo.css}
 						<li>
 							<a href="operation_count">Operation count</a>
 							<a href="operation_time">Operation time</a>
+							<a href="best_activity">Best activity</a>
+							<a href="Promotions">Promotions</a>
+							<a href="new_member">New_member</a>
+							<a href="deleted_member">Deleted_member</a>
 							<a href="sex">Sex ratio</a>
 							<a href="age">Age</a>
 							<a href="os">OS</a>
@@ -128,6 +154,7 @@ ${demo.css}
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->
+				
 				
 				<!--  page-wrapper -->
 				<div id="page-content-wrapper">
@@ -140,8 +167,27 @@ ${demo.css}
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-lg-12 text-center">
-								<!-- chart -->
+							<div class="col-lg-12 text-center" >
+							<div class="form-group">
+
+								<div class='input-group date' id='datetimepicker1'>
+									<select id="Type" name="Type"
+										class="selectpicker show-tick" style="width: 200px; margin-right: 20px;">
+										<option value="day">day</option>
+										<option value="month">month</option>
+										<option value="year">year</option>
+									</select> 
+									
+									<input id="Start" name="Start" type='text' class="form-control" /> <span
+										class="input-group-addon"> <span
+										class="fa fa-calendar" onClick="getoperation_count()"></span>
+									</span>
+								</div>
+							</div>
+
+
+
+							<!-- chart -->
 								<div id="container" style="min-width: 200px; height: 400px; margin: 0 auto" ></div>
 								<!-- /#chart -->
 							</div>
