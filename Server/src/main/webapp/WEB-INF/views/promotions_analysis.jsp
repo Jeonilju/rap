@@ -1,6 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page
+	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE HTML>
 <html>
-<!-- Ã¬ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ Ã«Â°Â Ã¬ÂÂ¸Ã­ÂÂ´Ã«Â£Â¨Ã«ÂÂ -->
+<!-- ÃÂ¬ÃÂÃÂÃÂ«ÃÂÃÂ¨ ÃÂ«ÃÂÃÂ¤ÃÂ«ÃÂ¹ÃÂÃÂªÃÂ²ÃÂÃÂ¬ÃÂÃÂ´ÃÂ¬ÃÂÃÂ ÃÂ«ÃÂ°ÃÂ ÃÂ¬ÃÂÃÂ¸ÃÂ­ÃÂÃÂ´ÃÂ«ÃÂ£ÃÂ¨ÃÂ«ÃÂÃÂ -->
 <jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -12,15 +17,63 @@ ${demo.css}
 		</style>
 		
         
+<%
+	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
+%>
 		
 <script type="text/javascript">
 
-function getoperation_count() {
-	var param = "type=" + document.getElementById('Type').value+
-				"&start=" + document.getElementById('Start').value;
+
+$(document).ready(function(){getpromotionlist()});
+
+function getpromotionlist()
+{
+	var param = "project_name" + "=" + "<%=(String)currentproject.getProject_name() %>";
 	
 	$.ajax({
-		url : "new_member_db",
+		url : "promotionlist_db",
+		type : "POST",
+		data : param,
+		dataType : "JSON",
+		success : function(data) {
+			$('#plist').html("");
+			
+			if(data!=null || data!="")
+			{
+				var list = data.promotionlist;
+				var listLen = list.length;
+				
+				for(var i=0;i<listLen;i++)
+				{
+					$('#promotion_list').append("<option>"+list[i].name+"</option>");
+				}
+				
+				if(listLen==0)
+				{	$('#promotion_list').append("<option>"+"No promotion"+"</option>");
+					
+				}
+			}
+			else
+			{	$('#promotion_list').append("<option>"+"No promotion"+"</option>");
+				
+			}
+		}
+	});
+	
+}
+
+
+
+function getoperation_count() {
+	
+	
+	var param = 
+				"start=" + document.getElementById('Start').value+
+				"&promotion=" + document.getElementById('promotion_list').value;
+	
+	//alert('param= '+param);
+	$.ajax({
+		url : "promotions_analysis_db",
 		type : "POST",
 		data : param,
 		dataType : "JSON",
@@ -107,76 +160,6 @@ $('#container').highcharts({
 		
 		
 		
-		
-		
-		
-		/* function modify_chart(start_time,count) {
-		    $('#container').highcharts({
-		        chart: {
-		            type: 'column'
-		        },
-		        title: {
-		            text: 'title'
-		        },
-		        xAxis: {
-		            categories: start_time
-		        },
-		        yAxis: {
-		            min: 0,
-		            title: {
-		                text: 'Total new member counts'
-		            },
-		            stackLabels: {
-		                enabled: true,
-		                style: {
-		                    fontWeight: 'bold',
-		                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-		                }
-		            }
-		        },
-		        legend: {
-		            align: 'right',
-		            x: -30,
-		            verticalAlign: 'top',
-		            y: 25,
-		            floating: true,
-		            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-		            borderColor: '#CCC',
-		            borderWidth: 1,
-		            shadow: false
-		        },
-		        tooltip: {
-		            formatter: function () {
-		                return '<b>' + this.x + '</b><br/>' +
-		                    this.series.name + ': ' + this.y + '<br/>' +
-		                    'Total: ' + this.point.stackTotal;
-		            }
-		        },
-		        plotOptions: {
-		            column: {
-		                stacking: 'normal',
-		                dataLabels: {
-		                    enabled: true,
-		                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-		                    style: {
-		                        textShadow: '0 0 3px black'
-		                    }
-		                }
-		            }
-		        },
-		        
-		        
-		        series: [{
-		            name: '1st class',
-		            data: count
-		        }]
-		    });
-		}
-		 */
-		
-		
-		
-		
 		</script>
 		
 		
@@ -210,20 +193,17 @@ $('#container').highcharts({
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>New member</h2>
+								<h2>Promotions Analysis</h2>
 							</div>
 						</div>
 						<div class="row">
 							<div class="col-lg-12 text-center" >
-							<div class="form-group">
+						
 
+							<div class="form-group">
+	<select class="selectpicker show-tick"  id="promotion_list" name="promotion_list" ></select> 
 								<div class='input-group date' id='datetimepicker1'>
-									<select id="Type" name="Type"
-										class="selectpicker show-tick" style="width: 200px; margin-right: 20px;">
-										<option value="day">day</option>
-										<option value="month">month</option>
-										<option value="year">year</option>
-									</select> 
+								
 									
 									<input id="Start" name="Start" type='text' class="form-control" /> <span
 										class="input-group-addon"> <span

@@ -12,8 +12,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.rap.analysismodels.OPcountInfo;
 import com.rap.idao.ActivityIDao;
 import com.rap.models.ActivityInfo;
+import com.rap.models.BestActivityInfo;
 
 @Repository
 public class ActivityDao implements ActivityIDao {
@@ -61,4 +63,22 @@ public class ActivityDao implements ActivityIDao {
 	public void delete(String project_key) {
 		jdbcTemplate.update("delete from activity_log where project_key = ?", new Object[] { project_key });
 	}
+	
+	public List<BestActivityInfo> countBest_activity(String project_key) {
+		
+		logger.info("count Best_activity /" + "project_key : " + project_key);
+		// SELECT DISTINCT email FROM table;
+		
+		 List<BestActivityInfo> result  = jdbcTemplate.query(
+				 "select  activity_name,count(*) from activity_log where project_key = ? group by activity_name order by count(*) desc",
+					new Object[] { project_key}, new RowMapper<BestActivityInfo>() {
+						public BestActivityInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+							return new BestActivityInfo(resultSet.getString("activity_name"), resultSet.getInt("count(*)"));
+						}
+					});
+		 return result;	
+		
+	}
+	
+	
 }

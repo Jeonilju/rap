@@ -1,8 +1,8 @@
-package com.rap.models;
+package com.rap.analysismodels;
 
 import java.sql.Timestamp;
 
-public class OPcountInfo {
+public class Promotion_resultInfo {
 	
 	private Timestamp start;	
 	private int count;
@@ -18,13 +18,11 @@ public class OPcountInfo {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public OPcountInfo(Timestamp start, int count) {
+	public Promotion_resultInfo(Timestamp start, int count) {
 		super();
 		this.start = start;
 		this.count = count;
 	}
 	
-	
-
 	
 }

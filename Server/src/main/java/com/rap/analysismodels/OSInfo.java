@@ -1,4 +1,4 @@
-package com.rap.models;
+package com.rap.analysismodels;
 
 
 public class OSInfo {

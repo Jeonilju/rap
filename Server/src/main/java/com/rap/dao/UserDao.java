@@ -14,10 +14,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.rap.analysismodels.NewmemberInfo;
+import com.rap.analysismodels.OSInfo;
 import com.rap.idao.UserIDao;
 import com.rap.models.DeviceInfo;
-import com.rap.models.OPcountInfo;
-import com.rap.models.OSInfo;
 import com.rap.models.UserInfo;
 
 @Repository
@@ -284,134 +284,32 @@ public class UserDao implements UserIDao {
 		return OS_version;
 	}
 
-	public List<OPcountInfo> countoperation_count(String project_key, String type, Timestamp start) {
-		
-		logger.info("count os" + "project_key : " + project_key + "type : " + type + "timestamp : " + start.toString());
-		// SELECT DISTINCT email FROM table;
-		
-		List<OPcountInfo> OPcount = null;
-		List<OPcountInfo> result = new ArrayList<OPcountInfo>();
-		if (type.equals("day")) {
-			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(start) AS ForDate from log_time where project_key=? AND start<TIMESTAMP(DATE_ADD(?, INTERVAL 7 day))AND DATE(start)>=DATE(?) GROUP BY DATE(start) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<OPcountInfo>() {
-						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new OPcountInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
-						}
-					});
-		
-			int index=0;
-			for (int i = 0; i < 7; i++) {			
-				if(OPcount.get(index).getStart().equals(start)){
-					result.add(i,OPcount.get(index));
-					if(index<OPcount.size()-1)
-					index++;	
-				}
-				else{
-					Timestamp c=new Timestamp(start.getTime());
-					OPcountInfo a = new OPcountInfo(c, 0);
-					result.add(i, a);
-				}
-				start.setDate(start.getDate()+1);
-			}
-		}
-		
-		if (type.equals("month")) {
-			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(start) AS ForDate from log_time where project_key=? AND start<TIMESTAMP(DATE_ADD(?, INTERVAL 7 month))AND MONTH(start)>=MONTH(?) GROUP BY MONTH(start) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<OPcountInfo>() {
-						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new OPcountInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
-						}
-					});
-/*			for (int i = 0; i < OPcount.size(); i++) {				
-				logger.info("q"+OPcount.get(i).getCount());
-			}*/
-			
-			int index=0;
-			
-			for (int i = 0; i < 7; i++) {			
-				if(OPcount.get(index).getStart().getMonth()==start.getMonth()){
-					result.add(i,OPcount.get(index));
-					if(index<OPcount.size()-1)
-						index++;					
-				}
-				else{
-					Timestamp c=new Timestamp(start.getTime());
-					OPcountInfo a = new OPcountInfo(c, 0);
-					result.add(i, a);
-				}
-				start.setMonth(start.getMonth()+1);
-				//logger.info(""+result.get(i).getCount());
-			}
-			
-			
-		}
-		
-		if (type.equals("year")) {
-			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(start) AS ForDate from log_time where project_key=? AND start<TIMESTAMP(DATE_ADD(?, INTERVAL 7 year))AND YEAR(start)>=YEAR(?) GROUP BY YEAR(start) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<OPcountInfo>() {
-						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new OPcountInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
-						}
-					});
-/*			for (int i = 0; i < OPcount.size(); i++) {				
-				logger.info("q"+OPcount.get(i).getStart().getYear());
-			}*/
-			
-			int index=0;
-			
-			for (int i = 0; i < 7; i++) {			
-				if(OPcount.get(index).getStart().getYear()==start.getYear()){
-					result.add(i,OPcount.get(index));
-					if(index<OPcount.size()-1)
-						index++;					
-				}
-				else{
-					Timestamp c=new Timestamp(start.getTime());
-					OPcountInfo a = new OPcountInfo(c, 0);
-					result.add(i, a);
-				}
-				start.setYear(start.getYear()+1);
-				//logger.info("year"+result.get(i).getCount());
-			}
-			/*for (int i = 0; i < 7; i++) {		
-				logger.info("year : "+result.get(i).getStart());
-				}*/
-		}
-
-
-		
-		return result;
-	}
-	
-public List<OPcountInfo> countnew_member(String project_key, String type, Timestamp start) {
+	public List<NewmemberInfo> count_new_member(String project_key, String type, Timestamp start) {
 		
 		logger.info("count new_member");
 		// SELECT DISTINCT email FROM table;
 		
-		List<OPcountInfo> OPcount = null;
-		List<OPcountInfo> result = new ArrayList<OPcountInfo>();
+		List<NewmemberInfo> OPcount = null;
+		List<NewmemberInfo> result = new ArrayList<NewmemberInfo>();
 		if (type.equals("day")) {
 			OPcount = jdbcTemplate.query(
 					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 day))AND DATE(reg_date)>=DATE(?) GROUP BY DATE(reg_date) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<OPcountInfo>() {
-						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new OPcountInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
+					new Object[] { project_key, start,start}, new RowMapper<NewmemberInfo>() {
+						public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+							return new NewmemberInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
 						}
 					});
 		
 			int index=0;
 			for (int i = 0; i < 7; i++) {			
-				if(OPcount.get(index).getStart().equals(start)){
+				if(OPcount.size()>0&&OPcount.get(index).getStart().equals(start)){
 					result.add(i,OPcount.get(index));
 					if(index<OPcount.size()-1)
 					index++;	
 				}
 				else{
 					Timestamp c=new Timestamp(start.getTime());
-					OPcountInfo a = new OPcountInfo(c, 0);
+					NewmemberInfo a = new NewmemberInfo(c, 0);
 					result.add(i, a);
 				}
 				start.setDate(start.getDate()+1);
@@ -420,27 +318,27 @@ public List<OPcountInfo> countnew_member(String project_key, String type, Timest
 		
 		if (type.equals("month")) {
 			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 month))AND MONTH(reg_date)>=MONTH(?) GROUP BY MONTH(reg_date) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<OPcountInfo>() {
-						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new OPcountInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
+					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 month))AND DATE(reg_date)>=DATE(?) GROUP BY MONTH(reg_date) ORDER BY ForDate",
+					new Object[] { project_key, start,start}, new RowMapper<NewmemberInfo>() {
+						public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+							return new NewmemberInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
 						}
 					});
-/*			for (int i = 0; i < OPcount.size(); i++) {				
-				logger.info("q"+OPcount.get(i).getCount());
-			}*/
+			for (int i = 0; i < OPcount.size(); i++) {				
+				logger.info("q"+"month : "+OPcount.get(i).getCount()+ " count : "+OPcount.get(i).getCount());
+			}
 			
 			int index=0;
 			
 			for (int i = 0; i < 7; i++) {			
-				if(OPcount.get(index).getStart().getMonth()==start.getMonth()){
+				if(OPcount.size()>0&&OPcount.get(index).getStart().getMonth()==start.getMonth()){
 					result.add(i,OPcount.get(index));
 					if(index<OPcount.size()-1)
 						index++;					
 				}
 				else{
 					Timestamp c=new Timestamp(start.getTime());
-					OPcountInfo a = new OPcountInfo(c, 0);
+					NewmemberInfo a = new NewmemberInfo(c, 0);
 					result.add(i, a);
 				}
 				start.setMonth(start.getMonth()+1);
@@ -452,10 +350,10 @@ public List<OPcountInfo> countnew_member(String project_key, String type, Timest
 		
 		if (type.equals("year")) {
 			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 year))AND YEAR(reg_date)>=YEAR(?) GROUP BY YEAR(reg_date) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<OPcountInfo>() {
-						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new OPcountInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
+					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 year))AND DATE(reg_date)>=DATE(?) GROUP BY YEAR(reg_date) ORDER BY ForDate",
+					new Object[] { project_key, start,start}, new RowMapper<NewmemberInfo>() {
+						public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+							return new NewmemberInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
 						}
 					});
 			for (int i = 0; i < OPcount.size(); i++) {				
@@ -465,22 +363,22 @@ public List<OPcountInfo> countnew_member(String project_key, String type, Timest
 			int index=0;
 			
 			for (int i = 0; i < 7; i++) {			
-				if(OPcount.get(index).getStart().getYear()==start.getYear()){
+				if(OPcount.size()>0&&OPcount.get(index).getStart().getYear()==start.getYear()){
 					result.add(i,OPcount.get(index));
 					if(index<OPcount.size()-1)
 						index++;					
 				}
 				else{
 					Timestamp c=new Timestamp(start.getTime());
-					OPcountInfo a = new OPcountInfo(c, 0);
+					NewmemberInfo a = new NewmemberInfo(c, 0);
 					result.add(i, a);
 				}
 				start.setYear(start.getYear()+1);
 				//logger.info("year"+result.get(i).getCount());
-			}
+			}/*
 			for (int i = 0; i < 7; i++) {		
 				logger.info("year : "+result.get(i).getStart());
-				}
+				}*/
 		}
 
 

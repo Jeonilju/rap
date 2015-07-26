@@ -639,4 +639,12 @@ public class RAP_MainController {
 
 		return "operation_time";
 	}
+
+	@RequestMapping(value = "/promotions_analysis", method = RequestMethod.GET)
+	public String MainController_promotions_analysis(HttpServletRequest request) {
+		logger.info("promotions_analysis Page");
+
+		return "promotions_analysis";
+	}	
+	
 }
