@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.util.List, com.rap.models.CategoryLInfo"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,8 +7,16 @@
 <jsp:include page="nav.jsp" flush = "false" />
 <script src="./resources/js/itemcategorization.js"></script>
 <script type="text/javascript">
-$(document).ready(
-		function(){var id = ['#Lcategory1','#Lcategory2'];getLcategory(id);});
+
+function getAllLcategory2()
+{
+	var id = ['#Lcategory1','#Lcategory2'];
+	getLcategory(id);
+}
+function close()
+{
+	$('#AddItemModal').modal('hide');	
+}
 
 function getItemlist()
 {
@@ -92,6 +101,7 @@ function addItem()
 			if(response=='200')
 			{
 				alert("아이템이 정상적으로 등록되었습니다.");
+				close();
 				getItemlist();
 			}
 			else if(response=='error')
@@ -172,11 +182,16 @@ function getCoinlist()
 				for(var i=0;i<mainlistLen;i++)
 				{
 					$('#coinlist').append("<option value='"+mainlist[i].name+"' >"+mainlist[i].name+"</option>");
+					$('#coinlist').selectpicker('refresh');
+
 				}
 				for(var i=0;i<sublistLen;i++)
 				{
 					$('#coinlist').append("<option value='"+sublist[i].name+"' >"+sublist[i].name+"</option>");
+					$('#coinlist').selectpicker('refresh');
+
 				}
+				close();
 			}
 		},
 		
@@ -215,14 +230,33 @@ function getCoinlist()
 					<div class = "row">
 						<!-- 대분류 -->
 						<div class="dropdown form-group col-lg-2">
-							<select id="Lcategory1" name="Lcategory1" onchange="getMcategory('1')">
+							<select class="selectpicker" id="Lcategory1" name="Lcategory1" onchange="getMcategory('1')">
+								<option value='' selected>대분류</option>
+									<%
+										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>)request.getAttribute("categoryLlist");
+										int categoryLlistcount;
+										if(categoryLlist == null) categoryLlistcount = 0;
+										else categoryLlistcount = categoryLlist.size();
+										
+										for(int i =0;i<categoryLlistcount;i++)
+										{
+											out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
+										}
+									%>
 							</select>
-							<select id="Mcategory1" name="Mcategory1" onchange="getScategory('1')">
-								<option value='' selected>해당없음</option>
+						</div>
+						<div class="dropdown form-group col-lg-2">
+						
+							<select class="selectpicker"  id="Mcategory1" name="Mcategory1" onchange="getScategory('1')">
+								<option value='' selected>중분류</option>
 							</select>
-							<select id="Scategory1" name="Scategory1" onchange="getItemlist()">
-								<option value='' selected>해당없음</option>		
+							</div>
+						<div class="dropdown form-group col-lg-2">
+						
+							<select class="selectpicker"  id="Scategory1" name="Scategory1" onchange="getItemlist()">
+								<option value='' selected>소분류</option>		
 							</select>
+							</div>
 							<div class="col-lg-2 pull-right">
 								<button type="button" class="btn" data-toggle="modal" data-target="#AddItemModal" onclick="getCoinlist()">Add an Item</button>
 							</div>
@@ -255,28 +289,31 @@ function getCoinlist()
 				</div>
 				<div class="col-md-8 portfolio-item">
 					<div class = "row">
-						<div class="dropdown form-group col-md-4">
+						<div class="col-md-4" style="padding:0px; margin:0px;">
 							<!-- 대분류 -->
-							<div class="dropdown form-group col-lg-2">
-								<select id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
+								<select class="selectpicker"  id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
+									<option value='' selected>대분류</option>
+									<%
+										for(int i =0;i<categoryLlistcount;i++)
+										{
+											out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
+										}
+									%>
 										</select>
-							</div>
 						</div>
-						<div class="dropdown form-group col-md-4">
+						<div class="col-md-4" style="padding:0px; margin:0px;">
 							<!-- 중분류 -->
-							<div class="dropdown form-group col-lg-2">
-								<select id="Mcategory2" name="Mcategory2" onchange="getScategory('2')">
-									<option value='' selected>해당없음</option>
-										</select>
-							</div>
+								<select class="selectpicker"  id="Mcategory2" name="Mcategory2" onchange="getScategory('2')">
+									<option value='' selected>중분류</option>
+								</select>
+							
 						</div>
-						<div class="dropdown form-group col-md-4">
+						<div class="col-md-4" style="padding:0px; margin:0px;">
 							<!-- 소분류 -->
-							<div class="dropdown form-group col-lg-2">
-								<select id="Scategory2" name="Scategory2">
-									<option value='' selected>해당없음</option>		
-										</select>
-							</div>
+							<select class="selectpicker"  id="Scategory2" name="Scategory2">
+									<option value='' selected>소분류</option>		
+							</select>
+							
 						</div>
 					</div>
 					<div class="row">
@@ -298,7 +335,7 @@ function getCoinlist()
 					<div class="row">
 						<label>Coin to use</label>
 						<div class="dropdown form-group">
-							<select id="coinlist" name="coinlist">
+							<select class="selectpicker"  id="coinlist" name="coinlist">
 								<option value='실제결제' selected>실제결제</option>		
 							</select>
 						</div>
@@ -308,7 +345,7 @@ function getCoinlist()
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-primary" onclick="addItem()" data-dismiss="modal">Add</button>
+			<button type="button" class="btn btn-primary" onclick="addItem()">Add</button>
 		  </div>
 		</div>
 	  </div>

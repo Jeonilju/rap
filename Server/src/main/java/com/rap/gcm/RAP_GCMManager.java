@@ -31,9 +31,11 @@ public class RAP_GCMManager {
 
 	/**
 	 * GCM을 보낸다.
-	 * @param title
-	 * @param content
-	 * @param userList
+	 * @param promotion_pk	프로모션의 PK
+	 * @param title	제목
+	 * @param content	내용
+	 * @param class		class 이름
+	 * @param userList	GCM을 받을 사용자 list
 	 * */
 	public void sendPush(int promotion_pk, String title, String content, String className, List<UserInfo> userList) {
 		Sender sender = new Sender("AIzaSyCE2Hy_AvqYduWKT4YiZWoIrGH4iYlu12I");  //구글 코드에서 발급받은 서버 키
