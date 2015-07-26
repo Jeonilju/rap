@@ -324,7 +324,94 @@ function getGradeTime()
 });
 
 }
+
+function EditGradeTime()
+{
+	
+}
+
+function ProjectEdit()
+{
+
+	$.ajax({
+	url : "ProjectEdit",
+	type : "POST",
+	data :
+		{
+		project_name : document.getElementById('modal_project_name').value,
+		project_summary : document.getElementById('modal_project_summary').value,
+		project_description : document.getElementById('modal_project_description').value
+		},
+	dataType : "text",
+	success : function(response) {
+		if(response == "project_name")
+			alert("프로젝트 이름을 선택해주세요.");
+		else if(response == "project_summary")
+			alert("프로젝트 요약을 선택해주세요.");
+		else if(response == "project_description")
+			alert("프로젝트 설명을 선택해주세요.");
+		else if(response == "overlap")
+			alert("같은 이름의 프로젝트가 존재합니다.");
+		else if(response == "200")
+			alert("프로젝트가 수정되었습니다.");
+		else
+			alert("에러가 발생했습니다.");
+	},
+
+	error : function(request, status, error) {
+		if (request.status != '0') {
+			alert("code : " + request.status + "\r\nmessage : "
+					+ request.reponseText + "\r\nerror : " + error);
+		}
+	}
+});
+}
 </script>
+
+<!-- ProjectEditModal -->
+<div class="modal fade" id="ProjectEditModal" tabindex="-1" role="dialog"
+	aria-labelledby="ProjectEditModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="ProjectEditModalLabel">Edit Project</h4>
+			</div>
+
+			<form>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Project Name</label> 
+						<input
+							name="modal_project_name" id="modal_project_name" type="text" class="form-control" placeholder="Project Name" />
+					</div>
+					<div class="form-group">
+						<label>Project Summary</label> 
+						<input
+							name="modal_project_summary" id="modal_project_summary" type="text" class="form-control" placeholder="Project Summary" />
+					</div>
+					<div class="form-group">
+						<label>Project Description</label> 
+						<textarea
+							name="modal_project_description" id="modal_project_description" class="form-control" placeholder="Project Description"></textarea>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						Close</button>											
+					<button type="button"  class="btn btn-primary" onclick="ProjectEdit()">Edit</button>
+						
+				</div>
+			</form>
+
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<!-- /.modal -->
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
@@ -371,21 +458,20 @@ function getGradeTime()
 							//Timestamp date = currentproject.getReg_date();
 					%>
 					<!-- project list 존재하는 경우 -->
-					<div class="row">
-						<div class="panel-body">
-							<div>
-								projectname :
-								<%=projectname%></div>
-							<div>
-								summary :
-								<%=projectsummary%></div>
-							<div>
-								description :
-								<%=projectdescription%></div>
-							<div>
-								projectkey :
-								<%=projectkey%></div>
+					<div class="panel panel-default">
+						<div class='panel-heading clearfix'>
+							<h3 class='panel-title pull-left'><%=projectname%></h3>				
+							<a data-toggle="modal" data-target="#ProjectEditModal" ><i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></a>
+							
 						</div>
+						<div class='panel-body'>
+							<div>
+								<div>summary : <%=projectsummary%></div>
+	                            <div>description : <%=projectdescription%></div>
+	                            <div>projectkey : <%=projectkey%></div>
+							</div>
+						</div>
+						<div class='panel-footer'></div>	
 					</div>
 
 					<!-- Item Categorization -->
@@ -403,7 +489,8 @@ function getGradeTime()
 								<button class="btn" onclick="registerLcategory()">Register</button>
 							</div>
 							<div class="col-md-4" style="padding: 5px">
-								<select id="Lcategory1" name="Lcategory1" class="selectpicker">
+								<button class="btn pull-right" onclick="deleteLcategory('Lcategory1')">Delete</button>
+								<select id="Lcategory1" name="Lcategory1" class="selectpicker pull-right">
 									<option value='' selected>대분류</option>
 									<%
 										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>) request.getAttribute("categoryLlist");
@@ -420,7 +507,6 @@ function getGradeTime()
 										}
 									%>
 								</select>
-								<button class="btn" onclick="deleteLcategory('Lcategory1')">Delete</button>
 							</div>
 						</form>
 						<!-- Medium Category -->
@@ -436,16 +522,14 @@ function getGradeTime()
 											}
 									%>
 								</select> <input type="text" class="form-control"
-									placeholder="Medium Category" id="CategoryM" required
-									data-validation-required-message="Please enter Medium Category."
-									style="width: 200px">
+									placeholder="Medium Category" id="CategoryM" style="width: 200px">
 								<button class="btn" onclick="registerMcategory()">Register</button>
 							</div>
 							<div class="col-md-4" style="padding: 5px">
-								<select class="selectpicker" id="Mcategory2" name="Mcategory2">
+								<button class="btn pull-right" onclick="deleteMcategory('Mcategory2')">Delete</button>
+								<select class="selectpicker pull-right" id="Mcategory2" name="Mcategory2">
 									<option value='' selected>중분류</option>
 								</select>
-								<button class="btn" onclick="deleteMcategory('Mcategory2')">Delete</button>
 							</div>
 						</form>
 
@@ -465,16 +549,14 @@ function getGradeTime()
 									onchange="getScategory('3')">
 									<option value='' selected>중분류</option>
 								</select> <input type="text" class="form-control"
-									placeholder="Small Category" id="CategoryS" required
-									data-validation-required-message="Please enter Small Category."
-									style="width: 200px">
+									placeholder="Small Category" id="CategoryS" style="width: 200px">
 								<button class="btn" onclick="registerScategory()">Register</button>
 							</div>
 							<div class="col-md-4" style="padding: 5px">
-								<select class="selectpicker" id="Scategory3" name="Scategory3">
+								<button class="btn pull-right" onclick="deleteScategory('Scategory3')">Delete</button>
+								<select class="selectpicker pull-right" id="Scategory3" name="Scategory3">
 									<option value="" selected>소분류</option>
 								</select>
-								<button class="btn" onclick="deleteScategory('Scategory3')">Delete</button>
 							</div>
 						</form>
 					</div>
@@ -488,13 +570,14 @@ function getGradeTime()
 					<div class="row">
 						<!-- Virtual Main Coin -->
 						<form class="form-inline">
-							<div class="col-md-8">
+							<div class="col-md-8" style="padding: 5px">
 								<input placeholder="Main Coin Name" type="text" class="form-control" id="virtual_main_name" style="width: 200px">
 								<textarea placeholder="Description" class="form-control" id="virtual_main_description" style="height: 45px"></textarea>
 								<button class="btn" onclick="registerVirtualMain()">Register</button>
 							</div>
-							<div class="col-md-4">
-								<select id="virtual_main" name="virtual_main" class="selectpicker">
+							<div class="col-md-4" style="padding: 5px">
+								<button class="btn pull-right" onclick="deleteVirtualMain()">Delete</button>
+								<select id="virtual_main" name="virtual_main" class="selectpicker pull-right">
 									<option value='' selected>주화폐</option>
 									<%
 										List<Virtual_MainInfo> mainlist = (List<Virtual_MainInfo>) request.getAttribute("mainlist");
@@ -511,18 +594,18 @@ function getGradeTime()
 											}
 									%>
 								</select>
-								<button class="btn" onclick="deleteVirtualMain()">Delete</button>
 							</div>
 						</form>
 						<!-- Virtual Sub Coin -->
 						<form class="form-inline">
-							<div class="col-md-8">
+							<div class="col-md-8" style="padding: 5px">
 								<input placeholder="Sub Coin Name" type="text" class="form-control" id="virtual_sub_name" style="width: 200px">
 								<textarea placeholder="Description" class="form-control" id="virtual_sub_description" style="height: 45px"></textarea>
 								<button class="btn" onclick="registerVirtualSub()">Register</button>
 							</div>
-							<div class="col-md-4">
-								<select id="virtual_sub" name="virtual_sub" class="selectpicker">
+							<div class="col-md-4" style="padding: 5px">
+								<button class="btn pull-right" onclick="deleteVirtualSub()">Delete</button>
+								<select id="virtual_sub" name="virtual_sub" class="selectpicker pull-right">
 									<option value='' selected>부화폐</option>
 									<%
 										List<Virtual_SubInfo> sublist = (List<Virtual_SubInfo>) request.getAttribute("sublist");
@@ -539,7 +622,6 @@ function getGradeTime()
 											}
 									%>
 								</select>
-								<button class="btn" onclick="deleteVirtualSub()">Delete</button>
 							</div>
 						</form>
 					</div>
@@ -563,14 +645,15 @@ function getGradeTime()
 						
 						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
-							<select class="selectpicker" id="grade_money" name="grade_money" onchange="getGradeMoney()">
+							<button class="btn pull-right" onclick="EditGradeMoney()">Edit</button>
+							 <input type="text" class="form-control pull-right"
+								placeholder="" id="grade_money_input" style="width: 100px">
+							<select class="selectpicker pull-right" id="grade_money" name="grade_money" onchange="getGradeMoney()">
 								<option value='' selected>과금액</option>
 								<option value='L'>상</option>
 								<option value='M'>중</option>
 								<option value='S'>하</option>
-							</select> <input type="text" class="form-control"
-								placeholder="" id="grade_money_input" style="width: 100px">
-							<button class="btn" onclick="EditGradeTime()">Edit</button>
+							</select>
 						</form>
 						</div>
 					</div>
@@ -587,14 +670,15 @@ function getGradeTime()
 						
 						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
-							<select class="selectpicker" id="grade_time" name="grade_time" onchange="getGradeTime()">
+							<button class="btn pull-right" onclick="EditGradeTime()">Edit</button>
+							<input type="text" class="form-control pull-right"
+								placeholder="" id="grade_time_input" style="width: 100px">
+							<select class="selectpicker pull-right" id="grade_time" name="grade_time" onchange="getGradeTime()">
 								<option value='' selected>사용시간</option>
 								<option value='L'>상</option>
 								<option value='M'>중</option>
 								<option value='S'>하</option>
-							</select> <input type="text" class="form-control"
-								placeholder="" id="grade_time_input" style="width: 100px">
-							<button class="btn" onclick="EditGradeTime()">Edit</button>
+							</select> 
 						</form>
 						</div>
 					</div>

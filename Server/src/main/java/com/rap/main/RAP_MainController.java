@@ -205,6 +205,56 @@ public class RAP_MainController {
 
 		return "error";
 	}
+	
+	/** 프로젝트 수정 */
+	@RequestMapping(value = "/ProjectEdit", method = RequestMethod.POST)
+	@ResponseBody
+	public String MainController_ProjectEdit(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("project_name") String project_name,
+			@RequestParam("project_summary") String project_summary,
+			@RequestParam("project_description") String project_description
+			) {
+		logger.info("ProjectEdit Page");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
+		if(member==null) return "error";
+		
+		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
+		if(project==null) return "error";
+
+		//입력값 검증
+		if(project_name == null) return "project_name";
+		if(project_name.isEmpty()) return "project_name";
+		
+		if(project_summary == null) return "project_summary";
+		if(project_summary.isEmpty()) return "project_summary";
+		
+		if(project_description == null) return "project_description";
+		if(project_description.isEmpty()) return "project_description";
+		
+		//현재 사용자의 프로젝트 리스트
+		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member.getPk());
+
+		if(projectlist == null) return "error";
+		if(projectlist.isEmpty()) return "error";
+
+		for(int i=0;i<projectlist.size();i++)
+		{
+			if(projectlist.get(i).getProject_name().equals(project_name))
+				{
+				if(!projectlist.get(i).getProject_name().equals(project.getProject_name()))
+					return "overlap";
+				}
+		}
+		
+		projectDao.update(project_name, project_summary, project_description, project.getPk());
+
+
+		return "200";
+	}
+	
 	/** 프로젝트 선택 */
 	@RequestMapping(value = "/selectProject", method = RequestMethod.POST)
 	@ResponseBody
