@@ -11,7 +11,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
 
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<style type="text/css">
 ${demo.css}
 		</style>
@@ -36,7 +35,7 @@ function getpromotionlist()
 		data : param,
 		dataType : "JSON",
 		success : function(data) {
-			$('#plist').html("");
+			$('#promotion_list').html("");
 			
 			if(data!=null || data!="")
 			{
@@ -57,6 +56,8 @@ function getpromotionlist()
 			{	$('#promotion_list').append("<option>"+"No promotion"+"</option>");
 				
 			}
+			
+			$('#promotion_list').selectpicker('refresh');
 		}
 	});
 	

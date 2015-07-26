@@ -327,9 +327,85 @@ function getGradeTime()
 
 function EditGradeTime()
 {
+
+	$.ajax({
+	url : "EditGradeTime",
+	type : "POST",
+	data :
+		{
+		grade_time_input : document.getElementById('grade_time_input').value,
+		grade_time : document.getElementById('grade_time').value,
+		},
+	dataType : "text",
+	success : function(response) {
+		if(response == "grade_time_input")
+			alert("값을 입력해주세요.");
+		else if(response == "grade_time")
+			alert("사용시간 등급을 선택해주세요.");
+		else if(response == "Not Number")
+			alert("숫자를 입력해주세요.");
+		else if(response == "L")
+			alert("상 등급은 중 등급보다 값이 커야합니다.");
+		else if(response == "M")
+			alert("중 등급은 하 등급보다 값이 커야하고, 상 등급보다 값이 작아야합니다.");
+		else if(response == "S")
+			alert("하 등급은 중 등급보다 값이 작아야합니다.");
+		else if(response == "200")
+			alert("등급이 수정되었습니다.");
+		else
+			alert("에러가 발생했습니다.");
+	},
+
+	error : function(request, status, error) {
+		if (request.status != '0') {
+			alert("code : " + request.status + "\r\nmessage : "
+					+ request.reponseText + "\r\nerror : " + error);
+		}
+	}
+});
 	
 }
 
+function EditGradeMoney()
+{
+
+	$.ajax({
+	url : "EditGradeMoney",
+	type : "POST",
+	data :
+		{
+		grade_money_input : document.getElementById('grade_money_input').value,
+		grade_money : document.getElementById('grade_money').value,
+		},
+	dataType : "text",
+	success : function(response) {
+		if(response == "grade_money_input")
+			alert("값을 입력해주세요.");
+		else if(response == "grade_money")
+			alert("과금액 등급을 선택해주세요.");
+		else if(response == "Not Number")
+			alert("숫자를 입력해주세요.");
+		else if(response == "L")
+			alert("상 등급은 중 등급보다 값이 커야합니다.");
+		else if(response == "M")
+			alert("중 등급은 하 등급보다 값이 커야하고, 상 등급보다 값이 작아야합니다.");
+		else if(response == "S")
+			alert("하 등급은 중 등급보다 값이 작아야합니다.");
+		else if(response == "200")
+			alert("등급이 수정되었습니다.");
+		else
+			alert("에러가 발생했습니다.");
+	},
+
+	error : function(request, status, error) {
+		if (request.status != '0') {
+			alert("code : " + request.status + "\r\nmessage : "
+					+ request.reponseText + "\r\nerror : " + error);
+		}
+	}
+});
+	
+}
 function ProjectEdit()
 {
 

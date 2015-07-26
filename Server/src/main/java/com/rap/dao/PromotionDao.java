@@ -29,8 +29,8 @@ public class PromotionDao implements PromotionIDao{
 		logger.info("Updated DataSource ---> " + ds);
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
-	public void create(String project_key, String name, String summary, int grade_time, int grade_using) {
-		jdbcTemplate.update("insert into promotion (project_key, name, summary, grade_time, grade_using) values (?, ?, ?, ?, ?)", new Object[] { project_key, name, summary, grade_time, grade_using });
+	public void create(String project_key, String name, String summary, int grade_time, int grade_money) {
+		jdbcTemplate.update("insert into promotion (project_key, name, summary, grade_time, grade_money) values (?, ?, ?, ?, ?)", new Object[] { project_key, name, summary, grade_time, grade_money });
 	}
 
 	public List<PromotionInfo> selectFromProject(String project_key){
@@ -44,7 +44,7 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("name")
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
-		    				, resultSet.getInt("grade_using"));
+		    				, resultSet.getInt("grade_money"));
 		    	}
 		    });
 	}
@@ -59,7 +59,7 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("name")
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
-		    				, resultSet.getInt("grade_using"));
+		    				, resultSet.getInt("grade_money"));
 		    	}
 		    });
 	}
