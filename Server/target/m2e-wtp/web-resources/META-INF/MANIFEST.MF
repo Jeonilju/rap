@@ -1,10 +1,5 @@
 Manifest-Version: 1.0
-<<<<<<< HEAD
 Built-By: KMINSU-PC-W1
 Build-Jdk: 1.8.0_40
-=======
-Built-By: Hansol
-Build-Jdk: 1.8.0_45
->>>>>>> a57f8b8b00b3ef761214e9bbddf28f71af7a5f09
 Created-By: Maven Integration for Eclipse
 

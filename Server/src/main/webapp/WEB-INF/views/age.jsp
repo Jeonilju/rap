@@ -6,8 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Highcharts Example</title>
 
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <style type="text/css">
 ${
 demo
@@ -74,14 +72,14 @@ demo
 		        yAxis: {
 		            min: 0,
 		            title: {
-		                text: 'Counts (millions)'
+		                text: 'Counts'
 		            }
 		        },
 		        legend: {
 		            enabled: false
 		        },
 		        tooltip: {
-		            pointFormat: 'Counts : <b>{point.y:.1f} millions</b>'
+		            pointFormat: 'Counts : <b>{point.y:.1f} </b>'
 		        },
 		        series: [{
 		            name: 'Population',

@@ -5,7 +5,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
-
 		<style type="text/css">
 ${demo.css}
 		</style>
@@ -14,89 +13,75 @@ ${demo.css}
 		
 <script type="text/javascript">
 
-	function getoperation_count() {
-		var param = "type=" + document.getElementById('Type').value + "&start="
-				+ document.getElementById('Start').value;
+function getoperation_count() {
+	var param = "type=" + document.getElementById('Type').value+
+				"&start=" + document.getElementById('Start').value;
+	
+	$.ajax({
+		url : "IAP_amount_db",
+		type : "POST",
+		data : param,
+		dataType : "JSON",
+		success : function(data) {
 
-		$.ajax({
-			url : "new_member_db",
-			type : "POST",
-			data : param,
-			dataType : "JSON",
-			success : function(data) {
+			if (data != null || data != "") {
 
-				if (data != null || data != "") {
+				//var start_time=data.start_time;
+				var start_time=data.start_time;
+				var count=data.count;
+				//alert(start_time.toString());
+				modify_chart(start_time,count);
 
-					//var start_time=data.start_time;
-					var result = data.result;
-					//alert(start_time.toString());
-					modify_chart(result);
-
-				}
-			},
-
-			error : function(request, status, error) {
-				if (request.status != '0') {
-					alert("code : " + request.status + "\r\nmessage : "
-							+ request.reponseText + "\r\nerror : " + error);
-				}
 			}
-		});
-	}
+		},
 
-	function modify_chart(result) {
-		$('#container').highcharts({
-			chart : {
-				type : 'column'
-			},
-			title : {
-				text : ' '
-			},
-			subtitle : {
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+}
 
-			},
-			xAxis : {
-				type : 'category',
-				labels : {
-					rotation : -45,
-					style : {
-						fontSize : '13px',
-						fontFamily : 'Verdana, sans-serif'
-					}
-				}
-			},
-			yAxis : {
-				min : 0,
-				title : {
-					text : 'Counts'
-				}
-			},
-			legend : {
-				enabled : false
-			},
-			tooltip : {
-				pointFormat : '<b>{point.y:.1f} </b>'
-			},
-			series : [ {
-				name : 'Count',
-				data : result,
-				dataLabels : {
-					enabled : true,
-					rotation : -45,
-					color : '#FFFFFF',
-					align : 'right',
-					format : '{point.y:.1f}', // one decimal
-					y : -15, // 10 pixels down from the top
-					style : {
-						fontSize : '13px',
-						fontFamily : 'Verdana, sans-serif'
-					}
-				}
-			} ]
-		});
 
-	}
-</script>
+function modify_chart(start_time,count) {
+    $('#container').highcharts({
+       
+        xAxis: {
+            categories: start_time
+        },
+        yAxis: {
+            title: {
+                text: 'Amount'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: ''
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [{
+            name: 'IAP',
+            data: count
+        }
+        ]
+    });
+}
+		
+		
+		
+		
+		</script>
 		
 		
 		
@@ -129,7 +114,7 @@ ${demo.css}
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>New user</h2>
+								<h2>IAP amount</h2>
 							</div>
 						</div>
 						<div class="row">

@@ -53,6 +53,9 @@
 	<beans:bean id="CategorySDao" class="com.rap.dao.CategorySDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
+	<beans:bean id="DeleteuserDao" class="com.rap.dao.DeleteuserDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
 	<beans:bean id="IAPDao" class="com.rap.dao.IAPDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>

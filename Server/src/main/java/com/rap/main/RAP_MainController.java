@@ -597,4 +597,24 @@ public class RAP_MainController {
 		return "promotions_analysis";
 	}	
 	
+	@RequestMapping(value = "/sales_ranking", method = RequestMethod.GET)
+	public String MainController_sales_ranking(HttpServletRequest request) {
+		logger.info("sales_ranking Page");
+
+		return "sales_ranking";
+	}	
+	
+	@RequestMapping(value = "/deleted_member", method = RequestMethod.GET)
+	public String MainController_deleted_member(HttpServletRequest request) {
+		logger.info("deleted_member Page");
+
+		return "deleted_member";
+	}	
+	
+	@RequestMapping(value = "/IAP_amount", method = RequestMethod.GET)
+	public String MainController_IAP_amount(HttpServletRequest request) {
+		logger.info("IAP_amount Page");
+
+		return "IAP_amount";
+	}	
 }

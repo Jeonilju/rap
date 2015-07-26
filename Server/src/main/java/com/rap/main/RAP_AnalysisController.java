@@ -20,15 +20,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rap.analysismodels.DeletedmembercountInfo;
+import com.rap.analysismodels.IAPamountInfo;
 import com.rap.analysismodels.NewmemberInfo;
 import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OPtimeInfo;
 import com.rap.analysismodels.Promotion_resultInfo;
+import com.rap.analysismodels.SalesRankingInfo;
 import com.rap.dao.ActivityDao;
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
 import com.rap.dao.CategorySDao;
+import com.rap.dao.DeleteuserDao;
+import com.rap.dao.IAPDao;
 import com.rap.dao.Log_timeDao;
+import com.rap.dao.PayDao;
 import com.rap.dao.PromotionResultDao;
 import com.rap.dao.UserDao;
 import com.rap.models.BestActivityInfo;
@@ -62,6 +68,14 @@ public class RAP_AnalysisController {
 	
 	@Autowired
 	private Log_timeDao log_timeDao;
+	
+	@Autowired
+	private DeleteuserDao deletedmemberDao;
+	
+	@Autowired
+	private IAPDao iapDao;
+	@Autowired
+	private PayDao payDao;
 	
 	@Autowired
 	private PromotionResultDao promotionResultDao;
@@ -179,13 +193,6 @@ public class RAP_AnalysisController {
 	          return "2";
 	       if (project_key.isEmpty())
 	          return "2";
-	       
-	     /*String project_key="1";*/
-	       
-	       
-	       
-	       
-	       
 		    
 		    
 		    List<NewmemberInfo> receive=userDao.count_new_member(project_key,type,starttime);
@@ -211,31 +218,86 @@ public class RAP_AnalysisController {
 			logger.info("NewmemberInfo : " + result.toString());
 			jObject.put("result", result.toString());
 			return jObject.toString();
-	       
-	       
-	       
-	   /* List<NewmemberInfo> result=userDao.count_new_member(project_key,type,starttime);
-	    List<String> start_time=new ArrayList<String>();
-	    List<Integer> count=new ArrayList<Integer>();*/
-	
-	   /* 
-		for (int i = 0; i < result.size(); i++) {		
-			if(type.equals("day"))
-				start_time.add(i,monthDayYearformatter.format((java.util.Date) result.get(i).getStart()));
-			if(type.equals("month"))
-				start_time.add(i,monthYearformatter.format((java.util.Date) result.get(i).getStart()));
-			if(type.equals("year"))
-				start_time.add(i,Yearformatter.format((java.util.Date) result.get(i).getStart()));
-			//start_time.add(i,result.get(i).getStart().getYear()+"/"+result.get(i).getStart().getMonth()+"/"+result.get(i).getStart().getDate());
-			count.add(result.get(i).getCount());
-		}
-		logger.info("start_time" + start_time.toString());
-		
-		jObject.put("start_time", start_time);
-		jObject.put("count", count);
-		
-		return jObject.toString();*/
+	   
 	}
+	
+	
+	
+	@RequestMapping(value = "/deleted_member_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleted_member_Get(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type, @RequestParam("start") String start
+			) {
+		
+		Calendar cal;
+		Timestamp starttime=null;
+		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
+		start = start.replace("-", "");
+		String date = new String(start+"000000");
+		 try {
+	            sd.parse(date);
+	            cal = sd.getCalendar();
+	             
+	             starttime = new Timestamp( cal.getTime().getTime() );
+	             
+	        } catch (ParseException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+		 
+		logger.info("deleted_member Tab" + "  type : " +type+" start : "+starttime.toString());
+		
+		JSONObject jObject= new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject=(ProjectInfo)session.getAttribute("currentproject");
+		
+	if(currentproject ==null)
+			return "1";//세션에 프로젝트 없는 경우
+		
+		
+		String project_key=currentproject.getPk();
+		project_key="1";
+	      if (project_key == null)
+	          return "2";
+	       if (project_key.isEmpty())
+	          return "2";
+		    
+		    
+		    List<DeletedmembercountInfo> receive=deletedmemberDao.count_deleted_member(project_key,type,starttime);
+		    //List<List<String>> result=new ArrayList<List<String>>();
+		    List<String> result=new ArrayList<String>();
+		  
+			for (int i = 0; i < receive.size(); i++) {		
+				
+				List<String> templist=new ArrayList<String>();
+				//templist.add(0,Hourformatter.format((java.util.Date) receive.get(i).getStart()));
+				
+				if(type.equals("day"))
+					templist.add(0,monthDayYearformatter.format((java.util.Date) receive.get(i).getStart()));
+				if(type.equals("month"))
+					templist.add(0,monthYearformatter.format((java.util.Date) receive.get(i).getStart()));
+				if(type.equals("year"))
+					templist.add(0,Yearformatter.format((java.util.Date) receive.get(i).getStart()));
+				
+				templist.add(1,receive.get(i).getCount()+"");
+				result.add(templist.toString());
+			}
+			
+			logger.info("DeletedmembercountInfo : " + result.toString());
+			jObject.put("result", result.toString());
+			return jObject.toString();
+	   
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@RequestMapping(value = "/operation_count_db", method = RequestMethod.POST)
 	@ResponseBody
@@ -456,7 +518,10 @@ public class RAP_AnalysisController {
 		
 		List<String> name=new ArrayList<String>();
 		List<Integer> count=new ArrayList<Integer>();
-		for(int i=0;i<5;i++){
+		
+		int size=receive.size();
+		if(size>10)size=10;
+		for(int i=0;i<size;i++){
 			name.add(receive.get(i).getActivity_name());
 			count.add(receive.get(i).getCount());		
 			
@@ -537,4 +602,106 @@ public class RAP_AnalysisController {
 	    
 	}
 	
+	
+	
+	@RequestMapping(value = "/sales_ranking_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String sales_ranking_Get(HttpServletRequest request, HttpServletResponse response) {
+		logger.info("sales_ranking_db Tab");
+
+		JSONObject jObject = new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		if (currentproject == null)
+			return "1";// 세션에 프로젝트 없는 경우
+
+		String project_key = currentproject.getPk();
+
+		if (project_key == null)
+			return "2";
+		if (project_key.isEmpty())
+			return "2";
+		
+	List<SalesRankingInfo> receive=iapDao.countsales_ranking(project_key);
+		
+	int size=receive.size();
+	if(size>10)size=10;
+		List<String> item_name=new ArrayList<String>();
+		List<Integer> count=new ArrayList<Integer>();
+		
+		for(int i=0;i<size;i++){
+			item_name.add(receive.get(i).getName());
+			count.add(receive.get(i).getCount());		
+			
+		}
+
+		jObject.put("item_name",item_name);
+		jObject.put("count",count);
+		return jObject.toString();
+	}
+	
+	
+	
+
+	
+	@RequestMapping(value = "/IAP_amount_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String IAP_amount_Get(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type, @RequestParam("start") String start
+			) {
+		
+		Calendar cal;
+		Timestamp starttime=null;
+		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
+		start = start.replace("-", "");
+		String date = new String(start+"000000");
+		 try {
+	            sd.parse(date);
+	            cal = sd.getCalendar();
+	             
+	             starttime = new Timestamp( cal.getTime().getTime() );
+	             
+	        } catch (ParseException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+		 
+		logger.info("IAP_amount_db Tab" + "  type : " +type+" start : "+starttime.toString());
+		
+		JSONObject jObject= new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject=(ProjectInfo)session.getAttribute("currentproject");
+		
+		if(currentproject ==null)
+			return "1";//세션에 프로젝트 없는 경우
+		
+		
+		String project_key=currentproject.getPk();
+		project_key="1";
+	      if (project_key == null)
+	          return "2";
+	       if (project_key.isEmpty())
+	          return "2";
+	    
+	    List<IAPamountInfo> result=payDao.count_IAP_amount(project_key,type,starttime);
+	    List<String> start_time=new ArrayList<String>();
+	    List<Integer> count=new ArrayList<Integer>();
+	
+	    
+		for (int i = 0; i < result.size(); i++) {
+			if (type.equals("day"))
+				start_time.add(i, monthDayYearformatter.format((java.util.Date) result.get(i).getReg_date()));
+			if (type.equals("month"))
+				start_time.add(i, monthYearformatter.format((java.util.Date) result.get(i).getReg_date()));
+			if (type.equals("year"))
+				start_time.add(i, Yearformatter.format((java.util.Date) result.get(i).getReg_date()));
+			count.add(result.get(i).getAmount());
+		}
+		
+		jObject.put("start_time", start_time);
+		jObject.put("count", count);
+		
+		return jObject.toString();
+	}
 }
