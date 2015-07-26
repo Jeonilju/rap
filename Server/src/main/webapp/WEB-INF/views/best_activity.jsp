@@ -1,12 +1,13 @@
-<!DOCTYPE HTML>
+ <!DOCTYPE HTML>
 <html>
-<!-- Ã¬ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ Ã«Â°Â Ã¬ÂÂ¸Ã­ÂÂ´Ã«Â£Â¨Ã«ÂÂ -->
+<!-- ÃÂ¬ÃÂÃÂÃÂ«ÃÂÃÂ¨ ÃÂ«ÃÂÃÂ¤ÃÂ«ÃÂ¹ÃÂÃÂªÃÂ²ÃÂÃÂ¬ÃÂÃÂ´ÃÂ¬ÃÂÃÂ ÃÂ«ÃÂ°ÃÂ ÃÂ¬ÃÂÃÂ¸ÃÂ­ÃÂÃÂ´ÃÂ«ÃÂ£ÃÂ¨ÃÂ«ÃÂÃÂ -->
 <jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
 
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		  <meta name="viewport" content="width=device-width, initial-scale=1">
 		<style type="text/css">
 ${demo.css}
 		</style>
@@ -14,7 +15,7 @@ ${demo.css}
         
 		
 <script type="text/javascript">
-
+$( document ).ready(getoperation_count());
 function getoperation_count() {
 	$.ajax({
 		url : "best_activity_db",
@@ -24,10 +25,10 @@ function getoperation_count() {
 
 			if (data != null || data != "") {
 
-				var start_time=data.start_time;
+				var activity_name=data.activity_name;
 				var count=data.count;
-				//alert(start_time.toString());
-				modify_chart(start_time,count);
+				//alert(activity_name.toString());
+				add_to_table(activity_name,count);
 
 			}
 		},
@@ -39,6 +40,20 @@ function getoperation_count() {
 			}
 		}
 	});
+}
+
+
+
+function add_to_table(name,count){
+	
+	//민수 여기 사이즈 체크 필요
+	for(i=0;i<5;i++)
+	$('#table_body').append("<tr><td>"+(i+1)+"</td><td>"+name[i]+"</td><td>"+count[i]+"</td></tr>");
+
+	
+	
+	
+	
 }
 
 		</script>
@@ -62,24 +77,7 @@ function getoperation_count() {
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-						<li><br><br><br></li>
-						<li class="sidebar-brand">
-							<a href="#">
-								Analysis
-							</a>
-						</li>
-						<li>
-							<a href="operation_count">Operation count</a>
-							<a href="operation_time">Operation time</a>
-							<a href="best_activity">Best activity</a>
-							<a href="Promotions">Promotions</a>
-							<a href="new_member">New_member</a>
-							<a href="deleted_member">Deleted_member</a>
-							<a href="sex">Sex ratio</a>
-							<a href="age">Age</a>
-							<a href="os">OS</a>
-							<a href="device">Device</a>
-						</li>
+					<jsp:include page="sidebar-nav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->
@@ -100,9 +98,20 @@ function getoperation_count() {
 							<h2>Best Activity</h2>
 						</div>
 					</div>
-					<div class="row">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Rank</th>
+									<th>Activity_name</th>
+									<th>Count</th>
+								</tr>
+							</thead>
+							
+							<tbody id="table_body">
+					
+							</tbody>
 
-	<table data-toggle="table" data-url="data1.json" data-cache="false" data-height="299">
+					<!-- <table data-toggle="table" data-url="data1.json" data-cache="false" data-height="299">
     <thead>
         <tr>
             <th data-field="rank">Activity Rank</th>
@@ -122,7 +131,7 @@ function getoperation_count() {
 								return 0;
 							}
 						</script>
-
+ -->
 
 					</div>
 				</div>
