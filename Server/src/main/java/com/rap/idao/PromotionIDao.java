@@ -8,7 +8,7 @@ import com.rap.models.PromotionInfo;
 
 public interface PromotionIDao {
 	void setDataSource(DataSource ds);
-	void create(String project_key, String name, String summary, int grade_time, int grade_money);
+	void create(String project_key, String name, String summary, int grade_time, int grade_money, String target_activity);
 	List<PromotionInfo> selectFromProject(String project_key);
 	List<PromotionInfo> selectAll();
 	void deleteAll();

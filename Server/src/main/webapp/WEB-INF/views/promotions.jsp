@@ -22,8 +22,13 @@ $(document).ready(function(){getpromotionlist()});
 
 function getpromotionlist()
 {
+<<<<<<< HEAD
+	var param = "project_name" + "=" + "<%=project_name %>";
+	
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
-		url : "promotionlist_db",
+		url : "getpromotionlist",
 		type : "POST",
 		dataType : "JSON",
 		success : function(data) {
@@ -129,7 +134,7 @@ function getpromotionlist()
 										</div>
 									</div>
 									<div class="col-lg-3">
-										<button type='button' class='btn btn-success btn-block'
+										<button id='addbutton' type='button' class='btn btn-success btn-block'
 										data-toggle='modal' data-target='#PromotionModal'>
 										<i class='fa fa-plus'></i>Add</button>
 									</div>
@@ -153,8 +158,56 @@ function getpromotionlist()
 </body>
 
 <script>
+
+$(function(){
+	$("#addbutton").click(function(){
+		$.ajax({
+			url : "getactivitylist",
+			type : "POST",
+			dataType : "JSON",
+			success : function(data) {
+				$('#target_activity').html("<option value='' selected>해당없음</option>");
+				
+				if(data!=null || data!="")
+				{
+					var list = data.activitylist;
+					var listLen = list.length;
+					
+					for(var i=0;i<listLen;i++)
+					{
+						if(list[i].grade_time == 0) time = '전체';
+						else time = list[i].grade_time+' 등급';
+
+						if(list[i].grade_money == 0) money = '전체';
+						else money = list[i].grade_money+' 등급';
+						
+						$('#target_activity').append("<option value = '"+ +"'>"+ +"</option>");	
+					}
+					
+				}
+			}
+		});
+	})
+})
 function registerPromotion() {
 
+<<<<<<< HEAD
+function save() {
+
+	var PromotionName = document.getElementById('PromotionName');
+	var PromotionSummary = document.getElementById('PromotionSummary');
+	var grade_time = document.promotionAddForm.grade_time.value;
+	var grade_using = document.promotionAddForm.grade_using.value;
+	var project_name = "<%=project_name %>";
+	
+	var param = "project_name" + "=" + project_name + "&" 
+				+ "name" + "=" + PromotionName.value + "&" 
+				+ "summary" + "=" + PromotionSummary.value + "&" 
+				+ "grade_using" + "=" + grade_using + "&" 
+				+ "grade_time" + "=" + grade_time;
+	
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
 		url : "registerPromotion",
 		type : "POST",
@@ -221,9 +274,15 @@ function registerPromotion() {
 									data-validation-required-message="Please enter Promotion Description.">
 							</div>
 							<div class="row" style="padding:5px">
+<<<<<<< HEAD
+								<label>사용횟수</label> 
+								<select class="selectpicker" id="grade_using" name="grade_using">
+									<option value="0" selected>해당없음</option>
+=======
 								<label style="padding-right:7px;padding-left:7px;">과금액</label> 
 								<select class="selectpicker" id="grade_money" name="grade_money">
 									<option value="0" selected>전체</option>
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
 									<option value="3">3 등급</option>
@@ -233,12 +292,21 @@ function registerPromotion() {
 							<div class="row" style="padding:5px">
 								<label>사용시간</label> 
 								<select class="selectpicker" id="grade_time" name="grade_time">
+<<<<<<< HEAD
+									<option value="0" selected>해당없음</option>
+=======
 									<option value="0" selected>전체</option>
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
 									<option value="3">3 등급</option>
 									<option value="4">4 등급</option>
 								</select>
+							</div>
+							
+							<div class="row" style="padding:5px">
+								<label>타겟 액티비티</label> 
+								<select class="selectpicker" id="target_activity" name="target_activity"></select>
 							</div>
 						</div>
 					</div>

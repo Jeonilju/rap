@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.px.tool.Preference;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
@@ -330,12 +331,31 @@ public class BuyActivity extends RAPBaseActivity{
 
 	private void ShowItemInfo(RAPIapInfo item) {
 		AlertDialog.Builder alt_bld = new AlertDialog.Builder(BuyActivity.this);
-		alt_bld.setMessage("이름: " + item.getName()
+		
+		String price = "";
+		if(item.getType() == 1){
+			// Main 화폐 결제
+			price = "" + item.getPriceMain() + Preference.getString(BuyActivity.this, Preference.PREF_MAIN); 
+		}
+		else if (item.getType() == 2){
+			// Sub 화폐 결제
+			price = "" + item.getPriceSub() + Preference.getString(BuyActivity.this, Preference.PREF_SUB);
+		}
+		else{
+			// Real 화폐 결제
+			price = "" + item.getPriceReal() + "원";
+		}
+		
+		String message = "이름: " + item.getName()
 				+ "\n대분류: " + item.getCategoryL()
 				+ "\n중분류: " + item.getCategoryM()
-				+ "\n소분류: " + item.getCategoryS()
+				+ "\n소분류: " + item.getCategoryS();
+		
+		message += "\n가격: " + price
 				+ "\n\n설명: " + item.getDescription()
-				+ "")
+				+ ""; 
+		
+		alt_bld.setMessage(message)
 				.setCancelable(false)
 				.setPositiveButton("확인",
 						new DialogInterface.OnClickListener() {

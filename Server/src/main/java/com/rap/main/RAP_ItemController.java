@@ -135,6 +135,7 @@ public class RAP_ItemController {
 		int price_real=-1;
 		int price_main=-1;
 		int price_sub=-1;
+		int using_type=-1;
 		
 		//화폐목록
 		if(Coin.equals("실제결제"))
@@ -168,7 +169,14 @@ public class RAP_ItemController {
 				price_main = Integer.parseInt(ItemPrice);
 		}
 		
-		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, -1, "", ItemDescription, Lcategory, Mcategory, Scategory);
+		if(price_main != -1)
+			using_type = 1;
+		else if(price_sub != -1)
+			using_type = 2;
+		else if(price_real != -1)
+			using_type = 3;
+		
+		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, using_type, "", ItemDescription, Lcategory, Mcategory, Scategory);
 		
 		return "200";
 	}
