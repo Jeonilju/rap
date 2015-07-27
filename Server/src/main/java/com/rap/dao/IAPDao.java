@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.google.android.gcm.server.Result;
+import com.rap.analysismodels.SalesRankingInfo;
 import com.rap.idao.IAPIDao;
 import com.rap.models.IAPInfo;
 
@@ -180,5 +180,29 @@ public class IAPDao implements IAPIDao{
 		jdbcTemplate.update("delete from iap where project_key = ? AND categoryl = ? AND categorym = ? AND categorys = ?",
 		        new Object[] { key, categoryL , categoryM, categoryS});	
 	}
+	
+	
+	
+	
+	
+	
+	
+	public List<SalesRankingInfo> countsales_ranking(String project_key) {
+		return jdbcTemplate.query("select iap,count(*) AS count from iap inner join log_pay on iap.pk=log_pay.item_pk where iap.project_key=?  GROUP BY iap ORDER BY count desc",
+		    	new Object[] { project_key}, new RowMapper<SalesRankingInfo>() {
+		    	public SalesRankingInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new SalesRankingInfo(
+		    				resultSet.getString("iap"),
+		    				resultSet.getInt("count"));   			
+		    	}
+		    });
+	}
+	
+	
+	
+	
+	
+	
 
 }
