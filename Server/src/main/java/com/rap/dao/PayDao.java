@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.rap.analysismodels.IAPamountInfo;
-import com.rap.analysismodels.IAPamountInfo;
 import com.rap.idao.PayIDao;
 import com.rap.models.PayInfo;
 

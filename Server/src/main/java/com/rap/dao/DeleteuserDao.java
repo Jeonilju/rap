@@ -20,7 +20,7 @@ import com.rap.models.DeleteuserrInfo;
 
 @Repository
 public class DeleteuserDao {
-	private static final Logger logger = LoggerFactory.getLogger(TimeDao.class);
+	private static final Logger logger = LoggerFactory.getLogger(DeleteuserDao.class);
 	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
