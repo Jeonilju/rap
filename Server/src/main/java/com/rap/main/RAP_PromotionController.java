@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rap.dao.ActivityDao;
 import com.rap.dao.PromotionDao;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
@@ -27,6 +28,10 @@ public class RAP_PromotionController {
 
 	@Autowired
 	private PromotionDao promotionDao;
+
+	@Autowired
+	private ActivityDao activityDao;
+	
 
 	/* minsu add */
 	@RequestMapping(value = "/promotions", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
@@ -58,6 +63,16 @@ public class RAP_PromotionController {
 			) {
 		logger.info("registerPromotion");
 
+		//name
+		if(name == null) return name;
+		if(name.isEmpty()) return name;
+		//summary
+		if(summary == null) return summary;
+		if(summary.isEmpty()) return summary;
+		//target_activity
+		if(target_activity == null) return target_activity;
+		if(target_activity.isEmpty()) return target_activity;
+		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
 		
@@ -100,6 +115,7 @@ public class RAP_PromotionController {
 		List<PromotionInfo> promotionlist = promotionDao.selectFromProject(project_key);
 		jObject.put("promotionlist", promotionlist);
 		logger.info(jObject.toString());
+		
 		return jObject.toString();
 
 	}
@@ -120,9 +136,10 @@ public class RAP_PromotionController {
 		
 		String project_key = project.getPk();
 		
-		List<PromotionInfo> promotionlist = promotionDao.selectFromProject(project_key);
-		jObject.put("promotionlist", promotionlist);
+		List<String> activitylist = activityDao.selectActivityList(project_key);
+		jObject.put("activitylist", activitylist);
 		logger.info(jObject.toString());
+		
 		return jObject.toString();
 
 	}
