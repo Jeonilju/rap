@@ -35,7 +35,7 @@ function getpromotionlist()
 		data : param,
 		dataType : "JSON",
 		success : function(data) {
-			$('#plist').html("");
+			$('#promotion_list').html("");
 			
 			if(data!=null || data!="")
 			{

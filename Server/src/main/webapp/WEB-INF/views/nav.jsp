@@ -22,7 +22,6 @@ if (request.getProtocol().equals("HTTP/1.1"))
 
 <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
 <link href="./resources/css/bootstrap.css" rel="stylesheet">
-
 <!-- Custom CSS -->
 <link href="./resources/css/freelancer.css" rel="stylesheet">
 

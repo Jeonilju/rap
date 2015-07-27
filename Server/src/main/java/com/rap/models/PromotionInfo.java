@@ -8,15 +8,15 @@ public class PromotionInfo {
 	private String name;
 	private String summary;
 	private int grade_time;
-	private int grade_using;
+	private int grade_money;
 	
-	public PromotionInfo(int pk, String project_key, String name, String summary, int grade_time, int grade_using){
+	public PromotionInfo(int pk, String project_key, String name, String summary, int grade_time, int grade_money){
 		this.pk = pk;
 		this.project_key = project_key;
 		this.name = name;
 		this.summary = summary;
 		this.grade_time = grade_time;
-		this.grade_using = grade_using;
+		this.grade_money = grade_money;
 	}
 
 	public int getPk() {
@@ -59,18 +59,12 @@ public class PromotionInfo {
 		this.grade_time = grade_time;
 	}
 
-	public int getGrade_using() {
-		return grade_using;
+	public int getGrade_money() {
+		return grade_money;
 	}
 
-	public void setGrade_using(int grade_using) {
-		this.grade_using = grade_using;
+	public void setGrade_money(int grade_money) {
+		this.grade_money = grade_money;
 	}
-	/*
-	@Override
-	public String toString() {
-		return "PK: " + this.pk
-				+ " name: " + this.name
-				+ " summary: " + this.name + "\n";
-	}*/
+
 }

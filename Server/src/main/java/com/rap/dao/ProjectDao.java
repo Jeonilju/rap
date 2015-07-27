@@ -34,6 +34,10 @@ public class ProjectDao implements ProjectIDao{
 		jdbcTemplate.update("insert into projects (pk, project_name, summary, description, member_pk) values (?, ?, ?, ?, ?)", new Object[] { pk, project_name, summary, description, member_pk });
 	}
 	
+	public void update(String project_name, String summary, String description, String pk) {
+		jdbcTemplate.update("update projects set project_name=?, summary=?, description=? where pk=?", new Object[] { project_name, summary, description, pk });
+	}
+	
 	public List<ProjectInfo> select(String pk){
 		return jdbcTemplate.query("select * from projects where pk = ?",
 		    	new Object[] { pk }, new RowMapper<ProjectInfo>() {
