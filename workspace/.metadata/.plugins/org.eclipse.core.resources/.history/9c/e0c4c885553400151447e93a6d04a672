@@ -8,11 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -88,7 +84,7 @@ public class IAPAdapter extends BaseAdapter{
 				if(contentsList.get(position).getType() == 1){
 					try {
 						HttpRequestBase req = RAPAPIs.BuyItemByMain(contentsList.get(position).getPk());
-						RAPHttpClient.getInstance().background(req, buyItemCallback);
+						RAPHttpClient.getInstance().background(req, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -96,7 +92,7 @@ public class IAPAdapter extends BaseAdapter{
 				else if(contentsList.get(position).getType() == 2){
 					try {
 						HttpRequestBase req = RAPAPIs.BuyItemBySub(contentsList.get(position).getPk());
-						RAPHttpClient.getInstance().background(req, buyItemCallback);
+						RAPHttpClient.getInstance().background(req, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -118,7 +114,7 @@ public class IAPAdapter extends BaseAdapter{
 		return view;
 	}
 	
-	Handler buyItemCallback = new Handler(){
+	Handler getIAPs = new Handler(){
 
 		@Override
 		public void handleMessage(Message msg){
@@ -133,10 +129,13 @@ public class IAPAdapter extends BaseAdapter{
 					
 					switch (status) {
 					case 200:
-						ShowDig("구매가 완료되었습니다.");
+						
+						break;
+					case 401:
+						break;
+					case 402:
 						break;
 					default:
-						ShowDig("구매에 실패하셨습니다.(" + status + ")");
 						break;
 					}
 				} catch (JSONException e) {
@@ -147,21 +146,6 @@ public class IAPAdapter extends BaseAdapter{
 		}
 		
 	};
-	
-	private void ShowDig(String message) {
-		AlertDialog.Builder alt_bld = new AlertDialog.Builder(mContext);
-		alt_bld.setMessage(message)
-				.setCancelable(false)
-				.setPositiveButton("확인",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-							}
-						});
-
-		AlertDialog alert = alt_bld.create();
-		alert.setTitle("결제정보");
-		alert.show();
-	}
 	
 	class ViewHolder {
 		

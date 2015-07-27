@@ -88,7 +88,7 @@ public class IAPAdapter extends BaseAdapter{
 				if(contentsList.get(position).getType() == 1){
 					try {
 						HttpRequestBase req = RAPAPIs.BuyItemByMain(contentsList.get(position).getPk());
-						RAPHttpClient.getInstance().background(req, buyItemCallback);
+						RAPHttpClient.getInstance().background(req, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -96,7 +96,7 @@ public class IAPAdapter extends BaseAdapter{
 				else if(contentsList.get(position).getType() == 2){
 					try {
 						HttpRequestBase req = RAPAPIs.BuyItemBySub(contentsList.get(position).getPk());
-						RAPHttpClient.getInstance().background(req, buyItemCallback);
+						RAPHttpClient.getInstance().background(req, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -118,7 +118,7 @@ public class IAPAdapter extends BaseAdapter{
 		return view;
 	}
 	
-	Handler buyItemCallback = new Handler(){
+	Handler getIAPs = new Handler(){
 
 		@Override
 		public void handleMessage(Message msg){
@@ -159,7 +159,15 @@ public class IAPAdapter extends BaseAdapter{
 						});
 
 		AlertDialog alert = alt_bld.create();
-		alert.setTitle("결제정보");
+
+		alert.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+			}
+		});
+
+		alert.setTitle("");
 		alert.show();
 	}
 	

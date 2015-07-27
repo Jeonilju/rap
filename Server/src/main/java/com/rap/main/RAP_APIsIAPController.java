@@ -1,12 +1,15 @@
 package com.rap.main;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -280,6 +283,7 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/BuyItemByMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String BuyVirtualMain(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("item_id") int item_pk) {
@@ -298,11 +302,12 @@ public class RAP_APIsIAPController {
 			}
 			else{
 				// 가진 돈보다 작음
-				
+				response.setStatus(401);
 				return "402";
 			}
 		}
 		else{
+			response.setStatus(401);
 			return "401";
 		}
 	}
@@ -311,6 +316,7 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/BuyItemBySub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String BuyVirtualSub(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("item_id") int item_pk) {
@@ -329,11 +335,12 @@ public class RAP_APIsIAPController {
 			}
 			else{
 				// 가진 돈보다 작음
-				
-				return "402";
+				response.setStatus(401);
+				return "401";
 			}
 		}
 		else{
+			response.setStatus(401);
 			return "401";
 		}
 	}
@@ -342,6 +349,7 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/BuyItemByReal", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String BuyVirtualReal(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("item_id") int item_pk) {
@@ -355,6 +363,7 @@ public class RAP_APIsIAPController {
 			return "200";
 		}
 		else{
+			response.setStatus(401);
 			return "401";
 		}
 	}
