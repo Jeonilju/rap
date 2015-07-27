@@ -28,10 +28,10 @@ function getoperation_count() {
 
 			if (data != null || data != "") {
 
-				var start_time=data.start_time;
-				var count=data.count;
+				//var start_time=data.start_time;
+				var result=data.result;
 				//alert(start_time.toString());
-				modify_chart(start_time,count);
+				modify_chart(result);
 
 			}
 		},
@@ -45,8 +45,72 @@ function getoperation_count() {
 	});
 }
 
+
+
+ function modify_chart(result) {
+$('#container').highcharts({
+    chart: {
+        type: 'column'
+    },
+    title: {
+    	text:' '
+    },
+    subtitle: {
+    	
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Counts'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: '<b>{point.y:.1f} </b>'
+    },
+    series: [{
+        name: 'Count',
+        data: result,
+        dataLabels: {
+            enabled: true,
+            rotation: -45,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.1f}', // one decimal
+            y: -15, // 10 pixels down from the top
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+});
+
+
+}
 		
-		function modify_chart(start_time,count) {
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/* function modify_chart(start_time,count) {
 		    $('#container').highcharts({
 		        chart: {
 		            type: 'column'
@@ -108,7 +172,7 @@ function getoperation_count() {
 		        }]
 		    });
 		}
-		
+		 */
 		
 		
 		
@@ -133,24 +197,7 @@ function getoperation_count() {
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-						<li><br><br><br></li>
-						<li class="sidebar-brand">
-							<a href="#">
-								Analysis
-							</a>
-						</li>
-						<li>
-							<a href="operation_count">Operation count</a>
-							<a href="operation_time">Operation time</a>
-							<a href="best_activity">Best activity</a>
-							<a href="Promotions">Promotions</a>
-							<a href="new_member">New_member</a>
-							<a href="deleted_member">Deleted_member</a>
-							<a href="sex">Sex ratio</a>
-							<a href="age">Age</a>
-							<a href="os">OS</a>
-							<a href="device">Device</a>
-						</li>
+						<jsp:include page="sidebar-nav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->

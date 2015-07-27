@@ -134,14 +134,7 @@ demo
 			<!--  sidebar-wrapper -->
 			<div id="sidebar-wrapper">
 				<ul class="sidebar-nav">
-					<li><br>
-					<br>
-					<br></li>
-					<li class="sidebar-brand"><a href="#"> Analysis </a></li>
-					<li><a href="operation_count">Operation count</a> <a
-						href="operation_time">Operation time</a> <a href="sex">Sex
-							ratio</a> <a href="#">Age</a> <a href="os">OS</a> <a href="device">Device</a>
-					</li>
+					<jsp:include page="sidebar-nav.jsp" flush="false" />
 				</ul>
 			</div>
 			<!--  #sidebar-wrapper -->

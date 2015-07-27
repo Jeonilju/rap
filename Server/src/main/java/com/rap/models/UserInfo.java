@@ -18,7 +18,6 @@ public class UserInfo {
 	private int count;
 	private int virtual_main;
 	private int virtual_sub;
-	
 	public UserInfo(int pk, String key, String gcm_id
 			, int grade_time, int grade_money
 			, double position_let, double position_lon
@@ -42,7 +41,7 @@ public class UserInfo {
 		this.virtual_sub = virtual_sub;
 		this.reg_date = reg_date;
 	}
-	
+
 	public int getPk() {
 		return pk;
 	}
@@ -94,6 +93,8 @@ public class UserInfo {
 	public String getOs_version() {
 		return os_version;
 	}
+	
+
 	public void setOs_version(String os_version) {
 		this.os_version = os_version;
 	}
