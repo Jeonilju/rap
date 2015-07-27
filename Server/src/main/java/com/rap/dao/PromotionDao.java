@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.rap.idao.PromotionIDao;
-import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
 
 @Repository
@@ -29,8 +28,8 @@ public class PromotionDao implements PromotionIDao{
 		logger.info("Updated DataSource ---> " + ds);
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
-	public void create(String project_key, String name, String summary, int grade_time, int grade_money) {
-		jdbcTemplate.update("insert into promotion (project_key, name, summary, grade_time, grade_money) values (?, ?, ?, ?, ?)", new Object[] { project_key, name, summary, grade_time, grade_money });
+	public void create(String project_key, String name, String summary, int grade_time, int grade_money, String target_activity) {
+		jdbcTemplate.update("insert into promotion (project_key, name, summary, grade_time, grade_money, target_activity) values (?, ?, ?, ?, ?, ?)", new Object[] { project_key, name, summary, grade_time, grade_money, target_activity });
 	}
 
 	public List<PromotionInfo> selectFromProject(String project_key){
@@ -44,7 +43,8 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("name")
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
-		    				, resultSet.getInt("grade_money"));
+		    				, resultSet.getInt("grade_money")
+		    				, resultSet.getString("target_activity"));
 		    	}
 		    });
 	}
@@ -59,9 +59,14 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("name")
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
-		    				, resultSet.getInt("grade_money"));
+		    				, resultSet.getInt("grade_money")
+		    				, resultSet.getString("target_activity"));
 		    	}
 		    });
+	}
+
+	public void update(String name, String summary, int grade_time, int grade_money, String project_key){
+		jdbcTemplate.update("update promotion set name=?,summary=?,grade_time=?,grade_money=? where project_key=?", new Object[] {name, summary, grade_time,grade_money, project_key });
 	}
 	
 	public void deleteAll() {

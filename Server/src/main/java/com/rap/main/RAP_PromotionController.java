@@ -1,7 +1,5 @@
 package com.rap.main;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,14 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.rap.dao.MemberDao;
-import com.rap.dao.ProjectDao;
 import com.rap.dao.PromotionDao;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
@@ -58,7 +53,9 @@ public class RAP_PromotionController {
 			@RequestParam("name") String name,
 			@RequestParam("summary") String summary, 
 			@RequestParam("grade_money") int grade_money,
-			@RequestParam("grade_time") int grade_time) {
+			@RequestParam("grade_time") int grade_time,
+			@RequestParam("target_activity") String target_activity
+			) {
 		logger.info("registerPromotion");
 
 		// 세션 객체 생성
@@ -79,17 +76,17 @@ public class RAP_PromotionController {
 				return "overlap";
 		}
 		
-		promotionDao.create(project_key, name, summary, grade_money, grade_time);
+		promotionDao.create(project_key, name, summary, grade_money, grade_time, target_activity);
 		logger.info("프로모션 등록");
 		return "200";
 	}
 
 	/** 프로모션 목록 설정 */
-	@RequestMapping(value = "/promotionlist_db", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@RequestMapping(value = "/getpromotionlist", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String MainController_promotionlist_db(HttpServletRequest request, HttpServletResponse response) {
+	public String MainController_getpromotionlist(HttpServletRequest request, HttpServletResponse response) {
 
-		logger.info("promotionlist_db");
+		logger.info("getpromotionlist");
 		JSONObject jObject = new JSONObject();
 
 		// 세션 객체 생성
@@ -107,5 +104,26 @@ public class RAP_PromotionController {
 
 	}
 
-	
+	/** 액티비티 목록 설정 */
+	@RequestMapping(value = "/getactivitylist", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String MainController_getactivitylist(HttpServletRequest request, HttpServletResponse response) {
+
+		logger.info("getactivitylist");
+		JSONObject jObject = new JSONObject();
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		
+		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
+		if(project==null) return "error";
+		
+		String project_key = project.getPk();
+		
+		List<PromotionInfo> promotionlist = promotionDao.selectFromProject(project_key);
+		jObject.put("promotionlist", promotionlist);
+		logger.info(jObject.toString());
+		return jObject.toString();
+
+	}
 }
