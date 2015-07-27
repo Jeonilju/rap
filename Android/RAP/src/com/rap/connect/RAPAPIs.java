@@ -569,6 +569,75 @@ public class RAPAPIs {
 		return httpPost;
 	}
 	
+	/**
+	 * 사용자의 Sub 가상화폐를 사용해 아이템을 구매한다.
+	 * 
+	 * */
+	public static HttpRequestBase BuyItemByMain(int item_id) {
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/BuyItemByMain");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("item_id", "" + item_id));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
+	}
+	
+	/**
+	 * 사용자의 Sub 가상화폐를 사용해 아이템을 구매한다.
+	 * 
+	 * */
+	public static HttpRequestBase BuyItemBySub(int item_id) {
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/BuyItemBySub");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("item_id", "" + item_id));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
+	}
+	
+	/**
+	 * 사용자의 Real 가상화폐를 사용해 아이템을 구매한다.
+	 * 
+	 * */
+	public static HttpRequestBase BuyItemByReal(int item_id) {
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/BuyItemByReal");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		nameValuePairs.add(new BasicNameValuePair("User", "" + RAPUser.getUserId()));
+		nameValuePairs.add(new BasicNameValuePair("project_key", "" + RAPSetting.getRAPKey()));
+		nameValuePairs.add(new BasicNameValuePair("item_id", "" + item_id));
+		
+		UrlEncodedFormEntity entityRequest;
+		try {
+			entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return httpPost;
+	}
+	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////														////////////////////////
 	///////////////////////						Promotion 보내기					////////////////////////

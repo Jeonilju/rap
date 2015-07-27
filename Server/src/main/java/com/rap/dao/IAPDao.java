@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.rap.analysismodels.SalesRankingInfo;
 import com.rap.idao.IAPIDao;
 import com.rap.models.IAPInfo;
 
@@ -126,6 +127,42 @@ public class IAPDao implements IAPIDao{
 		    	}
 		    });
 	}
+	public IAPInfo selectItem(String key, int item_pk){
+		List<IAPInfo> result = jdbcTemplate.query("select * from iap where project_key = ? AND pk = ?",
+		    	new Object[] { key, item_pk }, new RowMapper<IAPInfo>() {
+		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new IAPInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("iap")
+		    				, resultSet.getInt("price_real")
+		    				, resultSet.getInt("price_main")
+		    				, resultSet.getInt("price_sub")
+		    				, resultSet.getInt("using_type")
+		    				, resultSet.getString("google_id")
+		    				, resultSet.getString("image")
+		    				, resultSet.getString("description")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("categoryl")
+		    				, resultSet.getString("categorym")
+		    				, resultSet.getString("categorys"));
+		    	}
+		    });
+		
+		if(result.size() == 1){
+			return result.get(0);
+		}
+		else if(result.size() > 1){
+			logger.info("버그: 갯수가 1개 이상");
+			return result.get(0);
+		}
+		else {
+			logger.info("버그: 갯수가 1개도 없음");
+			return null;
+		}
+	}
+	
 	public void delete(String key) {
 		jdbcTemplate.update("delete from iap where project_key = ?",
 		        new Object[] { key });	
@@ -143,5 +180,29 @@ public class IAPDao implements IAPIDao{
 		jdbcTemplate.update("delete from iap where project_key = ? AND categoryl = ? AND categorym = ? AND categorys = ?",
 		        new Object[] { key, categoryL , categoryM, categoryS});	
 	}
+	
+	
+	
+	
+	
+	
+	
+	public List<SalesRankingInfo> countsales_ranking(String project_key) {
+		return jdbcTemplate.query("select iap,count(*) AS count from iap inner join log_pay on iap.pk=log_pay.item_pk where iap.project_key=?  GROUP BY iap ORDER BY count desc",
+		    	new Object[] { project_key}, new RowMapper<SalesRankingInfo>() {
+		    	public SalesRankingInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new SalesRankingInfo(
+		    				resultSet.getString("iap"),
+		    				resultSet.getInt("count"));   			
+		    	}
+		    });
+	}
+	
+	
+	
+	
+	
+	
 
 }

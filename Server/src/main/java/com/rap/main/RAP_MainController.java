@@ -25,7 +25,6 @@ import com.rap.models.ProjectInfo;
 public class RAP_MainController {
 	private static final Logger logger = LoggerFactory.getLogger(RAP_MainController.class);
 
-
 	@Autowired
 	private MemberDao memberDao;
 
@@ -53,13 +52,13 @@ public class RAP_MainController {
 			return "email";
 		if (email.isEmpty())
 			return "email";
-		
+
 		// password 입력하지 않았을 때
 		if (password == null)
 			return "password";
 		if (password.isEmpty())
 			return "password";
-		
+
 		// password_check 입력하지 않았을 때
 		if (password_check == null)
 			return "password_check";
@@ -68,15 +67,15 @@ public class RAP_MainController {
 
 		// 패스워드 값이 같지 않을 때
 		logger.info(" 패스워드 값이 같지 않을 때");
-		if (!password.equals(password_check)) return "password equality";
-		
+		if (!password.equals(password_check))
+			return "password equality";
+
 		List<MemberInfo> memberlist = memberDao.select(email);
 
 		// 이메일이 존재하지 않을 때
 		if (memberlist == null || memberlist.isEmpty()) {
 			memberDao.create(email, password);
-		} 
-		else {
+		} else {
 			if (memberlist.get(0).getEmail().equals(email)) {
 				logger.info("중복");
 				return "overlap";
@@ -230,18 +229,21 @@ public class RAP_MainController {
 
 		return "os";
 	}
+
 	@RequestMapping(value = "/new_member", method = RequestMethod.GET)
 	public String MainController_new_member(HttpServletRequest request) {
 		logger.info("new_member Page");
 
 		return "new_member";
-	}	
+	}
+
 	@RequestMapping(value = "/best_activity", method = RequestMethod.GET)
 	public String MainController_best_activity(HttpServletRequest request) {
 		logger.info("best_activityr Page");
 
 		return "best_activity";
 	}
+
 	@RequestMapping(value = "/device", method = RequestMethod.GET)
 	public String MainController_device(HttpServletRequest request) {
 		logger.info("device Page");
@@ -261,6 +263,26 @@ public class RAP_MainController {
 		logger.info("promotions_analysis Page");
 
 		return "promotions_analysis";
-	}	
-	
+	}
+
+	@RequestMapping(value = "/sales_ranking", method = RequestMethod.GET)
+	public String MainController_sales_ranking(HttpServletRequest request) {
+		logger.info("sales_ranking Page");
+
+		return "sales_ranking";
+	}
+
+	@RequestMapping(value = "/deleted_member", method = RequestMethod.GET)
+	public String MainController_deleted_member(HttpServletRequest request) {
+		logger.info("deleted_member Page");
+
+		return "deleted_member";
+	}
+
+	@RequestMapping(value = "/IAP_amount", method = RequestMethod.GET)
+	public String MainController_IAP_amount(HttpServletRequest request) {
+		logger.info("IAP_amount Page");
+
+		return "IAP_amount";
+	}
 }

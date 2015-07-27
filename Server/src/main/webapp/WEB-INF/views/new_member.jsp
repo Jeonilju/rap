@@ -6,7 +6,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
 
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 		<style type="text/css">
 ${demo.css}
 		</style>
@@ -15,169 +14,89 @@ ${demo.css}
 		
 <script type="text/javascript">
 
-function getoperation_count() {
-	var param = "type=" + document.getElementById('Type').value+
-				"&start=" + document.getElementById('Start').value;
-	
-	$.ajax({
-		url : "new_member_db",
-		type : "POST",
-		data : param,
-		dataType : "JSON",
-		success : function(data) {
+	function getoperation_count() {
+		var param = "type=" + document.getElementById('Type').value + "&start="
+				+ document.getElementById('Start').value;
 
-			if (data != null || data != "") {
+		$.ajax({
+			url : "new_member_db",
+			type : "POST",
+			data : param,
+			dataType : "JSON",
+			success : function(data) {
 
-				//var start_time=data.start_time;
-				var result=data.result;
-				//alert(start_time.toString());
-				modify_chart(result);
+				if (data != null || data != "") {
 
+					//var start_time=data.start_time;
+					var result = data.result;
+					//alert(start_time.toString());
+					modify_chart(result);
+
+				}
+			},
+
+			error : function(request, status, error) {
+				if (request.status != '0') {
+					alert("code : " + request.status + "\r\nmessage : "
+							+ request.reponseText + "\r\nerror : " + error);
+				}
 			}
-		},
+		});
+	}
 
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-}
+	function modify_chart(result) {
+		$('#container').highcharts({
+			chart : {
+				type : 'column'
+			},
+			title : {
+				text : ' '
+			},
+			subtitle : {
 
+			},
+			xAxis : {
+				type : 'category',
+				labels : {
+					rotation : -45,
+					style : {
+						fontSize : '13px',
+						fontFamily : 'Verdana, sans-serif'
+					}
+				}
+			},
+			yAxis : {
+				min : 0,
+				title : {
+					text : 'Counts'
+				}
+			},
+			legend : {
+				enabled : false
+			},
+			tooltip : {
+				pointFormat : '<b>{point.y:.1f} </b>'
+			},
+			series : [ {
+				name : 'Count',
+				data : result,
+				dataLabels : {
+					enabled : true,
+					rotation : -45,
+					color : '#FFFFFF',
+					align : 'right',
+					format : '{point.y:.1f}', // one decimal
+					y : -15, // 10 pixels down from the top
+					style : {
+						fontSize : '13px',
+						fontFamily : 'Verdana, sans-serif'
+					}
+				}
+			} ]
+		});
 
-
- function modify_chart(result) {
-$('#container').highcharts({
-    chart: {
-        type: 'column'
-    },
-    title: {
-    	text:' '
-    },
-    subtitle: {
-    	
-    },
-    xAxis: {
-        type: 'category',
-        labels: {
-            rotation: -45,
-            style: {
-                fontSize: '13px',
-                fontFamily: 'Verdana, sans-serif'
-            }
-        }
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Counts'
-        }
-    },
-    legend: {
-        enabled: false
-    },
-    tooltip: {
-        pointFormat: '<b>{point.y:.1f} </b>'
-    },
-    series: [{
-        name: 'Count',
-        data: result,
-        dataLabels: {
-            enabled: true,
-            rotation: -45,
-            color: '#FFFFFF',
-            align: 'right',
-            format: '{point.y:.1f}', // one decimal
-            y: -15, // 10 pixels down from the top
-            style: {
-                fontSize: '13px',
-                fontFamily: 'Verdana, sans-serif'
-            }
-        }
-    }]
-});
-
-
-}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/* function modify_chart(start_time,count) {
-		    $('#container').highcharts({
-		        chart: {
-		            type: 'column'
-		        },
-		        title: {
-		            text: 'title'
-		        },
-		        xAxis: {
-		            categories: start_time
-		        },
-		        yAxis: {
-		            min: 0,
-		            title: {
-		                text: 'Total new member counts'
-		            },
-		            stackLabels: {
-		                enabled: true,
-		                style: {
-		                    fontWeight: 'bold',
-		                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-		                }
-		            }
-		        },
-		        legend: {
-		            align: 'right',
-		            x: -30,
-		            verticalAlign: 'top',
-		            y: 25,
-		            floating: true,
-		            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-		            borderColor: '#CCC',
-		            borderWidth: 1,
-		            shadow: false
-		        },
-		        tooltip: {
-		            formatter: function () {
-		                return '<b>' + this.x + '</b><br/>' +
-		                    this.series.name + ': ' + this.y + '<br/>' +
-		                    'Total: ' + this.point.stackTotal;
-		            }
-		        },
-		        plotOptions: {
-		            column: {
-		                stacking: 'normal',
-		                dataLabels: {
-		                    enabled: true,
-		                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-		                    style: {
-		                        textShadow: '0 0 3px black'
-		                    }
-		                }
-		            }
-		        },
-		        
-		        
-		        series: [{
-		            name: '1st class',
-		            data: count
-		        }]
-		    });
-		}
-		 */
-		
-		
-		
-		
-		</script>
+	}
+</script>
 		
 		
 		
@@ -210,7 +129,7 @@ $('#container').highcharts({
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>New member</h2>
+								<h2>New user</h2>
 							</div>
 						</div>
 						<div class="row">

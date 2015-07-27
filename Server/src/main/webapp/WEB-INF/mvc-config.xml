@@ -30,7 +30,7 @@
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 		<beans:property name="url" value="jdbc:mysql://localhost:3306/rap?useUnicode=true&amp;characterEncoding=utf-8"/>
 		<beans:property name="username" value="root"/>
-		<beans:property name="password" value="Wjsdlfwn8520!"/>
+		<beans:property name="password" value="1234"/>
 	</beans:bean>
 	
 	<beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -51,6 +51,9 @@
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 	<beans:bean id="CategorySDao" class="com.rap.dao.CategorySDao">
+		<beans:property name="dataSource" ref="dataSource" />
+	</beans:bean>
+	<beans:bean id="DeleteuserDao" class="com.rap.dao.DeleteuserDao">
 		<beans:property name="dataSource" ref="dataSource" />
 	</beans:bean>
 	<beans:bean id="IAPDao" class="com.rap.dao.IAPDao">

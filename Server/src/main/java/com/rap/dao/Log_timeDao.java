@@ -30,9 +30,9 @@ public class Log_timeDao{
 		logger.info("Updated DataSource ---> " + ds);
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
-	public void create(String project_key, String name, int type, int price, int item_pk) {
-		jdbcTemplate.update("insert into log_pay (project_key, username, type, price, item_pk) values (?, ?, ?, ?, ?)"
-				, new Object[] { project_key, name, type, price, item_pk});
+	public void create(String project_key, String name,Timestamp start,Timestamp end) {
+		jdbcTemplate.update("insert into log_pay (project_key, name, start, end) values (?, ?, ?, ?, ?)"
+				, new Object[] { project_key, name, start, end});
 	}
 	public List<Log_timeInfo> select(String project_key) {
 		return jdbcTemplate.query("select * from log_pay where project_key = ?",

@@ -122,7 +122,7 @@ public class UserDao implements UserIDao {
 	public void useVirtual_sub(String project_key, String name, int money) {
 		isExist(project_key, name);
 		jdbcTemplate.update(
-				"update user set " + " virtual_sub = virtual_sub + " + money + " where project_key = ? AND name = ?",
+				"update user set " + " virtual_sub = virtual_sub - " + money + " where project_key = ? AND name = ?",
 				new Object[] { project_key, name });
 	}
 

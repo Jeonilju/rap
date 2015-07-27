@@ -41,7 +41,6 @@ function registerVirtualMain()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -71,7 +70,6 @@ function deleteVirtualMain()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -106,7 +104,6 @@ function registerVirtualSub()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -136,7 +133,6 @@ function deleteVirtualSub()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -149,7 +145,6 @@ function coinlist_db()
 {
 	$('#virtual_main').html("<option value='' selected>주화폐</option>");
 	$('#virtual_sub').html("<option value='' selected>부화폐</option>");
-
 	$.ajax({
 		url : "coinlist_db",
 		type : "POST",
@@ -173,7 +168,6 @@ function coinlist_db()
 				}
 			}
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -184,7 +178,6 @@ function coinlist_db()
 	$('#virtual_main').selectpicker('refresh');
 	$('#virtual_sub').selectpicker('refresh');
 }
-
 function registerGradeMoney()
 {
 	$.ajax({
@@ -215,7 +208,6 @@ function registerGradeMoney()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -244,7 +236,6 @@ function getGradeMoney()
 			document.getElementById('grade_money_input').placeholder = response;
 		}
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -252,9 +243,7 @@ function getGradeMoney()
 		}
 	}
 });
-
 }
-
 function registerGradeTime()
 {
 	$.ajax({
@@ -285,7 +274,6 @@ function registerGradeTime()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -314,7 +302,6 @@ function getGradeTime()
 			document.getElementById('grade_time_input').placeholder = response;
 		}
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -322,12 +309,9 @@ function getGradeTime()
 		}
 	}
 });
-
 }
-
 function EditGradeTime()
 {
-
 	$.ajax({
 	url : "EditGradeTime",
 	type : "POST",
@@ -355,7 +339,6 @@ function EditGradeTime()
 		else
 			alert("에러가 발생했습니다.");
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -365,10 +348,8 @@ function EditGradeTime()
 });
 	
 }
-
 function EditGradeMoney()
 {
-
 	$.ajax({
 	url : "EditGradeMoney",
 	type : "POST",
@@ -396,7 +377,6 @@ function EditGradeMoney()
 		else
 			alert("에러가 발생했습니다.");
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -408,7 +388,6 @@ function EditGradeMoney()
 }
 function ProjectEdit()
 {
-
 	$.ajax({
 	url : "ProjectEdit",
 	type : "POST",
@@ -433,7 +412,6 @@ function ProjectEdit()
 		else
 			alert("에러가 발생했습니다.");
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -508,10 +486,8 @@ function ProjectEdit()
 					<%
 						MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
 						String email = "";
-
 						if (member != null)
 							email = member.getEmail();
-
 						if (email == null || email.isEmpty()) {
 					%>
 					<!-- 로그인하지 않은 경우 -->
@@ -570,13 +546,11 @@ function ProjectEdit()
 									<option value='' selected>대분류</option>
 									<%
 										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>) request.getAttribute("categoryLlist");
-
 										int categoryLlistcount;
 										if (categoryLlist == null)
 											categoryLlistcount = 0;
 										else
 											categoryLlistcount = categoryLlist.size();
-
 										for (int i = 0; i < categoryLlistcount; i++) {
 											out.println("<option value='" + categoryLlist.get(i).getCategoryL() + "'>"
 													+ categoryLlist.get(i).getCategoryL() + "</option>");
@@ -657,13 +631,11 @@ function ProjectEdit()
 									<option value='' selected>주화폐</option>
 									<%
 										List<Virtual_MainInfo> mainlist = (List<Virtual_MainInfo>) request.getAttribute("mainlist");
-
 											int mainlistcount;
 											if (mainlist == null)
 												mainlistcount = 0;
 											else
 												mainlistcount = mainlist.size();
-
 											for (int i = 0; i < mainlistcount; i++) {
 												out.println("<option value='" + mainlist.get(i).getName() + "'>"
 														+ mainlist.get(i).getName()  + "</option>");
@@ -685,13 +657,11 @@ function ProjectEdit()
 									<option value='' selected>부화폐</option>
 									<%
 										List<Virtual_SubInfo> sublist = (List<Virtual_SubInfo>) request.getAttribute("sublist");
-
 											int sublistcount;
 											if (sublist == null)
 												sublistcount = 0;
 											else
 												sublistcount = sublist.size();
-
 											for (int i = 0; i < sublistcount; i++) {
 												out.println("<option value='" + sublist.get(i).getName() + "'>"
 														+ sublist.get(i).getName()  + "</option>");

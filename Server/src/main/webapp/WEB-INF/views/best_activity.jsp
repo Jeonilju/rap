@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
 
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		
 		  <meta name="viewport" content="width=device-width, initial-scale=1">
 		<style type="text/css">
 ${demo.css}
@@ -47,16 +47,24 @@ function getoperation_count() {
 function add_to_table(name,count){
 	
 	//민수 여기 사이즈 체크 필요
-	for(i=0;i<5;i++)
-	$('#table_body').append("<tr><td>"+(i+1)+"</td><td>"+name[i]+"</td><td>"+count[i]+"</td></tr>");
+	
+		
+	if (name.length > 0) {
+			var a = name.length;
+			if (a > 10)
+				a = 10;
 
-	
-	
-	
-	
-}
+			for (i = 0; i < a; i++)
 
-		</script>
+				for (i = 0; i < a; i++)
+					$('#table_body').append(
+							"<tr><td>" + (i + 1) + "</td><td>" + name[i]
+									+ "</td><td>" + count[i] + "</td></tr>");
+
+		}
+
+	}
+</script>
 		
 		
 		
