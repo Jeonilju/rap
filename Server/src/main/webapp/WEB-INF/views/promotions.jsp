@@ -28,7 +28,7 @@ function getpromotionlist()
 =======
 >>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
-		url : "promotionlist_db",
+		url : "getpromotionlist",
 		type : "POST",
 		dataType : "JSON",
 		success : function(data) {
@@ -134,7 +134,7 @@ function getpromotionlist()
 										</div>
 									</div>
 									<div class="col-lg-3">
-										<button type='button' class='btn btn-success btn-block'
+										<button id='addbutton' type='button' class='btn btn-success btn-block'
 										data-toggle='modal' data-target='#PromotionModal'>
 										<i class='fa fa-plus'></i>Add</button>
 									</div>
@@ -158,6 +158,37 @@ function getpromotionlist()
 </body>
 
 <script>
+
+$(function(){
+	$("#addbutton").click(function(){
+		$.ajax({
+			url : "getactivitylist",
+			type : "POST",
+			dataType : "JSON",
+			success : function(data) {
+				$('#target_activity').html("<option value='' selected>해당없음</option>");
+				
+				if(data!=null || data!="")
+				{
+					var list = data.activitylist;
+					var listLen = list.length;
+					
+					for(var i=0;i<listLen;i++)
+					{
+						if(list[i].grade_time == 0) time = '전체';
+						else time = list[i].grade_time+' 등급';
+
+						if(list[i].grade_money == 0) money = '전체';
+						else money = list[i].grade_money+' 등급';
+						
+						$('#target_activity').append("<option value = '"+ +"'>"+ +"</option>");	
+					}
+					
+				}
+			}
+		});
+	})
+})
 function registerPromotion() {
 
 <<<<<<< HEAD
@@ -271,6 +302,11 @@ function save() {
 									<option value="3">3 등급</option>
 									<option value="4">4 등급</option>
 								</select>
+							</div>
+							
+							<div class="row" style="padding:5px">
+								<label>타겟 액티비티</label> 
+								<select class="selectpicker" id="target_activity" name="target_activity"></select>
 							</div>
 						</div>
 					</div>

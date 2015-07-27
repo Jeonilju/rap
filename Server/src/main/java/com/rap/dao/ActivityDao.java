@@ -63,7 +63,18 @@ public class ActivityDao implements ActivityIDao {
 	public void delete(String project_key) {
 		jdbcTemplate.update("delete from activity_log where project_key = ?", new Object[] { project_key });
 	}
-	
+	/*
+	public List<String> selectActivityList(String project_key) {
+		 List<String> result  = jdbcTemplate.query(
+				 "select activity_name,count(*) from activity_log where project_key = ? group by activity_name order by count(*) desc",
+					new Object[] { project_key}, new RowMapper<BestActivityInfo>() {
+						public BestActivityInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+							return new BestActivityInfo(resultSet.getString("activity_name"), resultSet.getInt("count(*)"));
+						}
+					});
+		 return result;	
+		
+	}*/
 	public List<BestActivityInfo> countBest_activity(String project_key) {
 		
 		logger.info("count Best_activity /" + "project_key : " + project_key);

@@ -1,7 +1,5 @@
 package com.rap.models;
 
-import java.sql.Timestamp;
-
 public class PromotionInfo {
 	private int pk;
 	private String project_key;
@@ -9,14 +7,24 @@ public class PromotionInfo {
 	private String summary;
 	private int grade_time;
 	private int grade_money;
+	private String target_activity;
 	
-	public PromotionInfo(int pk, String project_key, String name, String summary, int grade_time, int grade_money){
+	public PromotionInfo(int pk, String project_key, String name, String summary, int grade_time, int grade_money, String target_activity){
 		this.pk = pk;
 		this.project_key = project_key;
 		this.name = name;
 		this.summary = summary;
 		this.grade_time = grade_time;
 		this.grade_money = grade_money;
+		this.target_activity = target_activity;
+	}
+
+	public String getTarget_activity() {
+		return target_activity;
+	}
+
+	public void setTarget_activity(String target_activity) {
+		this.target_activity = target_activity;
 	}
 
 	public int getPk() {
