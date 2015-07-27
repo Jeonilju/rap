@@ -48,6 +48,37 @@ public class PromotionDao implements PromotionIDao{
 		    	}
 		    });
 	}
+	
+	public PromotionInfo selectFromProject(String project_key, String promotion_name){
+		List<PromotionInfo> result= jdbcTemplate.query("select * from promotion where project_key = ? and name = ?",
+		    	new Object[] { project_key,promotion_name }, new RowMapper<PromotionInfo>() {
+		    	public PromotionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new PromotionInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("summary")
+		    				, resultSet.getInt("grade_time")
+		    				, resultSet.getInt("grade_money")
+		    				, resultSet.getString("target_activity"));
+		    	}
+		    });
+		
+		if(result.size() == 1)
+			return result.get(0);
+		else if(result.size() > 1)
+		{
+			logger.info("프로모션 중복 에러");
+			return result.get(0);
+		}
+		else
+		{
+			logger.info("해당 프로모션 존재 X");
+			return null;
+		}
+	}
+	
 	public List<PromotionInfo> selectAll(){
 		return jdbcTemplate.query("select * from promotion",
 		    	new Object[] {  }, new RowMapper<PromotionInfo>() {

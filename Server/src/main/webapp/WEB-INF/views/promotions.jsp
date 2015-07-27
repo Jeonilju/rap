@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page
 	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +20,29 @@
 
 $(document).ready(function(){getpromotionlist()});
 
+function sendpushmsg(promotionname)
+{
+	if(confirm('해당 프로모션으로 푸시메세지를 전송하시겠습니까?'))
+	{
+		$.ajax({
+			url : "sendpushmsg",
+			type : "POST",
+			data : 
+			{
+				name : promotionname
+			},
+			dataType : "text",
+			success : function(response) {
+				if(response == '200')
+				{
+					alert('푸시 메세지를 전송했습니다.');
+				}
+				else
+					alert('에러가 발생했습니다.');
+			}
+		});
+	}
+}
 function getpromotionlist()
 {
 	$.ajax({
@@ -49,7 +72,8 @@ function getpromotionlist()
 							+list[i].summary
 							+"</div><div>사용시간 등급 : "+time+"</div>"
 							+"<div>과금액 등급 : "+money+"</div>"
-							+"</div><div class='panel-footer'><a class='btn btn-default pull-right' href='#'> 푸시 알림 </a> <br><br></div><br>");	
+							+"<div>타겟 액티비티 : "+list[i].target_activity+"</div>"
+							+"</div><div class='panel-footer'><a class='btn btn-default pull-right' onclick=\"sendpushmsg('"+ list[i].name + "')\"> 푸시 알림 </a> <br><br></div><br>");
 				}
 				
 				if(listLen==0)
@@ -163,6 +187,7 @@ $(function(){
 			type : "POST",
 			dataType : "JSON",
 			success : function(data) {
+				
 				if(data!=null || data!="")
 				{
 					var list = data.activitylist;
@@ -204,6 +229,12 @@ function registerPromotion() {
 			}
 			else if(response == 'overlap')
 				alert('같은 이름의 프로모션이 존재합니다.');
+			else if(response == 'name')
+				alert('이름을 입력해주세요.');
+			else if(response == 'summary')
+				alert('요약을 입력해주세요.');
+			else if(response == 'target_activity')
+				alert('타겟 액티비티를 선택해주세요.');
 			else
 				alert('에러가 발생했습니다.');
 		}

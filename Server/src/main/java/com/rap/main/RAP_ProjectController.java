@@ -1,5 +1,6 @@
 package com.rap.main;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -50,7 +51,7 @@ public class RAP_ProjectController {
 	
 	/** 프로젝트 홈 */
 	@RequestMapping(value = "/projecthome", method = RequestMethod.GET)
-	public String MainController_projecthome(HttpServletRequest request) {
+	public String MainController_projecthome(HttpServletRequest request, HttpServletResponse response) {
 		logger.info("projecthome Page");
 
 		// 세션 객체 생성
@@ -61,6 +62,8 @@ public class RAP_ProjectController {
 			int member_pk = member.getPk();
 
 			List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
+			
+			logger.info("projectsize = "+projectlist.size());
 			request.setAttribute("projectlist", projectlist);
 			request.setAttribute("projectcount", projectlist.size());
 		}
@@ -69,7 +72,7 @@ public class RAP_ProjectController {
 
 	/** 프로젝트 등록 */
 	@RequestMapping(value = "/projectregister", method = RequestMethod.GET)
-	public String MainController_projectregister(HttpServletRequest request) {
+	public String MainController_projectregister(HttpServletRequest request){
 		logger.info("projectregister Page");
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
@@ -273,7 +276,7 @@ public class RAP_ProjectController {
 	
 	/** 프로젝트 세팅 */
 	@RequestMapping(value = "/projectsettings", method = RequestMethod.GET)
-	public String MainController_projectsettings(HttpServletRequest request) {
+	public String MainController_projectsettings(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("projectsettings Page");
 
 		// 세션 객체 생성
@@ -282,7 +285,7 @@ public class RAP_ProjectController {
 		
 		if(currentproject == null)
 		{
-			return "projectsettings";
+			return "projecthome";
 		}
 		
 		String project_key = currentproject.getPk();

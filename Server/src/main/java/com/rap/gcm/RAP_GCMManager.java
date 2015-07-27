@@ -5,15 +5,22 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+import com.rap.dao.SettingDao;
+import com.rap.models.SettingInfo;
 import com.rap.models.UserInfo;
 
 public class RAP_GCMManager {
 
 	private static RAP_GCMManager instance = null;
+
+	@Autowired
+	private SettingDao settingDao;
 	
 	private static final Logger logger = LoggerFactory.getLogger(RAP_GCMManager.class);
 	
@@ -37,8 +44,10 @@ public class RAP_GCMManager {
 	 * @param class		class 이름
 	 * @param userList	GCM을 받을 사용자 list
 	 * */
-	public void sendPush(int promotion_pk, String title, String content, String className, List<UserInfo> userList) {
-		Sender sender = new Sender("AIzaSyCE2Hy_AvqYduWKT4YiZWoIrGH4iYlu12I");  //구글 코드에서 발급받은 서버 키
+	public void sendPush(String project_key, String google_project_num, int promotion_pk, String title, String content, String className, List<UserInfo> userList) {
+		
+		System.out.println("google_project_num: " + google_project_num);
+		Sender sender = new Sender(google_project_num);  //구글 코드에서 발급받은 서버 키
 		Message msg = new Message.Builder()
 							.addData("title", title)  //데이터 추가
 							.addData("contents", content)  //데이터 추가
