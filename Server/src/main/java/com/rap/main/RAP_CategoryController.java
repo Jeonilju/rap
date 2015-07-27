@@ -230,6 +230,8 @@ public class RAP_CategoryController {
 			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
 			return "Enter Lcategory";
+		
+		Lcategory = Lcategory.replaceAll(" ", "");
 
 		logger.info("카테고리명 존재");
 
@@ -287,6 +289,8 @@ public class RAP_CategoryController {
 		if (Mcategory.isEmpty())
 			return "Enter Mcategory";
 		logger.info("중분류 존재");
+		
+		Mcategory = Mcategory.replaceAll(" ", "");
 
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 
@@ -360,6 +364,8 @@ return "error";}
 			return "Enter Scategory";
 		logger.info("소분류 존재");
 
+		Scategory = Scategory.replaceAll(" ", "");
+		
 		//대분류
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key, Lcategory);
 
