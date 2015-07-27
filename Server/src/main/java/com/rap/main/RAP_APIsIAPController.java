@@ -20,10 +20,12 @@ import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
 import com.rap.dao.CategorySDao;
 import com.rap.dao.IAPDao;
+import com.rap.dao.PayDao;
 import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.dao.Virtual_MainDao;
 import com.rap.dao.Virtual_SubDao;
+import com.rap.models.IAPInfo;
 import com.rap.models.UserInfo;
 
 @Controller
@@ -57,6 +59,9 @@ public class RAP_APIsIAPController {
 	
 	@Autowired
 	private Virtual_SubDao virtual_subDao;
+	
+	@Autowired
+	private PayDao payDao;
 	
 	@RequestMapping(value = "/APIs/getCategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
@@ -271,31 +276,86 @@ public class RAP_APIsIAPController {
 		return "";
 	}
 	
-	//TODO 미구현	
 	/** 아이템 main 화폐로 구매 */
-	@RequestMapping(value = "/APIs/BuyVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/BuyItemByMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String BuyVirtualMain(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
-			, @RequestParam("item_pk") int item_pk) {
-		logger.info("Sub 가상화폐 추가");
-		//userDao.getVirtual_sub(project_key, User, money);
+			, @RequestParam("item_id") int item_pk) {
+		logger.info("Main 가상화폐 결제");
 		
-		return "";
+		UserInfo info = userDao.selectUser(project_key, User);
+		IAPInfo item_info = iapSDao.selectItem(project_key, item_pk);
+		
+		if(info != null && item_info != null){
+			if(info.getVirtual_main() > item_info.getPrice_main()){
+				
+				userDao.useVirtual_main(project_key, User, item_info.getPrice_main());
+				payDao.create(project_key, User, 1, item_info.getPrice_main(), item_info.getPk());
+				
+				return "200";
+			}
+			else{
+				// 가진 돈보다 작음
+				
+				return "402";
+			}
+		}
+		else{
+			return "401";
+		}
 	}
 	
-	//TODO 미구현
 	/** 아이템 sub 화폐로 구매 */
-	@RequestMapping(value = "/APIs/BuyVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/APIs/BuyItemBySub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String BuyVirtualSub(HttpServletRequest request
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
-			, @RequestParam("item_pk") int item_pk) {
-		logger.info("Sub 가상화폐 추가");
-		//userDao.getVirtual_sub(project_key, User, money);
+			, @RequestParam("item_id") int item_pk) {
+		logger.info("Sub 가상화폐 결제");
 		
-		return "";
+		UserInfo info = userDao.selectUser(project_key, User);
+		IAPInfo item_info = iapSDao.selectItem(project_key, item_pk);
+		
+		if(info != null && item_info != null){
+			if(info.getVirtual_sub() > item_info.getPrice_sub()){
+				
+				userDao.useVirtual_sub(project_key, User, item_info.getPrice_sub());
+				payDao.create(project_key, User, 2, item_info.getPrice_sub(), item_info.getPk());
+				
+				return "200";
+			}
+			else{
+				// 가진 돈보다 작음
+				
+				return "402";
+			}
+		}
+		else{
+			return "401";
+		}
+	}
+	
+	/** 아이템 real 화폐로 구매 */
+	@RequestMapping(value = "/APIs/BuyItemByReal", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String BuyVirtualReal(HttpServletRequest request
+			, @RequestParam("project_key") String project_key
+			, @RequestParam("User") String User
+			, @RequestParam("item_id") int item_pk) {
+		logger.info("Sub 가상화폐 결제");
+		
+		UserInfo info = userDao.selectUser(project_key, User);
+		IAPInfo item_info = iapSDao.selectItem(project_key, item_pk);
+		
+		if(info != null && item_info != null){
+			payDao.create(project_key, User, 3, item_info.getPrice_real(), item_info.getPk());
+			return "200";
+		}
+		else{
+			return "401";
+		}
 	}
 }

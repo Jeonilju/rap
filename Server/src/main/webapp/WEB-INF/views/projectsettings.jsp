@@ -41,7 +41,6 @@ function registerVirtualMain()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -71,7 +70,6 @@ function deleteVirtualMain()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -106,7 +104,6 @@ function registerVirtualSub()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -136,7 +133,6 @@ function deleteVirtualSub()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -149,7 +145,6 @@ function coinlist_db()
 {
 	$('#virtual_main').html("<option value='' selected>주화폐</option>");
 	$('#virtual_sub').html("<option value='' selected>부화폐</option>");
-
 	$.ajax({
 		url : "coinlist_db",
 		type : "POST",
@@ -173,7 +168,6 @@ function coinlist_db()
 				}
 			}
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -184,7 +178,6 @@ function coinlist_db()
 	$('#virtual_main').selectpicker('refresh');
 	$('#virtual_sub').selectpicker('refresh');
 }
-
 function registerGradeMoney()
 {
 	$.ajax({
@@ -215,7 +208,6 @@ function registerGradeMoney()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -244,7 +236,6 @@ function getGradeMoney()
 			document.getElementById('grade_money_input').placeholder = response;
 		}
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -252,9 +243,7 @@ function getGradeMoney()
 		}
 	}
 });
-
 }
-
 function registerGradeTime()
 {
 	$.ajax({
@@ -285,7 +274,6 @@ function registerGradeTime()
 			else
 				alert("에러가 발생했습니다.");
 		},
-
 		error : function(request, status, error) {
 			if (request.status != '0') {
 				alert("code : " + request.status + "\r\nmessage : "
@@ -314,7 +302,6 @@ function getGradeTime()
 			document.getElementById('grade_time_input').placeholder = response;
 		}
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -322,15 +309,9 @@ function getGradeTime()
 		}
 	}
 });
-
 }
-<<<<<<< HEAD
-</script>
-=======
-
 function EditGradeTime()
 {
-
 	$.ajax({
 	url : "EditGradeTime",
 	type : "POST",
@@ -358,7 +339,6 @@ function EditGradeTime()
 		else
 			alert("에러가 발생했습니다.");
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -368,10 +348,8 @@ function EditGradeTime()
 });
 	
 }
-
 function EditGradeMoney()
 {
-
 	$.ajax({
 	url : "EditGradeMoney",
 	type : "POST",
@@ -399,7 +377,6 @@ function EditGradeMoney()
 		else
 			alert("에러가 발생했습니다.");
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -411,7 +388,6 @@ function EditGradeMoney()
 }
 function ProjectEdit()
 {
-
 	$.ajax({
 	url : "ProjectEdit",
 	type : "POST",
@@ -436,7 +412,6 @@ function ProjectEdit()
 		else
 			alert("에러가 발생했습니다.");
 	},
-
 	error : function(request, status, error) {
 		if (request.status != '0') {
 			alert("code : " + request.status + "\r\nmessage : "
@@ -491,7 +466,6 @@ function ProjectEdit()
 	</div>
 </div>
 <!-- /.modal -->
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
@@ -512,10 +486,8 @@ function ProjectEdit()
 					<%
 						MemberInfo member = (MemberInfo) session.getAttribute("currentmember");
 						String email = "";
-
 						if (member != null)
 							email = member.getEmail();
-
 						if (email == null || email.isEmpty()) {
 					%>
 					<!-- 로그인하지 않은 경우 -->
@@ -556,187 +528,6 @@ function ProjectEdit()
 
 					<!-- Item Categorization -->
 					<div class="row">
-<<<<<<< HEAD
-						<div class="panel-body">
-							<div>
-								projectname :
-								<%=projectname%></div>
-							<div>
-								summary :
-								<%=projectsummary%></div>
-							<div>
-								description :
-								<%=projectdescription%></div>
-							<div>
-								projectkey :
-								<%=projectkey%></div>
-						</div>
-					</div>
-
-					<!-- Item Categorization -->
-					<div class="row">
-						<div class="col-lg-12 text-center">
-							<h2>Item Categorization</h2>
-						</div>
-					</div>
-					<div class="row">
-						<!-- Large Category -->
-						<form class="form-inline">
-							<div class="col-md-8" style="padding: 5px">
-								<input type="text" class="form-control"
-									placeholder="Large Category" id="CategoryL" style="width: 200px">
-								<button class="btn" onclick="registerLcategory()">Register</button>
-							</div>
-							<div class="col-md-4" style="padding: 5px">
-								<select id="Lcategory1" name="Lcategory1" class="selectpicker">
-									<option value='' selected>대분류</option>
-									<%
-										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>) request.getAttribute("categoryLlist");
-
-										int categoryLlistcount;
-										if (categoryLlist == null)
-											categoryLlistcount = 0;
-										else
-											categoryLlistcount = categoryLlist.size();
-
-										for (int i = 0; i < categoryLlistcount; i++) {
-											out.println("<option value='" + categoryLlist.get(i).getCategoryL() + "'>"
-													+ categoryLlist.get(i).getCategoryL() + "</option>");
-										}
-									%>
-								</select>
-								<button class="btn" onclick="deleteLcategory('Lcategory1')">Delete</button>
-							</div>
-						</form>
-						<!-- Medium Category -->
-						<form class="form-inline">
-							<div class="col-md-8" style="padding: 5px">
-								<select class="selectpicker" id="Lcategory2" name="Lcategory2"
-									onchange="getMcategory('2')">
-									<option value='' selected>대분류</option>
-									<%
-										for (int i = 0; i < categoryLlistcount; i++) {
-												out.println("<option value='" + categoryLlist.get(i).getCategoryL() + "'>"
-														+ categoryLlist.get(i).getCategoryL() + "</option>");
-											}
-									%>
-								</select> <input type="text" class="form-control"
-									placeholder="Medium Category" id="CategoryM" required
-									data-validation-required-message="Please enter Medium Category."
-									style="width: 200px">
-								<button class="btn" onclick="registerMcategory()">Register</button>
-							</div>
-							<div class="col-md-4" style="padding: 5px">
-								<select class="selectpicker" id="Mcategory2" name="Mcategory2">
-									<option value='' selected>중분류</option>
-								</select>
-								<button class="btn" onclick="deleteMcategory('Mcategory2')">Delete</button>
-							</div>
-						</form>
-
-						<!-- Small Category -->
-						<form class="form-inline">
-							<div class="col-md-8" style="padding: 5px">
-								<select class="selectpicker" id="Lcategory3" name="Lcategory3"
-									onchange="getMcategory('3')">
-									<option value='' selected>대분류</option>
-									<%
-										for (int i = 0; i < categoryLlistcount; i++) {
-												out.println("<option value='" + categoryLlist.get(i).getCategoryL() + "'>"
-														+ categoryLlist.get(i).getCategoryL() + "</option>");
-											}
-									%>
-								</select> <select class="selectpicker" id="Mcategory3" name="Mcategory3"
-									onchange="getScategory('3')">
-									<option value='' selected>중분류</option>
-								</select> <input type="text" class="form-control"
-									placeholder="Small Category" id="CategoryS" required
-									data-validation-required-message="Please enter Small Category."
-									style="width: 200px">
-								<button class="btn" onclick="registerScategory()">Register</button>
-							</div>
-							<div class="col-md-4" style="padding: 5px">
-								<select class="selectpicker" id="Scategory3" name="Scategory3">
-									<option value="" selected>소분류</option>
-								</select>
-								<button class="btn" onclick="deleteScategory('Scategory3')">Delete</button>
-							</div>
-						</form>
-					</div>
-					<!-- Coin List -->
-					<br>
-					<div class="row">
-						<div class="col-lg-12 text-center">
-							<h2>Coin List</h2>
-						</div>
-					</div>
-					<div class="row">
-						<!-- Virtual Main Coin -->
-						<form class="form-inline">
-							<div class="col-md-8">
-								<input placeholder="Main Coin Name" type="text" class="form-control" id="virtual_main_name" style="width: 200px">
-								<textarea placeholder="Description" class="form-control" id="virtual_main_description" style="height: 45px"></textarea>
-								<button class="btn" onclick="registerVirtualMain()">Register</button>
-							</div>
-							<div class="col-md-4">
-								<select id="virtual_main" name="virtual_main" class="selectpicker">
-									<option value='' selected>주화폐</option>
-									<%
-										List<Virtual_MainInfo> mainlist = (List<Virtual_MainInfo>) request.getAttribute("mainlist");
-
-											int mainlistcount;
-											if (mainlist == null)
-												mainlistcount = 0;
-											else
-												mainlistcount = mainlist.size();
-
-											for (int i = 0; i < mainlistcount; i++) {
-												out.println("<option value='" + mainlist.get(i).getName() + "'>"
-														+ mainlist.get(i).getName()  + "</option>");
-											}
-									%>
-								</select>
-								<button class="btn" onclick="deleteVirtualMain()">Delete</button>
-							</div>
-						</form>
-						<!-- Virtual Sub Coin -->
-						<form class="form-inline">
-							<div class="col-md-8">
-								<input placeholder="Sub Coin Name" type="text" class="form-control" id="virtual_sub_name" style="width: 200px">
-								<textarea placeholder="Description" class="form-control" id="virtual_sub_description" style="height: 45px"></textarea>
-								<button class="btn" onclick="registerVirtualSub()">Register</button>
-							</div>
-							<div class="col-md-4">
-								<select id="virtual_sub" name="virtual_sub" class="selectpicker">
-									<option value='' selected>부화폐</option>
-									<%
-										List<Virtual_SubInfo> sublist = (List<Virtual_SubInfo>) request.getAttribute("sublist");
-
-											int sublistcount;
-											if (sublist == null)
-												sublistcount = 0;
-											else
-												sublistcount = sublist.size();
-
-											for (int i = 0; i < sublistcount; i++) {
-												out.println("<option value='" + sublist.get(i).getName() + "'>"
-														+ sublist.get(i).getName()  + "</option>");
-											}
-									%>
-								</select>
-								<button class="btn" onclick="deleteVirtualSub()">Delete</button>
-							</div>
-						</form>
-					</div>
-					<!-- User Class -->
-					<br>
-					<div class="row">
-						<div class="col-lg-12 text-center">
-							<h2>User Grade</h2>
-						</div>
-					</div>
-					<div class="row">
-=======
 						<div class="col-lg-12 text-center">
 							<h2>Item Categorization</h2>
 						</div>
@@ -755,13 +546,11 @@ function ProjectEdit()
 									<option value='' selected>대분류</option>
 									<%
 										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>) request.getAttribute("categoryLlist");
-
 										int categoryLlistcount;
 										if (categoryLlist == null)
 											categoryLlistcount = 0;
 										else
 											categoryLlistcount = categoryLlist.size();
-
 										for (int i = 0; i < categoryLlistcount; i++) {
 											out.println("<option value='" + categoryLlist.get(i).getCategoryL() + "'>"
 													+ categoryLlist.get(i).getCategoryL() + "</option>");
@@ -842,13 +631,11 @@ function ProjectEdit()
 									<option value='' selected>주화폐</option>
 									<%
 										List<Virtual_MainInfo> mainlist = (List<Virtual_MainInfo>) request.getAttribute("mainlist");
-
 											int mainlistcount;
 											if (mainlist == null)
 												mainlistcount = 0;
 											else
 												mainlistcount = mainlist.size();
-
 											for (int i = 0; i < mainlistcount; i++) {
 												out.println("<option value='" + mainlist.get(i).getName() + "'>"
 														+ mainlist.get(i).getName()  + "</option>");
@@ -870,13 +657,11 @@ function ProjectEdit()
 									<option value='' selected>부화폐</option>
 									<%
 										List<Virtual_SubInfo> sublist = (List<Virtual_SubInfo>) request.getAttribute("sublist");
-
 											int sublistcount;
 											if (sublist == null)
 												sublistcount = 0;
 											else
 												sublistcount = sublist.size();
-
 											for (int i = 0; i < sublistcount; i++) {
 												out.println("<option value='" + sublist.get(i).getName() + "'>"
 														+ sublist.get(i).getName()  + "</option>");
@@ -894,7 +679,6 @@ function ProjectEdit()
 						</div>
 					</div>
 					<div class="row">
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
 							<label style="padding:5px">Money</label>
@@ -907,25 +691,15 @@ function ProjectEdit()
 						
 						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
-<<<<<<< HEAD
-							<select class="selectpicker" id="grade_money" name="grade_money" onchange="getGradeMoney()">
-=======
 							<button class="btn pull-right" onclick="EditGradeMoney()">Edit</button>
 							 <input type="text" class="form-control pull-right"
 								placeholder="" id="grade_money_input" style="width: 100px">
 							<select class="selectpicker pull-right" id="grade_money" name="grade_money" onchange="getGradeMoney()">
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 								<option value='' selected>과금액</option>
 								<option value='L'>상</option>
 								<option value='M'>중</option>
 								<option value='S'>하</option>
-<<<<<<< HEAD
-							</select> <input type="text" class="form-control"
-								placeholder="" id="grade_money_input" style="width: 100px">
-							<button class="btn" onclick="EditGradeTime()">Edit</button>
-=======
 							</select>
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 						</form>
 						</div>
 					</div>
@@ -942,25 +716,15 @@ function ProjectEdit()
 						
 						<div class="col-lg-6" style="padding: 5px">
 						<form class="form-inline">
-<<<<<<< HEAD
-							<select class="selectpicker" id="grade_time" name="grade_time" onchange="getGradeTime()">
-=======
 							<button class="btn pull-right" onclick="EditGradeTime()">Edit</button>
 							<input type="text" class="form-control pull-right"
 								placeholder="" id="grade_time_input" style="width: 100px">
 							<select class="selectpicker pull-right" id="grade_time" name="grade_time" onchange="getGradeTime()">
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 								<option value='' selected>사용시간</option>
 								<option value='L'>상</option>
 								<option value='M'>중</option>
 								<option value='S'>하</option>
-<<<<<<< HEAD
-							</select> <input type="text" class="form-control"
-								placeholder="" id="grade_time_input" style="width: 100px">
-							<button class="btn" onclick="EditGradeTime()">Edit</button>
-=======
 							</select> 
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 						</form>
 						</div>
 					</div>
