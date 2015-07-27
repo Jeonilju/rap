@@ -47,15 +47,6 @@ public class RAP_CategoryController {
 
 	@Autowired
 	private CategorySDao categorySDao;
-
-	@Autowired
-	private IAPDao iapDao;
-	
-	@Autowired
-	private ProjectDao projectDao;
-
-	@Autowired
-	private MemberDao memberDao;
 	
 	@Autowired
 	private Virtual_MainDao virtual_MainDao;
@@ -66,6 +57,9 @@ public class RAP_CategoryController {
 	@Autowired
 	private SettingDao settingDao;
 
+	@Autowired
+	private IAPDao iapDao;
+	
 	/** 대분류 리스트 */
 	@RequestMapping(value = "/Lcategory_db", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
 	@ResponseBody
@@ -544,137 +538,6 @@ return "error";}
 		//소분류 삭제
 		categorySDao.delete(project_key, categoryM_pk, Scategory);
 		logger.info("소분류 삭제");
-
-
-		return "200";
-	}
-	
-	/** 아이템 추가 */
-	@RequestMapping(value = "/registerItem", method = RequestMethod.POST)
-	@ResponseBody
-	public String registerItem(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("ItemName") String ItemName, 
-			@RequestParam("ItemDescription") String ItemDescription,
-			@RequestParam("GoogleID") String GoogleID,
-			@RequestParam("ItemPrice") String ItemPrice, 
-			@RequestParam("Lcategory") String Lcategory,
-			@RequestParam("Mcategory") String Mcategory,
-			@RequestParam("Scategory") String Scategory,
-			@RequestParam("Coin") String Coin) {
-		
-		logger.info("registerItem pages");
-
-		// 세션 객체 생성
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
-		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-			return "error";
-
-		String project_key = currentproject.getPk();
-
-		// 프로젝트 키 존재 X
-		if (project_key == null)
-			return "error";
-		if (project_key.isEmpty())
-			return "error";
-
-		logger.info("프로젝트 = "+project_key);
-
-		// 대분류가 정상적으로 들어오지 않은 경우
-		if (Lcategory == null)
-			return "Lcategory";
-		if (Lcategory.isEmpty())
-			return "Lcategory";
-		logger.info("대분류 = "+Lcategory);
-
-		// 중분류가 정상적으로 들어오지 않은 경우
-		if (Mcategory == null)
-			return "Mcategory";
-		if (Mcategory.isEmpty())
-			return "Mcategory";
-		logger.info("중분류 = "+Mcategory);
-
-		// 소분류가 정상적으로 들어오지 않은 경우
-		if (Scategory == null)
-			return "Scategory";
-		if (Scategory.isEmpty())
-			return "Scategory";
-		logger.info("소분류 = "+Scategory);
-
-		// 아이템명이 정상적으로 들어오지 않은 경우
-		if (ItemName == null)
-			return "ItemName";
-		if (ItemName.isEmpty())
-			return "ItemName";
-		logger.info("ItemName = "+ItemName);
-		
-		// 아이템명이 정상적으로 들어오지 않은 경우
-		if (ItemDescription == null)
-			return "ItemDescription";
-		if (ItemDescription.isEmpty())
-			return "ItemDescription";
-		logger.info("ItemDescription = "+ItemDescription);
-
-		//가격 입력값 검증
-		String temp;
-		for(int i=0;i<ItemPrice.length();i++)
-		{
-			temp=ItemPrice.substring(i,i+1);
-			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
-					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
-					temp.equals("8")||temp.equals("9"))
-			{	continue;	}
-			else
-				return "ItemPrice";
-		}
-		logger.info("ItemPrice = "+ItemPrice);
-		
-		//화폐가 정상적으로 입력되지 않은 경우
-		if (Coin == null)
-			return "Coin";
-		if (Coin.isEmpty())
-			return "Coin";
-
-		logger.info("Coin = "+Coin);
-		int price_real=-1;
-		int price_main=-1;
-		int price_sub=-1;
-		
-		//화폐목록
-		if(Coin.equals("실제결제"))
-		{
-			//실제 결제인데 구글아이디가 입력되지 않은 경우
-			if (GoogleID == null)
-				return "GoogleID";
-			if (GoogleID.isEmpty())
-				return "GoogleID";
-			logger.info("GoogleID = "+GoogleID);
-			
-			price_real = Integer.parseInt(ItemPrice);
-		}
-		else
-		{
-			//주화폐 리스트
-			List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key, Coin);
-			
-			//해당 이름의 주화폐까 없는 경우
-			if(mainlist.isEmpty())
-			{
-				//부화폐 리스트
-				List<Virtual_MainInfo> sublist = virtual_MainDao.select(project_key, Coin);
-				//항목이 없으면 에러
-				if(sublist.isEmpty())
-					return "error";
-				else
-					price_sub = Integer.parseInt(ItemPrice);
-			}
-			else
-				price_main = Integer.parseInt(ItemPrice);
-		}
-		
-		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, -1, "", ItemDescription, Lcategory, Mcategory, Scategory);
 		
 		return "200";
 	}

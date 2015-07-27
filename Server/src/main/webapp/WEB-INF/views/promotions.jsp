@@ -22,12 +22,14 @@ $(document).ready(function(){getpromotionlist()});
 
 function getpromotionlist()
 {
+<<<<<<< HEAD
 	var param = "project_name" + "=" + "<%=project_name %>";
 	
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
 		url : "promotionlist_db",
 		type : "POST",
-		data : param,
 		dataType : "JSON",
 		success : function(data) {
 			$('#plist').html("");
@@ -36,15 +38,23 @@ function getpromotionlist()
 			{
 				var list = data.promotionlist;
 				var listLen = list.length;
-				
+				var time,money;
 				for(var i=0;i<listLen;i++)
 				{
+					if(list[i].grade_time == 0) time = '전체';
+					else time = list[i].grade_time+' 등급';
+
+					if(list[i].grade_money == 0) money = '전체';
+					else money = list[i].grade_money+' 등급';
+					
 					$('#plist').append("<div class='panel-heading clearfix'><h3 class='panel-title pull-left'>"
 							+list[i].name
 							+"</h3><i class='fa fa-trash pull-right'></i> <i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></div>"
-							+"<div class='panel-body'><div>"
+							+"<div class='panel-body'><div>summary : "
 							+list[i].summary
-							+"</div></div><div class='panel-footer'><a class='btn btn-default pull-right' href='#'> 푸시 알림 </a> <br><br></div><br>");	
+							+"</div><div>사용시간 등급 : "+time+"</div>"
+							+"<div>과금액 등급 : "+money+"</div>"
+							+"</div><div class='panel-footer'><a class='btn btn-default pull-right' href='#'> 푸시 알림 </a> <br><br></div><br>");	
 				}
 				
 				if(listLen==0)
@@ -148,26 +158,9 @@ function getpromotionlist()
 </body>
 
 <script>
-function formCheck() {
-	var PromotionName = document.getElementById('PromotionName');
-	var PromotionSummary = document.getElementById('PromotionSummary');
+function registerPromotion() {
 
-	if (PromotionName.value == '' || PromotionName.value == null) {
-		alert('PromotionName을 입력하세요');
-		focus.PromotionName;
-		return false;
-	}
-
-	if (PromotionSummary.value == '' || PromotionSummary.value == null) {
-		alert('PromotionSummary를 입력하세요');
-		focus.PromotionSummary;
-		return false;
-	}
-	
-	save();
-	
-}
-
+<<<<<<< HEAD
 function save() {
 
 	var PromotionName = document.getElementById('PromotionName');
@@ -182,13 +175,30 @@ function save() {
 				+ "grade_using" + "=" + grade_using + "&" 
 				+ "grade_time" + "=" + grade_time;
 	
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
-		url : "promotion_db",
+		url : "registerPromotion",
 		type : "POST",
-		data : param,
-		success : function(data) {
-			getpromotionlist();
-			alert('프로모션이 추가되었습니다');
+		data : 
+		{
+			name : document.getElementById('PromotionName').value,
+			summary : document.getElementById('PromotionSummary').value,
+			grade_money : document.promotionAddForm.grade_money.value,
+			grade_time : document.promotionAddForm.grade_time.value
+		},
+		dataType : "text",
+		success : function(response) {
+			if(response == '200')
+			{
+				getpromotionlist();
+				$('#PromotionModal').modal('hide');	
+				alert('프로모션이 등록되었습니다.');
+			}
+			else if(response == 'overlap')
+				alert('같은 이름의 프로모션이 존재합니다.');
+			else
+				alert('에러가 발생했습니다.');
 		}
 	});
 	
@@ -222,20 +232,26 @@ function save() {
 
 							<div class="row">
 								<label>Promotion Name</label> <input type="text"
-									class="form-control" placeholder="Item Name" id="PromotionName"
+									class="form-control" placeholder="Promotion Name" id="PromotionName"
 									name="PromotionName" required
 									data-validation-required-message="Please enter Promotion Name.">
 							</div>
 							<div class="row">
 								<label>Promotion Description</label> <input type="text"
-									class="form-control" placeholder="Item Description"
+									class="form-control" placeholder="Promotion Description"
 									id="PromotionSummary" name="PromotionSummary" required
 									data-validation-required-message="Please enter Promotion Description.">
 							</div>
 							<div class="row" style="padding:5px">
+<<<<<<< HEAD
 								<label>사용횟수</label> 
 								<select class="selectpicker" id="grade_using" name="grade_using">
 									<option value="0" selected>해당없음</option>
+=======
+								<label style="padding-right:7px;padding-left:7px;">과금액</label> 
+								<select class="selectpicker" id="grade_money" name="grade_money">
+									<option value="0" selected>전체</option>
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
 									<option value="3">3 등급</option>
@@ -245,7 +261,11 @@ function save() {
 							<div class="row" style="padding:5px">
 								<label>사용시간</label> 
 								<select class="selectpicker" id="grade_time" name="grade_time">
+<<<<<<< HEAD
 									<option value="0" selected>해당없음</option>
+=======
+									<option value="0" selected>전체</option>
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
 									<option value="3">3 등급</option>
@@ -256,8 +276,7 @@ function save() {
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-success" data-dismiss="modal"
-						onclick="javascript:formCheck();">Add</button>
+					<button type="button" class="btn btn-success" onclick="registerPromotion();">Add</button>
 					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 				</div>
 			</form>

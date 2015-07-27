@@ -1,7 +1,5 @@
 package com.rap.main;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.MemberDao;
+<<<<<<< HEAD
 import com.rap.dao.ProjectDao;
 import com.rap.dao.PromotionDao;
 import com.rap.dao.SettingDao;
@@ -34,22 +32,27 @@ import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
 
 import net.sf.json.JSONObject;
+=======
+import com.rap.models.CategoryLInfo;
+import com.rap.models.MemberInfo;
+import com.rap.models.ProjectInfo;
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 
 @Controller
 public class RAP_MainController {
-	private static final int PROJECTMAXNUM = 3;
 	private static final Logger logger = LoggerFactory.getLogger(RAP_MainController.class);
 
-	@Autowired
-	private ProjectDao projectDao;
 
 	@Autowired
 	private MemberDao memberDao;
 
 	@Autowired
+<<<<<<< HEAD
 	private PromotionDao promotionDao;
 
 	@Autowired
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	private CategoryLDao categoryLDao;
 	
 	@Autowired
@@ -68,6 +71,7 @@ public class RAP_MainController {
 		return "index";
 	}
 
+<<<<<<< HEAD
 	/** 프로젝트 홈 */
 	@RequestMapping(value = "/projecthome", method = RequestMethod.GET)
 	public String MainController_projecthome(HttpServletRequest request) {
@@ -230,6 +234,51 @@ public class RAP_MainController {
 			if (projectlist.get(i).getProject_name().equals(currentprojectname)) {
 				currentproject = projectlist.get(i);
 				break;
+=======
+	/** 회원가입 설정 */
+	@RequestMapping(value = "/signup_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String setMember(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("email") String email, @RequestParam("password") String password,
+			@RequestParam("password_check") String password_check) {
+		logger.info("signup_db pages");
+
+		// 이메일을 입력하지 않았을 때
+		if (email == null)
+			return "email";
+		if (email.isEmpty())
+			return "email";
+		
+		// password 입력하지 않았을 때
+		if (password == null)
+			return "password";
+		if (password.isEmpty())
+			return "password";
+		
+		// password_check 입력하지 않았을 때
+		if (password_check == null)
+			return "password_check";
+		if (password_check.isEmpty())
+			return "password_check";
+
+		// 패스워드 값이 같지 않을 때
+		logger.info(" 패스워드 값이 같지 않을 때");
+		if (!password.equals(password_check)) return "password equality";
+		
+		List<MemberInfo> memberlist = memberDao.select(email);
+
+		// 이메일이 존재하지 않을 때
+		if (memberlist == null || memberlist.isEmpty()) {
+			memberDao.create(email, password);
+		} 
+		else {
+			if (memberlist.get(0).getEmail().equals(email)) {
+				logger.info("중복");
+				return "overlap";
+			} else {
+				logger.info("에러");
+				return "error";
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 			}
 		}
 		
@@ -270,6 +319,7 @@ public class RAP_MainController {
 		request.setAttribute("sublist", sublist);
 
 
+<<<<<<< HEAD
 		return "projectsettings";
 	}
 
@@ -319,6 +369,8 @@ public class RAP_MainController {
 			}
 		}
 
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 		logger.info("회원가입 완료");
 		return "success";
 	}
@@ -436,6 +488,7 @@ public class RAP_MainController {
 		return "test";
 	}
 
+<<<<<<< HEAD
 	/* minsu add */
 	@RequestMapping(value = "/promotions", method = RequestMethod.GET)
 	public String MainController_promotions(HttpServletRequest request) {
@@ -537,6 +590,8 @@ public class RAP_MainController {
 
 	}
 
+=======
+>>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	@RequestMapping(value = "/age", method = RequestMethod.GET)
 	public String MainController_age(HttpServletRequest request) {
 		logger.info("age Page");

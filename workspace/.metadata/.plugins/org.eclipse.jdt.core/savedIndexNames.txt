@@ -16,7 +16,5 @@ INDEX VERSION 1.127+F:\SW memberShip\Ã¢°ú\RAP\SourseCode\rap\workspace\.metadata
 2160365219.index
 346435386.index
 2448899537.index
-3708570157.index
-380272594.index
 1306334084.index
 3515282563.index

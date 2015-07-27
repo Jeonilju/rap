@@ -137,8 +137,7 @@ function deleteProject(projectname)
 							<a onclick="selectProject('<%= projectlist.get(i).getProject_name() %>')"><%= projectlist.get(i).getProject_name() %></a>
 							</h3>
 							<a onclick="deleteProject('<%= projectlist.get(i).getProject_name() %>')"><i class="fa fa-trash pull-right"></i></a>
-							<a><i class="fa fa-edit pull-right" style="margin-right: 4px;"></i></a>
-
+							
 						</div>
 						<div class="panel-body">
 							<div>summary : <%= projectlist.get(i).getSummary() %></div>
