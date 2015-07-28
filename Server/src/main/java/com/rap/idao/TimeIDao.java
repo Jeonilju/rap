@@ -9,11 +9,11 @@ import com.rap.models.TimeInfo;
 
 public interface TimeIDao {
 	void setDataSource(DataSource ds);
-	void create(int Key, String name, Timestamp start, Timestamp end);
+	void create(String Key, String name, Timestamp start, Timestamp end);
 	
-	List<TimeInfo> select(int key);
-	List<TimeInfo> select(int key, Timestamp start, Timestamp end);
+	List<TimeInfo> select(String key);
+	List<TimeInfo> select(String key, Timestamp start, Timestamp end);
 	
 	void deleteAll();
-	void delete(int pk);
+	void delete(String pk);
 }

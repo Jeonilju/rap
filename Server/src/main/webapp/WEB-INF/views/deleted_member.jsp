@@ -99,11 +99,6 @@ $('#container').highcharts({
 
 }
 		
-		
-		
-		
-		
-		
 		</script>
 		
 		
@@ -158,8 +153,6 @@ $('#container').highcharts({
 									</span>
 								</div>
 							</div>
-
-
 
 							<!-- chart -->
 								<div id="container" style="min-width: 200px; height: 400px; margin: 0 auto" ></div>

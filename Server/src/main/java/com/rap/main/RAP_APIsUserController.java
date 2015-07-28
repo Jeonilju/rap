@@ -140,11 +140,12 @@ public class RAP_APIsUserController {
 	@RequestMapping(value = "/APIs/User/time", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String  setUserUsingTime(
-			@RequestParam("key") int key, 
+			@RequestParam("key") String key, 
 			@RequestParam("name") String name,
 			@RequestParam("startTime") long startTime, 
 			@RequestParam("endTime") long endTime){
 		logger.info("APIs: " + "사용 시간 설정");
+		//TODO 사용시간 등급 설정 추가
 		timeDao.create(key, name, new Timestamp(startTime), new Timestamp(endTime));
 		
 		return "";

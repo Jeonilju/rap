@@ -30,64 +30,7 @@ public class Log_timeDao{
 		logger.info("Updated DataSource ---> " + ds);
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
 	}
-	public void create(String project_key, String name,Timestamp start,Timestamp end) {
-		jdbcTemplate.update("insert into log_pay (project_key, name, start, end) values (?, ?, ?, ?, ?)"
-				, new Object[] { project_key, name, start, end});
-	}
-	public List<Log_timeInfo> select(String project_key) {
-		return jdbcTemplate.query("select * from log_pay where project_key = ?",
-		    	new Object[] { project_key }, new RowMapper<Log_timeInfo>() {
-		    	public Log_timeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
-		    	{
-		    		return new Log_timeInfo(
-		    				resultSet.getInt("pk")
-		    				, resultSet.getString("project_key")
-		    				, resultSet.getString("name")
-		    				, resultSet.getTimestamp("start")
-		    				, resultSet.getTimestamp("end")
-		    				);
-		    	}
-		    });
-	}
-	public List<Log_timeInfo> select(String project_key, String name) {
-		return jdbcTemplate.query("select * from log_pay where project_key = ? AND username = ?",
-		    	new Object[] { project_key, name }, new RowMapper<Log_timeInfo>() {
-		    	public Log_timeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
-		    	{
-		    		return new Log_timeInfo(
-		    				resultSet.getInt("pk")
-		    				, resultSet.getString("project_key")
-		    				, resultSet.getString("name")
-		    				, resultSet.getTimestamp("start")
-		    				, resultSet.getTimestamp("end")
-		    				);
-		    		}
-		    });
-	}
-	public List<Log_timeInfo> select(String project_key, int type) {
-		return jdbcTemplate.query("select * from log_pay where project_key = ? AND type = ?",
-		    	new Object[] { project_key, type }, new RowMapper<Log_timeInfo>() {
-		    	public Log_timeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
-		    	{
-		    		return new Log_timeInfo(
-		    				resultSet.getInt("pk")
-		    				, resultSet.getString("project_key")
-		    				, resultSet.getString("name")
-		    				, resultSet.getTimestamp("start")
-		    				, resultSet.getTimestamp("end")
-		    				);
-		    	}
-		    });
-	}
-	public void deleteAll() {
-		jdbcTemplate.update("delete from log_pay");
-	}
-	public void delete(String key) {
-		jdbcTemplate.update("delete from log_pay where project_key = ?", new Object[] { key });
-	}
 	
-	
-
 	public List<OPcountInfo> count_operation_count(String project_key, String type, Timestamp start) {
 		
 		logger.info("count os" + "project_key : " + project_key + "type : " + type + "timestamp : " + start.toString());
