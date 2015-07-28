@@ -61,7 +61,7 @@ function registerVirtualSub()
 		success : function(response) {
 			if(response == "200")
 			{
-				alert("부화폐가 등록되었습니다.");
+				alert("부화폐가 수정되었습니다.");
 				coinlist_db();
 			}
 			else if(response == "virtual_sub_name")
@@ -336,15 +336,19 @@ function ProjectEdit()
 	dataType : "text",
 	success : function(response) {
 		if(response == "project_name")
-			alert("프로젝트 이름을 선택해주세요.");
+			alert("프로젝트 이름을 입력해주세요.");
 		else if(response == "project_summary")
-			alert("프로젝트 요약을 선택해주세요.");
+			alert("프로젝트 요약을 입력해주세요.");
 		else if(response == "project_description")
-			alert("프로젝트 설명을 선택해주세요.");
+			alert("프로젝트 설명을 입력해주세요.");
 		else if(response == "overlap")
 			alert("같은 이름의 프로젝트가 존재합니다.");
 		else if(response == "200")
+			{
+			$('#ProjectEditModal').modal('hide');
 			alert("프로젝트가 수정되었습니다.");
+			location.reload();
+			}
 		else
 			alert("에러가 발생했습니다.");
 	},
@@ -386,50 +390,6 @@ function registerGoogleProjectNum()
 }
 </script>
 
-<!-- ProjectEditModal -->
-<div class="modal fade" id="ProjectEditModal" tabindex="-1" role="dialog"
-	aria-labelledby="ProjectEditModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="ProjectEditModalLabel">Edit Project</h4>
-			</div>
-
-			<form>
-				<div class="modal-body">
-					<div class="form-group">
-						<label>Project Name</label> 
-						<input
-							name="modal_project_name" id="modal_project_name" type="text" class="form-control" placeholder="Project Name" />
-					</div>
-					<div class="form-group">
-						<label>Project Summary</label> 
-						<input
-							name="modal_project_summary" id="modal_project_summary" type="text" class="form-control" placeholder="Project Summary" />
-					</div>
-					<div class="form-group">
-						<label>Project Description</label> 
-						<textarea
-							name="modal_project_description" id="modal_project_description" class="form-control" placeholder="Project Description"></textarea>
-					</div>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">
-						Close</button>											
-					<button type="button"  class="btn btn-primary" onclick="ProjectEdit()">Edit</button>
-						
-				</div>
-			</form>
-
-
-		</div>
-		<!-- /.modal-content -->
-	</div>
-</div>
-<!-- /.modal -->
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
@@ -452,6 +412,14 @@ function registerGoogleProjectNum()
 						String email = "";
 						if (member != null)
 							email = member.getEmail();
+						
+
+						ProjectInfo currentproject = null;
+						String projectname = "";
+						String projectdescription = "";
+						String projectsummary = "";
+						String projectkey = "";
+						
 						if (email == null || email.isEmpty()) {
 					%>
 					<!-- 로그인하지 않은 경우 -->
@@ -466,11 +434,11 @@ function registerGoogleProjectNum()
 
 					<%
 						} else {
-							ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-							String projectname = currentproject.getProject_name();
-							String projectdescription = currentproject.getDescription();
-							String projectsummary = currentproject.getSummary();
-							String projectkey = currentproject.getPk();
+							currentproject = (ProjectInfo) session.getAttribute("currentproject");
+							projectname = currentproject.getProject_name();
+							projectdescription = currentproject.getDescription();
+							projectsummary = currentproject.getSummary();
+							projectkey = currentproject.getPk();
 							//Timestamp date = currentproject.getReg_date();
 					%>
 					<!-- project list 존재하는 경우 -->
@@ -490,12 +458,14 @@ function registerGoogleProjectNum()
 						<div class='panel-footer'></div>	
 					</div>
 
+					<br>
 					<!-- Item Categorization -->
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>Item Categorization</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
 						<!-- Large Category -->
 						<form class="form-inline">
@@ -574,13 +544,14 @@ function registerGoogleProjectNum()
 							</div>
 						</form>
 					</div>
+					<br>
 					<!-- Coin List -->
-					<br><br>
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>Coin List</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
 						<!-- Virtual Main Coin -->
 						<form class="form-inline">
@@ -634,13 +605,14 @@ function registerGoogleProjectNum()
 							</div>
 						</form>
 					</div>
+					<br>
 					<!-- User Class -->
-					<br><br>
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>User Grade</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
 						<div style="padding: 5px">
 							<form class="form-inline">
@@ -663,12 +635,13 @@ function registerGoogleProjectNum()
 						</form>
 						</div>
 					</div>
-					<br><br>
+					<br>
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>Google Project Num</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
 						<form class="form-inline">
 							<label style="padding:5px">Google Project Num</label>
@@ -692,4 +665,47 @@ function registerGoogleProjectNum()
 	</div>
 </body>
 
+<!-- ProjectEditModal -->
+<div class="modal fade" id="ProjectEditModal" tabindex="-1" role="dialog"
+	aria-labelledby="ProjectEditModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="ProjectEditModalLabel">Edit Project</h4>
+			</div>
+
+			<form>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Project Name</label> 
+						<input name="modal_project_name" id="modal_project_name" type="text" class="form-control" placeholder="<%=projectname %>" />
+					</div>
+					<div class="form-group">
+						<label>Project Summary</label> 
+						<input
+							name="modal_project_summary" id="modal_project_summary" type="text" class="form-control" placeholder="<%=projectsummary%>" />
+					</div>
+					<div class="form-group">
+						<label>Project Description</label> 
+						<textarea
+							name="modal_project_description" id="modal_project_description" class="form-control" placeholder="<%=projectdescription%>"></textarea>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						Close</button>											
+					<button type="button"  class="btn btn-primary" onclick="ProjectEdit()">Edit</button>
+						
+				</div>
+			</form>
+
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<!-- /.modal -->
 </html>

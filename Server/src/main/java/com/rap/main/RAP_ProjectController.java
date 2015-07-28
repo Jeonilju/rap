@@ -234,7 +234,12 @@ public class RAP_ProjectController {
 				}
 		}
 		
+		logger.info("프로젝트 정상적으로 수정");
 		projectDao.update(project_name, project_summary, project_description, project.getPk());
+		project.setProject_name(project_name);
+		project.setDescription(project_description);
+		project.setSummary(project_summary);
+		session.setAttribute("currentproject", project);
 
 
 		return "200";
