@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.util.List, com.rap.models.CategoryLInfo"%>
+<%@ page import="java.util.List, com.rap.models.CategoryLInfo, com.rap.models.Virtual_MainInfo, com.rap.models.Virtual_SubInfo"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,16 +51,27 @@ function getItemlist()
 			{
 				var list = response.itemlist;
 				var listLen = list.length;
+				var main = response.main;
+				var sub = response.sub;
+				var price='';
 				
 				for(var i=0;i<listLen;i++)
 				{
+					if(list[i].using_type == 1)
+						price = list[i].price_main.toString() + main.name;
+					else if(list[i].using_type == 2)
+						price = list[i].price_sub.toString() + sub.name;
+					else if(list[i].using_type == 3)
+						price = list[i].price_real.toString() +'원';
+					else
+						price = '';
 					$('#itemlist').append("<div class='panel panel-default'><div class='panel-heading'><div class='row'>");
 					$('#itemlist').append("<div class='col-xs-3 text-center'><i class='fa fa-comments fa-5x'></i></div>");
 					$('#itemlist').append("<div class='col-xs-9'><div class='huge'><h4>"+list[i].iap+"</h4></div>");
-					$('#itemlist').append("</h4></div><div>"+list[i].description+"</div></div></div></div>");
-					$('#itemlist').append("<div><div class='panel-body'><span class='pull-left'>Users Purchased : "+"10,000"+"</span>");
-					$('#itemlist').append("<span class='pull-right'>20 Coins</span>");
-					$('#itemlist').append("<div class='clearfix'></div></div></div></div>");
+					$('#itemlist').append("<div>"+list[i].description+"</div></div></div></div>");
+					$('#itemlist').append("<div class='row'><div class='panel-body'>");
+					$('#itemlist').append("<span class='pull-right'>"+price+"</span>");
+					$('#itemlist').append("<div class='clearfix'></div></div></div></div><div class='panel-footer'></div><br>");
 				}
 			}
 		},

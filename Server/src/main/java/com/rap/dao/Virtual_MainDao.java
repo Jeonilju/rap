@@ -91,6 +91,10 @@ public class Virtual_MainDao implements Virtual_MainIDao{
 		    	}
 		    });
 	}
+	public void update(String project_key, String name, String description) {
+		jdbcTemplate.update("update virtual_main set name=?, description=? where project_key=?",
+				 new Object[] { name, description, project_key});
+	}
 	public void deleteAll() {
 		jdbcTemplate.update("delete from virtual_main");
 	}

@@ -89,9 +89,6 @@ public class RAP_PromotionController {
 		//summary
 		if(summary == null) return "summary";
 		if(summary.isEmpty()) return "summary";
-		//target_activity
-		if(target_activity == null) return "target_activity";
-		if(target_activity.isEmpty()) return "target_activity";
 		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();

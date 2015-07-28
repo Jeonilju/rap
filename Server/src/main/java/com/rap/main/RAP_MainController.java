@@ -31,9 +31,6 @@ public class RAP_MainController {
 	private MemberDao memberDao;
 
 	@Autowired
-	private CategoryLDao categoryLDao;
-
-	@Autowired
 	private SettingDao settingDao;
 	
 	/** RAP 홈 */
@@ -165,35 +162,6 @@ public class RAP_MainController {
 		logger.info("logout Page");
 
 		return "logout";
-	}
-
-	@RequestMapping(value = "/itemmanagement", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	public String MainController_itemmanagement(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		logger.info("itemmanagement Page");
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
-		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
-			response.sendRedirect("projecthome");
-			return "projecthome";
-		}
-
-		String project_key = currentproject.getPk();
-
-		// 프로젝트 키 존재 X
-		if (project_key == null)
-			return "projecthome";
-		if (project_key.isEmpty())
-			return "projecthome";
-
-		// 대분류 리스트
-		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
-
-		request.setAttribute("categoryLlist", categoryLlist);
-
-		return "itemmanagement";
 	}
 
 	@RequestMapping(value = "/analytics", method = RequestMethod.GET)

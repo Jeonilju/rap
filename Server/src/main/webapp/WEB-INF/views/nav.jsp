@@ -36,7 +36,6 @@ if (request.getProtocol().equals("HTTP/1.1"))
 <link
 	href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic"
 	rel="stylesheet" type="text/css">
-
 <!-- Custrom CSS -->
 <link rel="stylesheet" href="./resources/css/bootstrap-select.css">
   
@@ -208,22 +207,20 @@ function signup_db() {
 
 			<form action="signup_db" method="POST" id="joinForm" name="joinForm">
 				<div class="modal-body">
-					<div class="form-group">
-						<label for="email" cond="">Email Address</label> <input
-							name="email" id="email" type="email" required cond=""
-							class="form-control" placeholder="Email Address" />
-						<input type="button" class="btn pull-right"  value="중복확인" onclick='idCheck()'>
+					<div class="form-inline" style="padding:3px">
+							<label for="email"  class="form-inline" style="padding-right:14px;padding-left:14px;">Email Address</label> 
+							<input name="email" id="email" type="email" class="form-control" placeholder="Email Address" style="width:300px"/>
+							<input type="button" class="btn"  value="중복확인" onclick='idCheck()'>
 						<br>
 					</div>
-					<div class="form-group">
-						<label for="password" cond="">Password</label> <input
-							name="password" id="password" type="password" required cond=""
-							class="form-control" placeholder="Password" />
+					<div class="form-inline" style="padding:3px">
+						<label for="password" style="padding-right:29px;padding-left:29px;">Password</label>
+						 <input name="password" id="password" type="password" style="width:390px" class="form-control" placeholder="Password" />
 					</div>
-					<div class="form-group">
+					<div class="form-inline" style="padding:3px">
 						<label for="user_id" cond="">Password Confirm</label> <input
 							name="password_check" id="password_check" type="password" required cond=""
-							class="form-control" placeholder="Password Confirm" />
+							class="form-control" placeholder="Password Confirm" style="width:390px"  />
 					</div>
 				</div>
 

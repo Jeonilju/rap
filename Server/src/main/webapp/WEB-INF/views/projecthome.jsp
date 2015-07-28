@@ -6,6 +6,11 @@
 <html lang="en">
 <!-- 네비게이션바 인클루드 -->
 <jsp:include page="nav.jsp" flush="false" />
+<style>
+body { 
+  font-family: Tahoma, 돋움, Geneva, sans-serif;
+}
+</style>
 <script>
 function selectProject(projectname){
 	
@@ -71,6 +76,11 @@ function deleteProject(projectname)
 		return;
 	}
 }
+
+function register()
+{
+	location.href='projectregister';	
+}
 </script>
 
 <body id="page-top" class="index">
@@ -133,15 +143,16 @@ function deleteProject(projectname)
 					<!-- project list 존재하는 경우 -->
 					<div class="panel panel-default">
 						<div class="panel-heading clearfix">
-							<h3 class="panel-title pull-left">
+							<h3 class="panel-title pull-left" style="cursor:pointer">
 							<a onclick="selectProject('<%= projectlist.get(i).getProject_name() %>')"><%= projectlist.get(i).getProject_name() %></a>
 							</h3>
-							<a onclick="deleteProject('<%= projectlist.get(i).getProject_name() %>')"><i class="fa fa-trash pull-right"></i></a>
+							<a onclick="deleteProject('<%= projectlist.get(i).getProject_name() %>')" style="cursor:pointer"><i class="fa fa-trash pull-right"></i></a>
 							
 						</div>
 						<div class="panel-body">
 							<div>summary : <%= projectlist.get(i).getSummary() %></div>
 							<div>description : <%= projectlist.get(i).getDescription() %></div>
+							<div>projectkey : <%= projectlist.get(i).getPk() %></div>
 						</div>
 						<div class="panel-footer">
 							<div class="pull-right"><%= projectlist.get(i).getReg_date() %></div>
@@ -153,7 +164,7 @@ function deleteProject(projectname)
 						}
 						if(projectcount == 0){
 							out.println("<div class='row'><center>");
-							out.println("<br>등록된 프로젝트가 없습니다.");
+							out.println("<center><button type='button' class='btn btn-success btn-lg' onclick='register();'>프로젝트 등록하기</button></center>");
 							out.println("</center></div>");
 						}
 					}

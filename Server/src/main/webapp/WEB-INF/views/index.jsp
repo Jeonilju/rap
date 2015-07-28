@@ -30,15 +30,15 @@
 			</div>
 
 			<div>
-				<a style="font-weight: bold; font-size: 2em; color: white">
-					virtual store</a> <br>
+				<label style="font-weight: bold; font-size: 2em; color: white">
+					virtual store</label> <br>
 				<br>
 			</div>
 
 			<div>
-				<a style="font-weight: bold; font-size: 1em; color: white">
+				<label style="font-weight: bold; font-size: 1em; color: white">
 					Setting up a virtual store that contains both virtual currencies
-					and virtual goods.</a> <br>
+					and virtual goods.</label> <br>
 				<br>
 			</div>
 
@@ -52,14 +52,14 @@
 			</div>
 
 			<div>
-				<a style="font-weight: bold; font-size: 2em; color: white">
-					Promotions</a> <br>
+				<label style="font-weight: bold; font-size: 2em; color: white">
+					Promotions</label> <br>
 				<br>
 			</div>
 
 			<div>
-				<a style="font-weight: bold; font-size: 1em; color: white">
-					Creating promotions through dashboard.</a> <br>
+				<label style="font-weight: bold; font-size: 1em; color: white">
+					Creating promotions through dashboard.</label> <br>
 				<br>
 			</div>
 
@@ -72,14 +72,14 @@
 			</div>
 
 			<div>
-				<a style="font-weight: bold; font-size: 2em; color: white">
-					Analytics</a> <br>
+				<label style="font-weight: bold; font-size: 2em; color: white">
+					Analytics</label> <br>
 				<br>
 			</div>
 
 			<div>
-				<a style="font-weight: bold; font-size: 1em; color: white">
-					Analyze user according to multiple criteria.</a> <br>
+				<label style="font-weight: bold; font-size: 1em; color: white">
+					Analyze user according to multiple criteria.</label> <br>
 				<br>
 			</div>
 

@@ -1,5 +1,6 @@
 package com.rap.main;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rap.dao.CategoryLDao;
 import com.rap.dao.IAPDao;
 import com.rap.dao.SettingDao;
 import com.rap.dao.Virtual_MainDao;
 import com.rap.dao.Virtual_SubDao;
+import com.rap.models.CategoryLInfo;
 import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
 import com.rap.models.SettingInfo;
@@ -43,6 +46,35 @@ public class RAP_ItemController {
 	@Autowired
 	private SettingDao settingDao;
 
+	@Autowired
+	private CategoryLDao categoryLDao;
+	
+	@RequestMapping(value = "/itemmanagement", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public String MainController_itemmanagement(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		logger.info("itemmanagement Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "projecthome";
+		if (project_key.isEmpty())
+			return "projecthome";
+
+		// 대분류 리스트
+		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
+		request.setAttribute("categoryLlist", categoryLlist);
+		return "itemmanagement";
+	}
 	/** 아이템 추가 */
 	@RequestMapping(value = "/registerItem", method = RequestMethod.POST)
 	@ResponseBody
@@ -232,11 +264,16 @@ public class RAP_ItemController {
 			return "Scategory";
 		logger.info("소분류 존재");
 
+		Virtual_MainInfo main = virtual_MainDao.selectOne(project_key);
+		Virtual_SubInfo sub = virtual_SubDao.selectOne(project_key);
+
 		List<IAPInfo> itemlist = iapDao.select(project_key, Lcategory, Mcategory, Scategory);
 		
 		JSONObject jObject = new JSONObject();
 				
 		jObject.put("itemlist", itemlist);
+		jObject.put("main", main);
+		jObject.put("sub", sub);
 		logger.info(jObject.toString());
 
 		return jObject.toString();
@@ -325,52 +362,12 @@ public class RAP_ItemController {
 		
 		List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key);
 
-		if(mainlist.size() > 0) return "Already Exist";
-		
-		virtual_MainDao.create(project_key, virtual_main_name, 0, "", virtual_main_description);
-		logger.info("주화폐 생성");
-
-		return "200";
-	}
-
-	/** 주화폐 삭제 */
-	@RequestMapping(value = "/deleteVirtualMain", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
-	@ResponseBody
-	public String deleteVirtualMain(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("virtual_main_name") String virtual_main_name) {
-		logger.info("deleteVirtualMain pages");
-		
-		//UTF 인코딩
-		response.setContentType("text/html; charset=utf-8"); 
-
-		// 세션 객체 생성
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
-		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
+		//이미 주화폐가 존재하면 수정
+		if(mainlist.size() == 1)
+			virtual_MainDao.update(project_key, virtual_main_name, virtual_main_description);
+		else
 			return "error";
-
-		String project_key = currentproject.getPk();
-
-		// 프로젝트 키 존재 X
-		if (project_key == null)
-			return "error";
-		if (project_key.isEmpty())
-			return "error";
-
-		logger.info("프로젝트 존재");
-
-		// 이름 존재 X
-		if (virtual_main_name == null)
-			return "virtual_main_name";
-		if (virtual_main_name.isEmpty())
-			return "virtual_main_name";
-
-		logger.info("정상적으로 입력");
-		
-		virtual_MainDao.delete(project_key);
-		logger.info("주화폐 삭제");
+		logger.info("주화폐 수정");
 
 		return "200";
 	}
@@ -420,55 +417,16 @@ public class RAP_ItemController {
 		
 		List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key);
 
-		if(sublist.size() > 0) return "Already Exist";
+		if(sublist.size() == 1)
+			virtual_SubDao.update(project_key, virtual_sub_name, virtual_sub_description);
+		else
+			return "error";
 		
-		virtual_SubDao.create(project_key, virtual_sub_name, 0, "", virtual_sub_description);
-		logger.info("부화폐 생성");
+		logger.info("부화폐 수정");
 
 		return "200";
 	}
 
-	/** 주화폐 삭제 */
-	@RequestMapping(value = "/deleteVirtualSub", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
-	@ResponseBody
-	public String deleteVirtualSub(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("virtual_sub_name") String virtual_sub_name) {
-		logger.info("deleteVirtualSub pages");
-		
-		//UTF 인코딩
-		response.setContentType("text/html; charset=utf-8"); 
-
-		// 세션 객체 생성
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
-		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-			return "error";
-
-		String project_key = currentproject.getPk();
-
-		// 프로젝트 키 존재 X
-		if (project_key == null)
-			return "error";
-		if (project_key.isEmpty())
-			return "error";
-
-		logger.info("프로젝트 존재");
-
-		// 이름 존재 X
-		if (virtual_sub_name == null)
-			return "virtual_main_name";
-		if (virtual_sub_name.isEmpty())
-			return "virtual_main_name";
-
-		logger.info("정상적으로 입력");
-		
-		virtual_SubDao.delete(project_key);
-		logger.info("부화폐 삭제");
-
-		return "200";
-	}
 	/** 사용금액 등급 등록 */
 	@RequestMapping(value = "/registerGradeMoney", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
 	@ResponseBody
