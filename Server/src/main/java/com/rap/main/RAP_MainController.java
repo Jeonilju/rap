@@ -1,5 +1,6 @@
 package com.rap.main;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.MemberDao;
+import com.rap.dao.SettingDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.MemberInfo;
 import com.rap.models.ProjectInfo;
@@ -31,6 +33,9 @@ public class RAP_MainController {
 	@Autowired
 	private CategoryLDao categoryLDao;
 
+	@Autowired
+	private SettingDao settingDao;
+	
 	/** RAP 홈 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String MainController_index(HttpServletRequest request) {
@@ -163,22 +168,25 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/itemmanagement", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	public String MainController_itemmanagement(HttpServletRequest request) {
+	public String MainController_itemmanagement(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("itemmanagement Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
-			return "itemmanagement";
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		String project_key = currentproject.getPk();
 
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "itemmanagement";
+			return "projecthome";
 		if (project_key.isEmpty())
-			return "itemmanagement";
+			return "projecthome";
 
 		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
@@ -203,85 +211,193 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/age", method = RequestMethod.GET)
-	public String MainController_age(HttpServletRequest request) {
+	public String MainController_age(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("age Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "age";
 	}
 
 	@RequestMapping(value = "/sex", method = RequestMethod.GET)
-	public String MainController_sex(HttpServletRequest request) {
+	public String MainController_sex(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("sex Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "sex";
 	}
 
 	@RequestMapping(value = "/operation_count", method = RequestMethod.GET)
-	public String MainController_operation_count(HttpServletRequest request) {
+	public String MainController_operation_count(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("operation_count Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
+		
 		return "operation_count";
 	}
 
 	@RequestMapping(value = "/os", method = RequestMethod.GET)
-	public String MainController_os(HttpServletRequest request) {
+	public String MainController_os(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("os Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "os";
 	}
 
 	@RequestMapping(value = "/new_member", method = RequestMethod.GET)
-	public String MainController_new_member(HttpServletRequest request) {
+	public String MainController_new_member(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("new_member Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "new_member";
 	}
 
 	@RequestMapping(value = "/best_activity", method = RequestMethod.GET)
-	public String MainController_best_activity(HttpServletRequest request) {
+	public String MainController_best_activity(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("best_activityr Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "best_activity";
 	}
 
 	@RequestMapping(value = "/device", method = RequestMethod.GET)
-	public String MainController_device(HttpServletRequest request) {
+	public String MainController_device(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("device Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "device";
 	}
 
 	@RequestMapping(value = "/operation_time", method = RequestMethod.GET)
-	public String MainController_operation_time(HttpServletRequest request) {
+	public String MainController_operation_time(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("operation_time Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "operation_time";
 	}
 
 	@RequestMapping(value = "/promotions_analysis", method = RequestMethod.GET)
-	public String MainController_promotions_analysis(HttpServletRequest request) {
+	public String MainController_promotions_analysis(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("promotions_analysis Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "promotions_analysis";
 	}
 
 	@RequestMapping(value = "/sales_ranking", method = RequestMethod.GET)
-	public String MainController_sales_ranking(HttpServletRequest request) {
+	public String MainController_sales_ranking(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("sales_ranking Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "sales_ranking";
 	}
 
 	@RequestMapping(value = "/deleted_member", method = RequestMethod.GET)
-	public String MainController_deleted_member(HttpServletRequest request) {
+	public String MainController_deleted_member(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("deleted_member Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "deleted_member";
 	}
 
 	@RequestMapping(value = "/IAP_amount", method = RequestMethod.GET)
-	public String MainController_IAP_amount(HttpServletRequest request) {
+	public String MainController_IAP_amount(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("IAP_amount Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
 
 		return "IAP_amount";
 	}

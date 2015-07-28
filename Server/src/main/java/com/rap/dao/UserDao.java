@@ -388,4 +388,20 @@ public class UserDao implements UserIDao {
 		
 		return result;
 	}
+	
+	public List<UserInfo> selectPromotionUserlist(String project_key, int grade_time, int grade_money) {
+		return jdbcTemplate.query("select * from user where project_key = ? and grade_time = ? and grade_money = ?", new Object[] { project_key, grade_time, grade_money },
+				new RowMapper<UserInfo>() {
+					public UserInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+						return new UserInfo(resultSet.getInt("pk"), resultSet.getString("project_key"),
+								resultSet.getString("gcm_id"), resultSet.getInt("grade_time"),
+								resultSet.getInt("grade_money"), resultSet.getDouble("position_let"),
+								resultSet.getDouble("position_lon"), resultSet.getInt("sex"),
+								resultSet.getString("os_version"), resultSet.getString("device_version"),
+								resultSet.getInt("age"), resultSet.getInt("count"), resultSet.getInt("virtual_main"),
+								resultSet.getInt("virtual_sub"), resultSet.getTimestamp("reg_date"));
+					}
+				});
+	}
+	
 }

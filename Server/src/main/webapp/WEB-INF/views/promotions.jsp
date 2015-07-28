@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ page
 	import="java.util.List, com.rap.models.PromotionInfo, com.rap.models.ProjectInfo, com.rap.models.MemberInfo"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,13 +20,31 @@
 
 $(document).ready(function(){getpromotionlist()});
 
+function sendpushmsg(promotionname)
+{
+	if(confirm('해당 프로모션으로 푸시메세지를 전송하시겠습니까?'))
+	{
+		$.ajax({
+			url : "sendpushmsg",
+			type : "POST",
+			data : 
+			{
+				name : promotionname
+			},
+			dataType : "text",
+			success : function(response) {
+				if(response == '200')
+				{
+					alert('푸시 메세지를 전송했습니다.');
+				}
+				else
+					alert('에러가 발생했습니다.');
+			}
+		});
+	}
+}
 function getpromotionlist()
 {
-<<<<<<< HEAD
-	var param = "project_name" + "=" + "<%=project_name %>";
-	
-=======
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
 		url : "getpromotionlist",
 		type : "POST",
@@ -54,7 +72,8 @@ function getpromotionlist()
 							+list[i].summary
 							+"</div><div>사용시간 등급 : "+time+"</div>"
 							+"<div>과금액 등급 : "+money+"</div>"
-							+"</div><div class='panel-footer'><a class='btn btn-default pull-right' href='#'> 푸시 알림 </a> <br><br></div><br>");	
+							+"<div>타겟 액티비티 : "+list[i].target_activity+"</div>"
+							+"</div><div class='panel-footer'><a class='btn btn-default pull-right' onclick=\"sendpushmsg('"+ list[i].name + "')\"> 푸시 알림 </a> <br><br></div><br>");
 				}
 				
 				if(listLen==0)
@@ -161,12 +180,13 @@ function getpromotionlist()
 
 $(function(){
 	$("#addbutton").click(function(){
+		$('#target_activity').html("<option value='' selected>해당없음</option>");
+		
 		$.ajax({
 			url : "getactivitylist",
 			type : "POST",
 			dataType : "JSON",
 			success : function(data) {
-				$('#target_activity').html("<option value='' selected>해당없음</option>");
 				
 				if(data!=null || data!="")
 				{
@@ -175,39 +195,19 @@ $(function(){
 					
 					for(var i=0;i<listLen;i++)
 					{
-						if(list[i].grade_time == 0) time = '전체';
-						else time = list[i].grade_time+' 등급';
-
-						if(list[i].grade_money == 0) money = '전체';
-						else money = list[i].grade_money+' 등급';
-						
-						$('#target_activity').append("<option value = '"+ +"'>"+ +"</option>");	
+						$('#target_activity').append("<option value = '"+list[i]+"'>"+list[i]+"</option>");	
+						$('#target_activity').selectpicker('refresh');
 					}
 					
 				}
 			}
 		});
+		
+		
 	})
 })
 function registerPromotion() {
 
-<<<<<<< HEAD
-function save() {
-
-	var PromotionName = document.getElementById('PromotionName');
-	var PromotionSummary = document.getElementById('PromotionSummary');
-	var grade_time = document.promotionAddForm.grade_time.value;
-	var grade_using = document.promotionAddForm.grade_using.value;
-	var project_name = "<%=project_name %>";
-	
-	var param = "project_name" + "=" + project_name + "&" 
-				+ "name" + "=" + PromotionName.value + "&" 
-				+ "summary" + "=" + PromotionSummary.value + "&" 
-				+ "grade_using" + "=" + grade_using + "&" 
-				+ "grade_time" + "=" + grade_time;
-	
-=======
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 	$.ajax({
 		url : "registerPromotion",
 		type : "POST",
@@ -216,7 +216,8 @@ function save() {
 			name : document.getElementById('PromotionName').value,
 			summary : document.getElementById('PromotionSummary').value,
 			grade_money : document.promotionAddForm.grade_money.value,
-			grade_time : document.promotionAddForm.grade_time.value
+			grade_time : document.promotionAddForm.grade_time.value,
+			target_activity : document.promotionAddForm.target_activity.value
 		},
 		dataType : "text",
 		success : function(response) {
@@ -228,6 +229,12 @@ function save() {
 			}
 			else if(response == 'overlap')
 				alert('같은 이름의 프로모션이 존재합니다.');
+			else if(response == 'name')
+				alert('이름을 입력해주세요.');
+			else if(response == 'summary')
+				alert('요약을 입력해주세요.');
+			else if(response == 'target_activity')
+				alert('타겟 액티비티를 선택해주세요.');
 			else
 				alert('에러가 발생했습니다.');
 		}
@@ -274,15 +281,9 @@ function save() {
 									data-validation-required-message="Please enter Promotion Description.">
 							</div>
 							<div class="row" style="padding:5px">
-<<<<<<< HEAD
-								<label>사용횟수</label> 
-								<select class="selectpicker" id="grade_using" name="grade_using">
-									<option value="0" selected>해당없음</option>
-=======
-								<label style="padding-right:7px;padding-left:7px;">과금액</label> 
+								<label>과금액</label>
 								<select class="selectpicker" id="grade_money" name="grade_money">
 									<option value="0" selected>전체</option>
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
 									<option value="3">3 등급</option>
@@ -292,11 +293,7 @@ function save() {
 							<div class="row" style="padding:5px">
 								<label>사용시간</label> 
 								<select class="selectpicker" id="grade_time" name="grade_time">
-<<<<<<< HEAD
-									<option value="0" selected>해당없음</option>
-=======
 									<option value="0" selected>전체</option>
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 									<option value="1">1 등급</option>
 									<option value="2">2 등급</option>
 									<option value="3">3 등급</option>

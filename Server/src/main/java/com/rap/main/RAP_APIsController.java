@@ -69,7 +69,7 @@ public class RAP_APIsController {
 	public String gcmTest(HttpServletRequest request) {
 		logger.info("APIs Tab");
 		
-		RAP_GCMManager.getInstance().sendPush(1, "제목", "내용", "com.rap.example.RAP_MainActivity" , userDao.select("1"));
+		//RAP_GCMManager.getInstance().sendPush(1, "제목", "내용", "com.rap.example.RAP_MainActivity" , userDao.select("1"));
 		
 		return "APIs";
 	}

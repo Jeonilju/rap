@@ -40,6 +40,41 @@ public class SettingDao implements SettingIDao{
 		jdbcTemplate.update("update setting set grade_moneyl=?,grade_moneym=?,grade_moneys=? where project_key=?", new Object[] {grade_moneyl, grade_moneym, grade_moneys, project_key });
 	}
 	
+	public SettingInfo selectSettingInfo(String project_key){
+		System.out.println("project_key :" + project_key);
+		List<SettingInfo> result= jdbcTemplate.query("select * from setting where project_key = ?",
+		    	new Object[] { project_key }, new RowMapper<SettingInfo>() {
+		    	public SettingInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new SettingInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getInt("grade_moneyl")
+		    				, resultSet.getInt("grade_moneym")
+		    				, resultSet.getInt("grade_moneys")
+		    				, resultSet.getInt("grade_timel")
+		    				, resultSet.getInt("grade_timem")
+		    				, resultSet.getInt("grade_times")
+		    				, resultSet.getString("google_project_num"));
+		    	}
+		    });
+		
+		if(result.size() == 1){
+			System.out.println("Pass");
+			return result.get(0);
+		}
+		else if(result.size() > 1){
+			logger.info("프로젝트 중복키 버그 발생");
+			System.out.println("Fail2");
+			return result.get(0);
+		}
+		else{
+			logger.info("프로젝트 키 없음 버그 발생");
+			System.out.println("Fail3");
+			return null;
+		}
+	}
+	
 	public List<SettingInfo> selectFromProject(String project_key){
 		return jdbcTemplate.query("select * from setting where project_key = ?",
 		    	new Object[] { project_key }, new RowMapper<SettingInfo>() {

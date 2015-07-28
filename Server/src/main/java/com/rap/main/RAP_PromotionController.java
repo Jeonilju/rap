@@ -1,5 +1,6 @@
 package com.rap.main;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +16,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rap.dao.ActivityDao;
 import com.rap.dao.PromotionDao;
+import com.rap.dao.SettingDao;
+import com.rap.dao.UserDao;
+import com.rap.gcm.RAP_GCMManager;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionInfo;
+import com.rap.models.SettingInfo;
+import com.rap.models.UserInfo;
 
 import net.sf.json.JSONObject;
 
@@ -28,11 +35,29 @@ public class RAP_PromotionController {
 	@Autowired
 	private PromotionDao promotionDao;
 
+	@Autowired
+	private ActivityDao activityDao;
+
+	@Autowired
+	private UserDao userDao;
+
+	@Autowired
+	private SettingDao settingDao;
+
 	/* minsu add */
 	@RequestMapping(value = "/promotions", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	public String MainController_promotions(HttpServletRequest request) {
+	public String MainController_promotions(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("promotions Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
+		
 		List<PromotionInfo> promotionlist = (List<PromotionInfo>) request.getAttribute("promotionlist");
 
 		if (promotionlist == null || promotionlist.isEmpty()) {
@@ -58,6 +83,16 @@ public class RAP_PromotionController {
 			) {
 		logger.info("registerPromotion");
 
+		//name
+		if(name == null) return "name";
+		if(name.isEmpty()) return "name";
+		//summary
+		if(summary == null) return "summary";
+		if(summary.isEmpty()) return "summary";
+		//target_activity
+		if(target_activity == null) return "target_activity";
+		if(target_activity.isEmpty()) return "target_activity";
+		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
 		
@@ -100,6 +135,7 @@ public class RAP_PromotionController {
 		List<PromotionInfo> promotionlist = promotionDao.selectFromProject(project_key);
 		jObject.put("promotionlist", promotionlist);
 		logger.info(jObject.toString());
+		
 		return jObject.toString();
 
 	}
@@ -120,10 +156,52 @@ public class RAP_PromotionController {
 		
 		String project_key = project.getPk();
 		
-		List<PromotionInfo> promotionlist = promotionDao.selectFromProject(project_key);
-		jObject.put("promotionlist", promotionlist);
+		List<String> activitylist = activityDao.selectActivityList(project_key);
+		jObject.put("activitylist", activitylist);
 		logger.info(jObject.toString());
+		
 		return jObject.toString();
+
+	}
+	
+	/** 푸시메시지 전송 */
+	@RequestMapping(value = "/sendpushmsg", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String MainController_sendpushmsg(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("name") String name
+			) {
+
+		logger.info("sendpushmsg pages");
+		
+		if(name == null) return "name";
+		if(name.isEmpty()) return "name";
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		
+		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
+		if(project==null) return "error";
+		
+		String project_key = project.getPk();
+		
+		//해당 프로모션
+		PromotionInfo promotion = promotionDao.selectFromProject(project_key, name);
+		if(promotion==null) return "error";
+		
+		int grade_time = promotion.getGrade_time();
+		int grade_money = promotion.getGrade_money();
+
+		//프로젝트 설정
+		SettingInfo setting_info = settingDao.selectSettingInfo(project_key);
+		if(setting_info==null) return "error";
+
+		//사용자 리스트
+		List<UserInfo> userList = userDao.selectPromotionUserlist(project_key, grade_time, grade_money);
+		RAP_GCMManager.getInstance().sendPush(project_key,setting_info.getGoogle_project_num(), promotion.getPk(), promotion.getName(), promotion.getSummary(), promotion.getTarget_activity() , userList);
+		
+		logger.info("푸시 메시지 전송");
+		
+		return "200";
 
 	}
 }
