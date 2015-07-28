@@ -87,7 +87,7 @@ function coinlist_db()
 		dataType : "JSON",
 		success : function(data) {
 			
-			if(data!=null || data!="")
+			if(data!=null && data!="")
 			{
 				var mainlist = data.mainlist;
 				var mainlistLen = mainlist.length;

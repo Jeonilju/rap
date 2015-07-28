@@ -31,7 +31,7 @@
 					data : param,
 					dataType : "JSON",
 					success : function(data) {
-						if (data != null || data != "") {
+						if (data != null && data != "") {
 						var result=data.result;
 						//alert(start_time.toString());
 						modify_chart(result);

@@ -37,7 +37,7 @@ function getItemlist()
 		success : function(response) {	
 			$('#itemlist').html("");
 			
-			if(response!=null){
+			if(response!=null && response!=""){
 				var list = response.itemlist;
 				var listLen = list.length;
 				var main = response.main;
@@ -168,7 +168,7 @@ function getCoinlist()
 		success : function(response) {	
 			$('#coinlist').html("<option value='실제결제' selected>실제결제</option>");
 			
-			if(response!=null){
+			if(response!=null && response!=""){
 				var mainlist = response.mainlist;
 				var mainlistLen = mainlist.length;
 				var sublist = response.sublist;

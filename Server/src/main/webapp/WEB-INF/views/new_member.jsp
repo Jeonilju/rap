@@ -25,7 +25,7 @@ ${demo.css}
 			dataType : "JSON",
 			success : function(data) {
 
-				if (data != null || data != "") {
+				if (data != null && data != "") {
 
 					//var start_time=data.start_time;
 					var result = data.result;

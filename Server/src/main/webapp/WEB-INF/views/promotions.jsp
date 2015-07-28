@@ -52,7 +52,7 @@ function getpromotionlist()
 		success : function(data) {
 			$('#plist').html("");
 			
-			if(data!=null || data!="")
+			if(data!=null && data!="")
 			{
 				var list = data.promotionlist;
 				var listLen = list.length;
@@ -191,7 +191,7 @@ $(function(){
 			dataType : "JSON",
 			success : function(data) {
 				
-				if(data!=null || data!="")
+				if(data!=null && data!="")
 				{
 					var list = data.activitylist;
 					var listLen = list.length;

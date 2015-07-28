@@ -22,7 +22,7 @@ function getOS() {
 		dataType : "JSON",
 		success : function(data) {
 
-			if (data != null || data != "") {
+			if (data != null && data != "") {
 
 				var os = data.OS;
 				var oslen = os.length;
