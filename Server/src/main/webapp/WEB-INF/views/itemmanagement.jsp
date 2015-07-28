@@ -37,18 +37,7 @@ function getItemlist()
 		success : function(response) {	
 			$('#itemlist').html("");
 			
-			if(response=='error')
-			{
-				alert("에러가 발생했습니다.");
-			}
-			else if(response=='Lcategory')
-				alert('대분류를 입력해주세요.');
-			else if(response=='Mcategory')
-				alert('중분류를 입력해주세요.');
-			else if(response=='Scategory')
-				alert('소분류를 입력해주세요.');
-			else
-			{
+			if(response!=null){
 				var list = response.itemlist;
 				var listLen = list.length;
 				var main = response.main;
@@ -179,12 +168,7 @@ function getCoinlist()
 		success : function(response) {	
 			$('#coinlist').html("<option value='실제결제' selected>실제결제</option>");
 			
-			if(response=='error')
-			{
-				alert("에러가 발생했습니다.");
-			}
-			else
-			{
+			if(response!=null){
 				var mainlist = response.mainlist;
 				var mainlistLen = mainlist.length;
 				var sublist = response.sublist;

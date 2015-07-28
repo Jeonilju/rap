@@ -63,15 +63,15 @@ public class RAP_CategoryController {
 		
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
-			return "Project Not Found";
+			return "";
 
 		String project_key = currentproject.getPk();
 
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "Project Not Found";
+			return "";
 		if (project_key.isEmpty())
-			return "Project Not Found";
+			return "";
 
 		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
@@ -98,21 +98,21 @@ public class RAP_CategoryController {
 
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
-			return "rap : 1";
+			return "";
 
 		String project_key = currentproject.getPk();
 
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
 
 		if (categoryLlist == null)
-			return "3";
+			return "";
 
 		logger.info(categoryLlist.toString());
 
@@ -147,21 +147,20 @@ public class RAP_CategoryController {
 
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
-			return "1";
+			return "";
 
 		String project_key = currentproject.getPk();
 
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
-
+			return "";
 		// 대분류 리스트
 		List<CategoryLInfo> categoryLlist = categoryLDao.select(project_key);
 
 		if (categoryLlist == null)
-			return "3";
+			return "";
 
 		logger.info("categoryL = " + categoryL);
 		logger.info("categoryM = " + categoryM);
@@ -176,7 +175,7 @@ public class RAP_CategoryController {
 
 		// 대분류 pk 존재하지 않는 경우
 		if (categoryL_pk == -1)
-			return "4";
+			return "";
 
 		// 중분류 리스트
 		List<CategoryMInfo> categoryMlist = categoryMDao.select(project_key, categoryL_pk);
@@ -190,7 +189,7 @@ public class RAP_CategoryController {
 
 		// 중분류 pk 존재하지 않는 경우
 		if (categoryM_pk == -1)
-			return "5";
+			return "";
 
 		List<CategorySInfo> categorySlist = categorySDao.select(project_key, categoryM_pk);
 

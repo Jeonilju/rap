@@ -67,21 +67,17 @@ if (request.getProtocol().equals("HTTP/1.1"))
 <script language="javascript" charset='UTF-8'>
 
 var count =0;
+var email = '';
 
 function idCheck(){
 	
-	var text = $("#email").val();
-	
-    var regexp = /[0-9a-zA-Z]/; // 숫자,영문,특수문자
-    
-    for(var i=0; i<text.length; i++){
-        if(text.charAt(i) != " " && regexp.test(text.charAt(i)) == false ){
-			alert("한글이나 특수문자는 입력불가능 합니다.");
-			return false;
-		}
-    }
-    
-    count=1;
+	var email = $("#email").val();
+	var regex=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;   
+	  
+	if(regex.test(email) === false) {  
+	    alert("잘못된 이메일 형식입니다.");  
+	    return false;  
+	}
     overlapCheck();
 }
 
@@ -105,8 +101,8 @@ function overlapCheck(){
 		success : function(response) {				
 			if(response=='0')
 			{
-				
 				count = 1;
+				email = $("#email").val();
 				alert("아이디가 중복이 되지 않습니다. 쓰셔도 됩니다.")
 				
 			}
@@ -132,7 +128,7 @@ function overlapCheck(){
 
 function signup_db() {
 
-	if(count==0)
+	if(count==0 || email != $("#email").val())
 	{
 		alert('중복확인을 눌러주세요');
 		return false;

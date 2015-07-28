@@ -231,37 +231,37 @@ public class RAP_ItemController {
 
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
-			return "error";
+			return "";
 
 		String project_key = currentproject.getPk();
 
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "error";
+			return "";
 		if (project_key.isEmpty())
-			return "error";
+			return "";
 
 		logger.info("프로젝트 존재");
 
 		// 대분류가 정상적으로 들어오지 않은 경우
 		if (Lcategory == null)
-			return "Lcategory";
+			return "";
 		if (Lcategory.isEmpty())
-			return "Lcategory";
+			return "";
 		logger.info("대분류 존재");
 
 		// 중분류가 정상적으로 들어오지 않은 경우
 		if (Mcategory == null)
-			return "Mcategory";
+			return "";
 		if (Mcategory.isEmpty())
-			return "Mcategory";
+			return "";
 		logger.info("중분류 존재");
 
 		// 소분류가 정상적으로 들어오지 않은 경우
 		if (Scategory == null)
-			return "Scategory";
+			return "";
 		if (Scategory.isEmpty())
-			return "Scategory";
+			return "";
 		logger.info("소분류 존재");
 
 		Virtual_MainInfo main = virtual_MainDao.selectOne(project_key);
@@ -294,15 +294,15 @@ public class RAP_ItemController {
 
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null)
-			return "error";
+			return "";
 
 		String project_key = currentproject.getPk();
 
 		// 프로젝트 키 존재 X
 		if (project_key == null)
-			return "error";
+			return "";
 		if (project_key.isEmpty())
-			return "error";
+			return "";
 
 		logger.info("프로젝트 존재");
 

@@ -103,14 +103,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		int woman = userDao.countSex(project_key, 0);
 		int man = userDao.countSex(project_key, 1);
@@ -131,13 +131,13 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 		String project_key = currentproject.getPk();
 
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		logger.info("basdgag");
 		int baby = userDao.countAge(project_key, "baby");
@@ -191,14 +191,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
-		project_key = "1";
+		project_key = "";
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<NewmemberInfo> receive = userDao.count_new_member(project_key,
 				type, starttime);
@@ -264,14 +264,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 		project_key = "1";
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<DeletedmembercountInfo> receive = deletedmemberDao
 				.count_deleted_member(project_key, type, starttime);
@@ -334,14 +334,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 		project_key = "1";
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		/*
 		 * List<OPcountInfo>
@@ -424,14 +424,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 		project_key = "1";
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<OPtimeInfo> receive = log_timeDao.count_operation_time(
 				project_key, starttime);
@@ -465,14 +465,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		jObject.put("Device", userDao.countDevice(project_key));
 		return jObject.toString();
@@ -490,14 +490,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		jObject.put("OS", userDao.countOS(project_key));
 		return jObject.toString();
@@ -515,14 +515,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<BestActivityInfo> receive = activityDao
 				.countBest_activity(project_key);
@@ -576,14 +576,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 		project_key = "1";
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<Promotion_resultInfo> receive = promotionResultDao
 				.count_promotion_result(project_key, starttime, promotion);
@@ -625,14 +625,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<SalesRankingInfo> receive = iapDao.countsales_ranking(project_key);
 
@@ -684,14 +684,14 @@ public class RAP_AnalysisController {
 				.getAttribute("currentproject");
 
 		if (currentproject == null)
-			return "1";// 세션에 프로젝트 없는 경우
+			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
 		project_key = "1";
 		if (project_key == null)
-			return "2";
+			return "";
 		if (project_key.isEmpty())
-			return "2";
+			return "";
 
 		List<IAPamountInfo> result = payDao.count_IAP_amount(project_key, type,
 				starttime);

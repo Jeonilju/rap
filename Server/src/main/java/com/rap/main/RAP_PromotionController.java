@@ -125,7 +125,7 @@ public class RAP_PromotionController {
 		HttpSession session = request.getSession();
 		
 		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
-		if(project==null) return "error";
+		if(project==null) return "";
 		
 		String project_key = project.getPk();
 		
@@ -149,7 +149,7 @@ public class RAP_PromotionController {
 		HttpSession session = request.getSession();
 		
 		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
-		if(project==null) return "error";
+		if(project==null) return "";
 		
 		String project_key = project.getPk();
 		
