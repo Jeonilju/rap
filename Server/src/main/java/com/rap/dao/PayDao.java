@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -17,10 +18,17 @@ import org.springframework.stereotype.Repository;
 import com.rap.analysismodels.IAPamountInfo;
 import com.rap.idao.PayIDao;
 import com.rap.models.PayInfo;
+import com.rap.models.SettingInfo;
 
 @Repository
 public class PayDao implements PayIDao{
 	private static final Logger logger = LoggerFactory.getLogger(PayDao.class);
+	
+	@Autowired
+	private SettingDao settingDao;
+	
+	@Autowired
+	private UserDao userDao;
 	
 	private DataSource dataSource;
 	private JdbcTemplate jdbcTemplate;
@@ -33,6 +41,30 @@ public class PayDao implements PayIDao{
 	public void create(String project_key, String name, int type, int price, int item_pk) {
 		jdbcTemplate.update("insert into log_pay (project_key, username, type, price, item_pk) values (?, ?, ?, ?, ?)"
 				, new Object[] { project_key, name, type, price, item_pk});
+		
+		SettingInfo projectInfo = settingDao.selectFromProject(project_key).get(0);
+		int usingMoney = jdbcTemplate.queryForInt("select sum(price) from log_pay where project_key='" + project_key + "' and username = '" + name + "' and type = 3");
+		
+		int money_L = projectInfo.getGrade_moneyl();
+		int money_M = projectInfo.getGrade_moneym();
+		int money_S = projectInfo.getGrade_moneys();
+		
+		if(money_L < usingMoney){
+			// 1등급
+			userDao.setGradeMoney(project_key, name, 1);
+		}
+		else if(money_M < usingMoney){
+			// 2등급
+			userDao.setGradeMoney(project_key, name, 2);
+		}
+		else if(money_S < usingMoney){
+			// 3등급
+			userDao.setGradeMoney(project_key, name, 3);
+		}
+		else{
+			// 4등급
+			userDao.setGradeMoney(project_key, name, 4);
+		}
 	}
 	public List<PayInfo> select(String project_key) {
 		return jdbcTemplate.query("select * from log_pay where project_key = ?",

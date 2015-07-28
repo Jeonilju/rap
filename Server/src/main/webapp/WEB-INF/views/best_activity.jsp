@@ -47,7 +47,6 @@ function getoperation_count() {
 function add_to_table(name,count){
 	
 	//민수 여기 사이즈 체크 필요
-	
 		
 	if (name.length > 0) {
 			var a = name.length;

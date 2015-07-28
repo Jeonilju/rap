@@ -51,13 +51,16 @@ public class UserDao implements UserIDao {
 				new Object[] { gcm_id, project_key, name });
 	}
 
-	public void setGradeTime(String project_key, String name, int grage_time) {
+	public void setGradeTime(String project_key, String name, int grade_time) {
 		isExist(project_key, name);
-
+		jdbcTemplate.update("update user set " + " grade_time = ?" + " where project_key = ? AND name = ?",
+				new Object[] { grade_time, project_key, name });
 	}
 
-	public void setGradeMoney(String project_key, String name, int grage_money) {
+	public void setGradeMoney(String project_key, String name, int grade_money) {
 		isExist(project_key, name);
+		jdbcTemplate.update("update user set " + " grade_money = ?" + " where project_key = ? AND name = ?",
+				new Object[] { grade_money, project_key, name });
 	}
 
 	public void setPosition(String project_key, String name, double position_let, double position_lon) {

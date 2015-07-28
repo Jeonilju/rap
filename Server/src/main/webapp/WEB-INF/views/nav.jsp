@@ -333,20 +333,26 @@ function signup_db() {
 		<div class="collapse navbar-collapse"
 			id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="nav nav-tabs"><a href="index">Home</a></li>
+				<li class="nav nav-tabs">
+					<a href="index">Home</a>
+				</li>
 
-				<li class="dropdown"><a id="drop1" href="#" role="button"
-					class="dropdown-toggle" data-toggle="dropdown">Developer <b
-						class="caret"></b></a>
+				<li class="dropdown">
+					<a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Developer<b class="caret"></b></a>
+					
 					<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-						<li role="presentation"><a role="menuitem" href="projecthome">Project</a></li>
-					</ul></li>
-				<li class="dropdown"><a id="drop2" href="#" role="button"
-					class="dropdown-toggle" data-toggle="dropdown">Resources <b
+						<li role="presentation">
+							<a role="menuitem" href="projecthome">Project</a>
+						</li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a id="drop2" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Resources <b
 						class="caret"></b></a>
+						
 					<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
-						<li role="presentation"><a role="menuitem" href="#">Download</a></li>
-						<li role="presentation"><a role="menuitem" href="#">Documentation</a></li>
+						<li role="presentation"><a role="menuitem" href="sdk">Download</a></li>
+						<li role="presentation"><a role="menuitem" href="ApiDoc">Documentation</a></li>
 					</ul></li>
 				
 				<%

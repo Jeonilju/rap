@@ -4,12 +4,12 @@ import java.sql.Timestamp;
 
 public class TimeInfo {
 	private int pk;
-	private int project_key;
+	private String project_key;
 	private String name;
 	private Timestamp start;
 	private Timestamp end;
 	
-	public TimeInfo(int pk, int project_key, String name, Timestamp start, Timestamp end){
+	public TimeInfo(int pk, String project_key, String name, Timestamp start, Timestamp end){
 		this.pk = pk;
 		this.project_key = project_key;
 		this.name = name;
@@ -23,10 +23,10 @@ public class TimeInfo {
 	public void setPk(int pk) {
 		this.pk = pk;
 	}
-	public int getProject_key() {
+	public String getProject_key() {
 		return project_key;
 	}
-	public void setProject_key(int project_key) {
+	public void setProject_key(String project_key) {
 		this.project_key = project_key;
 	}
 	public String getName() {

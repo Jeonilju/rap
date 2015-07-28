@@ -7,16 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
+import com.rap.iap.RAPIapInfo;
 
 public class RAPBaseActivity extends Activity{
 
@@ -119,11 +126,9 @@ public class RAPBaseActivity extends Activity{
 			Log.i(TAG, "Application Á¾·á");
 			try {
 				HttpRequestBase req = RAPAPIs.Common_AppCount();
-				RAPHttpClient.getInstance().background(req, null);
+				RAPHttpClient.getInstance().background(req, baseCallback);
 				
 				endTime = new Timestamp(System.currentTimeMillis());
-				HttpRequestBase req2 = RAPAPIs.Common_AppTime(startTime.getTime(), endTime.getTime());
-				RAPHttpClient.getInstance().background(req2, null);
 				
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -150,5 +155,20 @@ public class RAPBaseActivity extends Activity{
 		super.onNewIntent(intent);
 	}
 	
-	
+	Handler baseCallback = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			HttpRequestBase req2;
+			try {
+				req2 = RAPAPIs.Common_AppTime(startTime.getTime(), endTime.getTime());
+				RAPHttpClient.getInstance().background(req2, null);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	};
 }
