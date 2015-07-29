@@ -91,6 +91,10 @@ public class Virtual_SubDao implements Virtual_SubIDao{
 		    	}
 		    });
 	}
+	public void update(String project_key, String name, String description) {
+		jdbcTemplate.update("update virtual_sub set name=?, description=? where project_key=?",
+				 new Object[] { name, description, project_key});
+	}
 	public void deleteAll() {
 		jdbcTemplate.update("delete from virtual_sub");
 	}

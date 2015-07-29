@@ -89,9 +89,6 @@ public class RAP_PromotionController {
 		//summary
 		if(summary == null) return "summary";
 		if(summary.isEmpty()) return "summary";
-		//target_activity
-		if(target_activity == null) return "target_activity";
-		if(target_activity.isEmpty()) return "target_activity";
 		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
@@ -128,7 +125,7 @@ public class RAP_PromotionController {
 		HttpSession session = request.getSession();
 		
 		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
-		if(project==null) return "error";
+		if(project==null) return "";
 		
 		String project_key = project.getPk();
 		
@@ -152,7 +149,7 @@ public class RAP_PromotionController {
 		HttpSession session = request.getSession();
 		
 		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
-		if(project==null) return "error";
+		if(project==null) return "";
 		
 		String project_key = project.getPk();
 		

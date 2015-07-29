@@ -23,7 +23,7 @@ function getsales_ranking() {
 		dataType : "JSON",
 		success : function(data) {
 
-			if (data != null || data != "") {
+			if (data != null && data != "") {
 
 				var item_name=data.item_name;
 				var count=data.count;

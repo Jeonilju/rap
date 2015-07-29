@@ -52,11 +52,11 @@ function getpromotionlist()
 		success : function(data) {
 			$('#plist').html("");
 			
-			if(data!=null || data!="")
+			if(data!=null && data!="")
 			{
 				var list = data.promotionlist;
 				var listLen = list.length;
-				var time,money;
+				var time,money,target;
 				for(var i=0;i<listLen;i++)
 				{
 					if(list[i].grade_time == 0) time = '전체';
@@ -65,6 +65,9 @@ function getpromotionlist()
 					if(list[i].grade_money == 0) money = '전체';
 					else money = list[i].grade_money+' 등급';
 					
+					if(list[i].target_activity == '') target = '해당없음';
+					else target = list[i].target_activity;
+					
 					$('#plist').append("<div class='panel-heading clearfix'><h3 class='panel-title pull-left'>"
 							+list[i].name
 							+"</h3><i class='fa fa-trash pull-right'></i> <i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></div>"
@@ -72,7 +75,7 @@ function getpromotionlist()
 							+list[i].summary
 							+"</div><div>사용시간 등급 : "+time+"</div>"
 							+"<div>과금액 등급 : "+money+"</div>"
-							+"<div>타겟 액티비티 : "+list[i].target_activity+"</div>"
+							+"<div>Target Activity : "+target+"</div>"
 							+"</div><div class='panel-footer'><a class='btn btn-default pull-right' onclick=\"sendpushmsg('"+ list[i].name + "')\"> 푸시 알림 </a> <br><br></div><br>");
 				}
 				
@@ -188,7 +191,7 @@ $(function(){
 			dataType : "JSON",
 			success : function(data) {
 				
-				if(data!=null || data!="")
+				if(data!=null && data!="")
 				{
 					var list = data.activitylist;
 					var listLen = list.length;
@@ -280,30 +283,30 @@ function registerPromotion() {
 									id="PromotionSummary" name="PromotionSummary" required
 									data-validation-required-message="Please enter Promotion Description.">
 							</div>
-							<div class="row" style="padding:5px">
-								<label>과금액</label>
-								<select class="selectpicker" id="grade_money" name="grade_money">
-									<option value="0" selected>전체</option>
-									<option value="1">1 등급</option>
-									<option value="2">2 등급</option>
-									<option value="3">3 등급</option>
-									<option value="4">4 등급</option>
-								</select>
+							<div class="row form-inline" style="padding:5px">
+									<label style="padding-left:38px;padding-right:38px">과금액</label>
+									<select class="selectpicker" id="grade_money" name="grade_money">
+										<option value="0" selected>전체</option>
+										<option value="1">1 등급</option>
+										<option value="2">2 등급</option>
+										<option value="3">3 등급</option>
+										<option value="4">4 등급</option>
+									</select>
 							</div>
-							<div class="row" style="padding:5px">
-								<label>사용시간</label> 
-								<select class="selectpicker" id="grade_time" name="grade_time">
-									<option value="0" selected>전체</option>
-									<option value="1">1 등급</option>
-									<option value="2">2 등급</option>
-									<option value="3">3 등급</option>
-									<option value="4">4 등급</option>
-								</select>
+							<div class="row form-inline" style="padding:5px">
+									<label style="padding-left:30px;padding-right:30px">사용시간</label> 
+									<select class="selectpicker" id="grade_time" name="grade_time">
+										<option value="0" selected>전체</option>
+										<option value="1">1 등급</option>
+										<option value="2">2 등급</option>
+										<option value="3">3 등급</option>
+										<option value="4">4 등급</option>
+									</select>
 							</div>
 							
-							<div class="row" style="padding:5px">
-								<label>타겟 액티비티</label> 
-								<select class="selectpicker" id="target_activity" name="target_activity"></select>
+							<div class="row form-inline" style="padding:5px">
+									<label style="padding-left:10px;padding-right:10px">Target Activity</label> 
+									<select class="selectpicker" id="target_activity" name="target_activity"></select>
 							</div>
 						</div>
 					</div>

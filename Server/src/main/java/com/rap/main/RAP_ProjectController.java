@@ -154,6 +154,8 @@ public class RAP_ProjectController {
 		logger.info("프로젝트 생성");
 		projectDao.create(pk, project_name, summary, description, member_pk);
 		settingDao.create(pk, 0, 0, 0, 0, 0, 0, "" );
+		virtual_MainDao.create(pk, "Main 화폐", 0, "", "");
+		virtual_SubDao.create(pk, "Sub 화폐", 0, "", "");
 
 		projectlist = projectDao.selectFromMemberPK(member_pk);
 
@@ -232,7 +234,12 @@ public class RAP_ProjectController {
 				}
 		}
 		
+		logger.info("프로젝트 정상적으로 수정");
 		projectDao.update(project_name, project_summary, project_description, project.getPk());
+		project.setProject_name(project_name);
+		project.setDescription(project_description);
+		project.setSummary(project_summary);
+		session.setAttribute("currentproject", project);
 
 
 		return "200";

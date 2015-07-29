@@ -20,7 +20,7 @@ ${demo.css}
 				dataType : "JSON",
 				success : function(data) {
 
-					if (data != null || data != "") {
+					if (data != null && data != "") {
 
 						var device = data.Device;
 						var devicelen = device.length;

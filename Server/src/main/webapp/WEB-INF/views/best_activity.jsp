@@ -23,7 +23,7 @@ function getoperation_count() {
 		dataType : "JSON",
 		success : function(data) {
 
-			if (data != null || data != "") {
+			if (data != null && data != "") {
 
 				var activity_name=data.activity_name;
 				var count=data.count;

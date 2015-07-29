@@ -32,41 +32,10 @@ function registerVirtualMain()
 				alert("주화폐가 등록되었습니다.");
 				coinlist_db();
 			}
-			else if(response == "Already Exist")
-				alert("주화폐가 이미 존재합니다.");
 			else if(response == "virtual_main_name")
 				alert("이름을 입력해주세요.");
 			else if(response == "virtual_main_description")
 				alert("설명을 입력해주세요.");
-			else
-				alert("에러가 발생했습니다.");
-		},
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-}
-function deleteVirtualMain()
-{
-	$.ajax({
-		url : "deleteVirtualMain",
-		type : "POST",
-		data :
-			{
-			virtual_main_name: document.getElementById('virtual_main').value
-			},
-		dataType : "text",
-		success : function(response) {
-			if(response == "200")
-			{
-				alert("주화폐가 삭제되었습니다.");
-				coinlist_db();
-			}
-			else if(response == "virtual_main_name")
-				alert("주화폐를 선택해주세요.");
 			else
 				alert("에러가 발생했습니다.");
 		},
@@ -92,11 +61,9 @@ function registerVirtualSub()
 		success : function(response) {
 			if(response == "200")
 			{
-				alert("부화폐가 등록되었습니다.");
+				alert("부화폐가 수정되었습니다.");
 				coinlist_db();
 			}
-			else if(response == "Already Exist")
-				alert("부화폐가 이미 존재합니다.");
 			else if(response == "virtual_sub_name")
 				alert("이름을 입력해주세요.");
 			else if(response == "virtual_sub_description")
@@ -112,46 +79,15 @@ function registerVirtualSub()
 		}
 	});
 }
-function deleteVirtualSub()
-{
-	$.ajax({
-		url : "deleteVirtualSub",
-		type : "POST",
-		data :
-			{
-			virtual_sub_name: document.getElementById('virtual_sub').value
-			},
-		dataType : "text",
-		success : function(response) {
-			if(response == "200")
-			{
-				alert("부화페가 삭제되었습니다.");
-				coinlist_db();
-			}
-			else if(response == "virtual_sub_name")
-				alert("부화폐를 선택해주세요.");
-			else
-				alert("에러가 발생했습니다.");
-		},
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
-			}
-		}
-	});
-}
 function coinlist_db()
 {
-	$('#virtual_main').html("<option value='' selected>주화폐</option>");
-	$('#virtual_sub').html("<option value='' selected>부화폐</option>");
 	$.ajax({
 		url : "coinlist_db",
 		type : "POST",
 		dataType : "JSON",
 		success : function(data) {
 			
-			if(data!=null || data!="")
+			if(data!=null && data!="")
 			{
 				var mainlist = data.mainlist;
 				var mainlistLen = mainlist.length;
@@ -160,11 +96,13 @@ function coinlist_db()
 				
 				for(var i=0;i<mainlistLen;i++)
 				{
-					$('#virtual_main').append("<option value='"+mainlist[i].name+"'>"+mainlist[i].name+"</option>");
+					document.getElementById('virtual_main_name').placeholder = mainlist[i].name;
+					document.getElementById('virtual_main_description').value = mainlist[i].description;
 				}
 				for(var i=0;i<sublistLen;i++)
 				{
-					$('#virtual_sub').append("<option value='"+sublist[i].name+"'>"+sublist[i].name+"</option>");
+					document.getElementById('virtual_sub_name').placeholder = sublist[i].name;
+					document.getElementById('virtual_sub_description').value = sublist[i].description;
 				}
 			}
 		},
@@ -175,8 +113,6 @@ function coinlist_db()
 			}
 		}
 	});
-	$('#virtual_main').selectpicker('refresh');
-	$('#virtual_sub').selectpicker('refresh');
 }
 function registerGradeMoney()
 {
@@ -400,15 +336,19 @@ function ProjectEdit()
 	dataType : "text",
 	success : function(response) {
 		if(response == "project_name")
-			alert("프로젝트 이름을 선택해주세요.");
+			alert("프로젝트 이름을 입력해주세요.");
 		else if(response == "project_summary")
-			alert("프로젝트 요약을 선택해주세요.");
+			alert("프로젝트 요약을 입력해주세요.");
 		else if(response == "project_description")
-			alert("프로젝트 설명을 선택해주세요.");
+			alert("프로젝트 설명을 입력해주세요.");
 		else if(response == "overlap")
 			alert("같은 이름의 프로젝트가 존재합니다.");
 		else if(response == "200")
+			{
+			$('#ProjectEditModal').modal('hide');
 			alert("프로젝트가 수정되었습니다.");
+			location.reload();
+			}
 		else
 			alert("에러가 발생했습니다.");
 	},
@@ -420,52 +360,36 @@ function ProjectEdit()
 	}
 });
 }
+
+function registerGoogleProjectNum()
+{
+	$.ajax({
+		url : "registerGoogleProjectNum",
+		type : "POST",
+		data :
+			{
+			google_project_num : document.getElementById('google_project_num_input').value
+			},
+		dataType : "text",
+		success : function(response) {
+			if(response == "google_project_num")
+				alert("값을 입력해주세요.");
+			else if(response == "200")
+				alert("구글 프로젝트 넘버가 등록되었습니다.");
+			else
+				alert("에러가 발생했습니다.");
+		},
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+	
+}
 </script>
 
-<!-- ProjectEditModal -->
-<div class="modal fade" id="ProjectEditModal" tabindex="-1" role="dialog"
-	aria-labelledby="ProjectEditModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="ProjectEditModalLabel">Edit Project</h4>
-			</div>
-
-			<form>
-				<div class="modal-body">
-					<div class="form-group">
-						<label>Project Name</label> 
-						<input
-							name="modal_project_name" id="modal_project_name" type="text" class="form-control" placeholder="Project Name" />
-					</div>
-					<div class="form-group">
-						<label>Project Summary</label> 
-						<input
-							name="modal_project_summary" id="modal_project_summary" type="text" class="form-control" placeholder="Project Summary" />
-					</div>
-					<div class="form-group">
-						<label>Project Description</label> 
-						<textarea
-							name="modal_project_description" id="modal_project_description" class="form-control" placeholder="Project Description"></textarea>
-					</div>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">
-						Close</button>											
-					<button type="button"  class="btn btn-primary" onclick="ProjectEdit()">Edit</button>
-						
-				</div>
-			</form>
-
-
-		</div>
-		<!-- /.modal-content -->
-	</div>
-</div>
-<!-- /.modal -->
 <body id="page-top" class="index">
 	<div class="container">
 		<!-- wrapper -->
@@ -488,6 +412,14 @@ function ProjectEdit()
 						String email = "";
 						if (member != null)
 							email = member.getEmail();
+						
+
+						ProjectInfo currentproject = null;
+						String projectname = "";
+						String projectdescription = "";
+						String projectsummary = "";
+						String projectkey = "";
+						
 						if (email == null || email.isEmpty()) {
 					%>
 					<!-- 로그인하지 않은 경우 -->
@@ -502,18 +434,18 @@ function ProjectEdit()
 
 					<%
 						} else {
-							ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-							String projectname = currentproject.getProject_name();
-							String projectdescription = currentproject.getDescription();
-							String projectsummary = currentproject.getSummary();
-							String projectkey = currentproject.getPk();
+							currentproject = (ProjectInfo) session.getAttribute("currentproject");
+							projectname = currentproject.getProject_name();
+							projectdescription = currentproject.getDescription();
+							projectsummary = currentproject.getSummary();
+							projectkey = currentproject.getPk();
 							//Timestamp date = currentproject.getReg_date();
 					%>
 					<!-- project list 존재하는 경우 -->
 					<div class="panel panel-default">
 						<div class='panel-heading clearfix'>
 							<h3 class='panel-title pull-left'><%=projectname%></h3>				
-							<a data-toggle="modal" data-target="#ProjectEditModal" ><i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></a>
+							<a style="cursor:pointer" data-toggle="modal" data-target="#ProjectEditModal" ><i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></a>
 							
 						</div>
 						<div class='panel-body'>
@@ -526,12 +458,14 @@ function ProjectEdit()
 						<div class='panel-footer'></div>	
 					</div>
 
+					<br>
 					<!-- Item Categorization -->
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>Item Categorization</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
 						<!-- Large Category -->
 						<form class="form-inline">
@@ -610,123 +544,110 @@ function ProjectEdit()
 							</div>
 						</form>
 					</div>
-					<!-- Coin List -->
 					<br>
+					<!-- Coin List -->
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>Coin List</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
 						<!-- Virtual Main Coin -->
 						<form class="form-inline">
-							<div class="col-md-8" style="padding: 5px">
-								<input placeholder="Main Coin Name" type="text" class="form-control" id="virtual_main_name" style="width: 200px">
-								<textarea placeholder="Description" class="form-control" id="virtual_main_description" style="height: 45px"></textarea>
-								<button class="btn" onclick="registerVirtualMain()">Register</button>
-							</div>
-							<div class="col-md-4" style="padding: 5px">
-								<button class="btn pull-right" onclick="deleteVirtualMain()">Delete</button>
-								<select id="virtual_main" name="virtual_main" class="selectpicker pull-right">
-									<option value='' selected>주화폐</option>
-									<%
-										List<Virtual_MainInfo> mainlist = (List<Virtual_MainInfo>) request.getAttribute("mainlist");
-											int mainlistcount;
-											if (mainlist == null)
-												mainlistcount = 0;
-											else
-												mainlistcount = mainlist.size();
-											for (int i = 0; i < mainlistcount; i++) {
-												out.println("<option value='" + mainlist.get(i).getName() + "'>"
-														+ mainlist.get(i).getName()  + "</option>");
-											}
-									%>
-								</select>
+							<div style="padding: 5px">
+							<%
+							List<Virtual_MainInfo> mainlist = (List<Virtual_MainInfo>) request.getAttribute("mainlist");
+							int mainlistcount;
+
+							if (mainlist == null)
+								mainlistcount = 0;
+							else
+								mainlistcount = mainlist.size();
+							
+							if(mainlistcount == 0){
+								out.println("<div class='col-lg-6'><label>Main Coin Name</label><input placeholder='Main Coin Name' type='text' class='form-control' id='virtual_main_name'></div>");
+								out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_main_description' style='height: 45px'></textarea>"
+										+"<button class='btn' onclick='registerVirtualMain()'>Register</button></div>");
+							}
+							else{
+								out.println("<div class='col-lg-6'><label>Main Coin Name</label><input placeholder="+mainlist.get(0).getName()+" type='text' class='form-control' id='virtual_main_name'></div>");
+								out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+mainlist.get(0).getDescription()+" class='form-control' id='virtual_main_description' style='height: 45px'></textarea>"
+										+"<button class='btn' onclick='registerVirtualMain()'>Register</button></div>");
+							}
+								
+							%>
 							</div>
 						</form>
 						<!-- Virtual Sub Coin -->
 						<form class="form-inline">
-							<div class="col-md-8" style="padding: 5px">
-								<input placeholder="Sub Coin Name" type="text" class="form-control" id="virtual_sub_name" style="width: 200px">
-								<textarea placeholder="Description" class="form-control" id="virtual_sub_description" style="height: 45px"></textarea>
-								<button class="btn" onclick="registerVirtualSub()">Register</button>
-							</div>
-							<div class="col-md-4" style="padding: 5px">
-								<button class="btn pull-right" onclick="deleteVirtualSub()">Delete</button>
-								<select id="virtual_sub" name="virtual_sub" class="selectpicker pull-right">
-									<option value='' selected>부화폐</option>
-									<%
-										List<Virtual_SubInfo> sublist = (List<Virtual_SubInfo>) request.getAttribute("sublist");
-											int sublistcount;
-											if (sublist == null)
-												sublistcount = 0;
-											else
-												sublistcount = sublist.size();
-											for (int i = 0; i < sublistcount; i++) {
-												out.println("<option value='" + sublist.get(i).getName() + "'>"
-														+ sublist.get(i).getName()  + "</option>");
-											}
-									%>
-								</select>
+							<div style="padding: 5px">
+							
+							<%
+								List<Virtual_SubInfo> sublist = (List<Virtual_SubInfo>) request.getAttribute("sublist");
+								int sublistcount;
+								if (sublist == null)
+									sublistcount = 0;
+								else
+									sublistcount = sublist.size();
+									
+								if(sublistcount == 0){
+									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder='Sub Coin Name' type='text' class='form-control' id='virtual_sub_name'></div>");
+									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
+											+"<button class='btn' onclick='registerVirtualSub()'>Register</button></div>");
+								}
+								else{
+									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder="+sublist.get(0).getName()+" type='text' class='form-control' id='virtual_sub_name'></div>");
+									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+sublist.get(0).getDescription()+" class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
+											+"<button class='btn' onclick='registerVirtualSub()'>Register</button></div>");
+								}
+							%>
 							</div>
 						</form>
 					</div>
-					<!-- User Class -->
 					<br>
+					<!-- User Class -->
 					<div class="row">
 						<div class="col-lg-12 text-center">
 							<h2>User Grade</h2>
 						</div>
 					</div>
+					<hr class="star-primary"></hr>
 					<div class="row">
-						<div class="col-lg-6" style="padding: 5px">
-						<form class="form-inline">
-							<label style="padding:5px">Money</label>
-							<input type="text" class="form-control" placeholder="상" id="grade_moneyL" style="width: 70px">
-							<input type="text" class="form-control" placeholder="중" id="grade_moneyM" style="width: 70px">
-							<input type="text" class="form-control" placeholder="하" id="grade_moneyS" style="width: 70px">
-							<button class="btn" onclick="registerGradeMoney()">Register</button>
-						</form>
-						</div>
-						
-						<div class="col-lg-6" style="padding: 5px">
-						<form class="form-inline">
-							<button class="btn pull-right" onclick="EditGradeMoney()">Edit</button>
-							 <input type="text" class="form-control pull-right"
-								placeholder="" id="grade_money_input" style="width: 100px">
-							<select class="selectpicker pull-right" id="grade_money" name="grade_money" onchange="getGradeMoney()">
-								<option value='' selected>과금액</option>
-								<option value='L'>상</option>
-								<option value='M'>중</option>
-								<option value='S'>하</option>
-							</select>
-						</form>
+						<div style="padding: 5px">
+							<form class="form-inline">
+								<label style="padding:5px">Money</label>
+								<input type="text" class="form-control" placeholder="상" id="grade_moneyL">
+								<input type="text" class="form-control" placeholder="중" id="grade_moneyM">
+								<input type="text" class="form-control" placeholder="하" id="grade_moneyS">
+								<button class="btn" onclick="registerGradeMoney()">Register</button>
+							</form>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-6" style="padding: 5px">
+						<div style="padding: 5px">
 						<form class="form-inline">
 							<label style="padding:5px">Time</label>
-							<input type="text" class="form-control" placeholder="상" id="grade_timeL" style="width: 70px">
-							<input type="text" class="form-control" placeholder="중" id="grade_timeM" style="width: 70px">
-							<input type="text" class="form-control" placeholder="하" id="grade_timeS" style="width: 70px">
+							<input type="text" class="form-control" placeholder="상" id="grade_timeL">
+							<input type="text" class="form-control" placeholder="중" id="grade_timeM">
+							<input type="text" class="form-control" placeholder="하" id="grade_timeS">
 							<button class="btn" onclick="registerGradeTime()">Register</button>
 						</form>
 						</div>
-						
-						<div class="col-lg-6" style="padding: 5px">
-						<form class="form-inline">
-							<button class="btn pull-right" onclick="EditGradeTime()">Edit</button>
-							<input type="text" class="form-control pull-right"
-								placeholder="" id="grade_time_input" style="width: 100px">
-							<select class="selectpicker pull-right" id="grade_time" name="grade_time" onchange="getGradeTime()">
-								<option value='' selected>사용시간</option>
-								<option value='L'>상</option>
-								<option value='M'>중</option>
-								<option value='S'>하</option>
-							</select> 
-						</form>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<h2>Google Project Num</h2>
 						</div>
+					</div>
+					<hr class="star-primary"></hr>
+					<div class="row">
+						<form class="form-inline">
+							<label style="padding:5px">Google Project Num</label>
+							<input type="text" class="form-control" placeholder="상" id="google_project_num_input">
+							<button class="btn" onclick="registerGoogleProjectNum()">Register</button>
+						</form>
 					</div>
 					<br><br>
 					<%
@@ -744,4 +665,47 @@ function ProjectEdit()
 	</div>
 </body>
 
+<!-- ProjectEditModal -->
+<div class="modal fade" id="ProjectEditModal" tabindex="-1" role="dialog"
+	aria-labelledby="ProjectEditModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="ProjectEditModalLabel">Edit Project</h4>
+			</div>
+
+			<form>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Project Name</label> 
+						<input name="modal_project_name" id="modal_project_name" type="text" class="form-control" placeholder="<%=projectname %>" />
+					</div>
+					<div class="form-group">
+						<label>Project Summary</label> 
+						<input
+							name="modal_project_summary" id="modal_project_summary" type="text" class="form-control" placeholder="<%=projectsummary%>" />
+					</div>
+					<div class="form-group">
+						<label>Project Description</label> 
+						<textarea
+							name="modal_project_description" id="modal_project_description" class="form-control" placeholder="<%=projectdescription%>"></textarea>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">
+						Close</button>											
+					<button type="button"  class="btn btn-primary" onclick="ProjectEdit()">Edit</button>
+						
+				</div>
+			</form>
+
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
+<!-- /.modal -->
 </html>

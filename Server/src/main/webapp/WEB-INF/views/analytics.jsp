@@ -3,7 +3,6 @@
 <!-- 상단 네비게이션 바 인클루드 -->
 <jsp:include page="nav.jsp" flush = "false" />
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <style type="text/css">
 	${demo.css}
 </style>

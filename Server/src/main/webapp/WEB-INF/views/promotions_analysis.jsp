@@ -10,16 +10,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
-
-<<<<<<< HEAD
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-=======
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 		<style type="text/css">
 ${demo.css}
 		</style>
-		
-        
 <%
 	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
 %>
@@ -39,13 +32,9 @@ function getpromotionlist()
 		data : param,
 		dataType : "JSON",
 		success : function(data) {
-<<<<<<< HEAD
-			$('#plist').html("");
-=======
 			$('#promotion_list').html("");
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 			
-			if(data!=null || data!="")
+			if(data!=null && data!="")
 			{
 				var list = data.promotionlist;
 				var listLen = list.length;
@@ -68,14 +57,10 @@ function getpromotionlist()
 			
 				
 			}
-<<<<<<< HEAD
-=======
 			
 			$('#promotion_list').selectpicker('refresh');
->>>>>>> 4b25dd1172f00a37fa2d64c6934849e83e66ce4e
 		}
 	});
-	
 }
 
 
@@ -95,7 +80,7 @@ function getoperation_count() {
 		dataType : "JSON",
 		success : function(data) {
 
-			if (data != null || data != "") {
+			if (data != null && data != "") {
 
 				//var start_time=data.start_time;
 				var result=data.result;

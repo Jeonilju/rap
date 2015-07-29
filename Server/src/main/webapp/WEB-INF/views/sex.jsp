@@ -6,8 +6,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Highcharts Example</title>
 
-<script type="text/javascript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <style type="text/css">
 ${
 demo
@@ -33,7 +31,7 @@ demo
 			dataType : "JSON",
 			success : function(data) {
 
-				if (data != null || data != "") {
+				if (data != null && data != "") {
 
 					var man = data.man;
 					var woman = data.woman;
