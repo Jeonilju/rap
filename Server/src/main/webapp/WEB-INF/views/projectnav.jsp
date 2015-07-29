@@ -11,23 +11,28 @@ else projectname = project.getProject_name();
 %>
 <script type="text/javascript">
 
+function aaa()
+{
+	$("#appinfo2").attr('class','accordion-body collapse');			
+	$("#iapinfo2").attr('class','accordion-body collapse');
+	
+}
 
-	$("#userinfo2").click(function(){
-				$("#appinfo2").attr('class','accordion-body collapse');			
-				$("#iapinfo2").attr('class','accordion-body collapse');
-			}	
-	);
-	$("#appinfo2").click(function(){
-		alert("hey");
-		$("#userinfo2").attr('class','accordion-body collapse');			
-		$("#iapinfo2").attr('class','accordion-body collapse');
-	}	
-);
-	$("#iapinfo2").click(function(){
-		$("#appinfo2").attr('class','accordion-body collapse');			
-		$("#userinfo2").attr('class','accordion-body collapse');
-	}	
-);
+function bbb()
+{
+	$("#userinfo2").attr('class','accordion-body collapse');			
+	$("#iapinfo2").attr('class','accordion-body collapse');
+	
+}
+
+function ccc()
+{
+	$("#appinfo2").attr('class','accordion-body collapse');			
+	$("#userinfo2").attr('class','accordion-body collapse');
+	
+}
+
+	
 	
 	
 
@@ -62,7 +67,7 @@ else projectname = project.getProject_name();
 		
 												<div class="accordion-group">
 													<div class="accordion-heading equipamento">
-														<a class="accordion-toggle collapse" data-toggle="collapse" id="userinfo" 
+														<a class="accordion-toggle collapse" data-toggle="collapse" id="userinfo" onclick="aaa()"
 															href="#userinfo2" style="padding-left:10px" >Basic User Info</a>
 		
 														<div class="accordion-body collapse"  id="userinfo2">
@@ -81,7 +86,7 @@ else projectname = project.getProject_name();
 														<!-- Pontos -->
 													</div>
 													<div class="accordion-heading equipamento">
-														<a class="accordion-toggle collapse" data-toggle="collapse"  id="appinfo" 
+														<a class="accordion-toggle collapse" data-toggle="collapse"  id="appinfo" onclick="bbb()"
 															href="#appinfo2"  style="padding-left:10px">Application Info</a>
 		
 														<div class="accordion-body collapse" id="appinfo2">
@@ -103,7 +108,7 @@ else projectname = project.getProject_name();
 													</div>
 		
 													<div class="accordion-heading equipamento" >
-														<a class="accordion-toggle" data-toggle="collapse"  id="iapinfo" 
+														<a class="accordion-toggle" data-toggle="collapse"  id="iapinfo" onclick="ccc()"
 															href="#iapinfo2"  style="padding-left:10px">IAP Info</a>
 		
 														<div class="accordion-body collapse"   id="iapinfo2">
