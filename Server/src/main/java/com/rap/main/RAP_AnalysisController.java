@@ -503,6 +503,7 @@ public class RAP_AnalysisController {
 		return jObject.toString();
 	}
 
+	
 	@RequestMapping(value = "/best_activity_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String Best_activity_Get(HttpServletRequest request,

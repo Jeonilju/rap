@@ -15,6 +15,12 @@ ${demo.css}
         
 		
 <script type="text/javascript">
+$(function() {
+	$("#basicuserinfo").attr('class','accordion-body collapse in');
+	$("#appinfo2").attr('class','accordion-body collapse in');
+	});
+
+
 $( document ).ready(getoperation_count());
 function getoperation_count() {
 	$.ajax({
@@ -84,7 +90,7 @@ function add_to_table(name,count){
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-					<jsp:include page="sidebar-nav.jsp" flush="false" />
+					<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->
