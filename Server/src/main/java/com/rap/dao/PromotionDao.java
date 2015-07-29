@@ -33,7 +33,7 @@ public class PromotionDao implements PromotionIDao{
 	}
 
 	public List<PromotionInfo> selectFromProject(String project_key){
-		return jdbcTemplate.query("select * from promotion where project_key = ?",
+		return jdbcTemplate.query("select * from promotion where project_key = ? order by reg_date desc",
 		    	new Object[] { project_key }, new RowMapper<PromotionInfo>() {
 		    	public PromotionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -50,7 +50,7 @@ public class PromotionDao implements PromotionIDao{
 	}
 	
 	public PromotionInfo selectFromProject(String project_key, String promotion_name){
-		List<PromotionInfo> result= jdbcTemplate.query("select * from promotion where project_key = ? and name = ?",
+		List<PromotionInfo> result= jdbcTemplate.query("select * from promotion where project_key = ? and name = ? order by reg_date desc",
 		    	new Object[] { project_key,promotion_name }, new RowMapper<PromotionInfo>() {
 		    	public PromotionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -80,7 +80,7 @@ public class PromotionDao implements PromotionIDao{
 	}
 	
 	public List<PromotionInfo> selectAll(){
-		return jdbcTemplate.query("select * from promotion",
+		return jdbcTemplate.query("select * from promotion order by reg_date desc",
 		    	new Object[] {  }, new RowMapper<PromotionInfo>() {
 		    	public PromotionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -96,8 +96,8 @@ public class PromotionDao implements PromotionIDao{
 		    });
 	}
 
-	public void update(String name, String summary, int grade_time, int grade_money, String project_key){
-		jdbcTemplate.update("update promotion set name=?,summary=?,grade_time=?,grade_money=? where project_key=?", new Object[] {name, summary, grade_time,grade_money, project_key });
+	public void update(String name, String summary, int grade_time, int grade_money, int pk){
+		jdbcTemplate.update("update promotion set name=?,summary=?,grade_time=?,grade_money=? where pk=?", new Object[] {name, summary, grade_time,grade_money, pk });
 	}
 	
 	public void deleteAll() {

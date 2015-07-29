@@ -26,6 +26,7 @@ import com.rap.dao.Virtual_SubDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.MemberInfo;
 import com.rap.models.ProjectInfo;
+import com.rap.models.SettingInfo;
 import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
 
@@ -153,7 +154,8 @@ public class RAP_ProjectController {
 
 		logger.info("프로젝트 생성");
 		projectDao.create(pk, project_name, summary, description, member_pk);
-		settingDao.create(pk, 0, 0, 0, 0, 0, 0, "" );
+		//시간 5 3 1, 돈 30000 20000 10000
+		settingDao.create(pk, 30000, 20000, 10000, 5, 3, 1, "" );
 		virtual_MainDao.create(pk, "Main 화폐", 0, "", "");
 		virtual_SubDao.create(pk, "Sub 화폐", 0, "", "");
 
@@ -292,7 +294,7 @@ public class RAP_ProjectController {
 		
 		if(currentproject == null)
 		{
-			return "projecthome";
+			return "index";
 		}
 		
 		String project_key = currentproject.getPk();
@@ -305,12 +307,41 @@ public class RAP_ProjectController {
 		// 부화폐 리스트
 		List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key);
 		
+		//프로젝트 설정
+		SettingInfo setting = settingDao.selectSettingInfo(project_key);
+		
 		request.setAttribute("categoryLlist", categoryLlist);
 		request.setAttribute("mainlist", mainlist);
 		request.setAttribute("sublist", sublist);
+		request.setAttribute("setting", setting);
 
 
 		return "projectsettings";
 	}
 	
+	/** 구글 프로젝트 번호 수정 */
+	@RequestMapping(value = "/registerGoogleProjectNum", method = RequestMethod.POST)
+	@ResponseBody
+	public String registerGoogleProjectNum(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("google_project_num") String google_project_num) {
+		logger.info("registerGoogleProjectNum");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+		
+		if(google_project_num == null) return "google_project_num";
+		if(google_project_num.isEmpty()) return "google_project_num";
+		
+		if(currentproject == null)
+		{
+			return "error";
+		}
+		logger.info("프로젝트 존재");
+		
+		settingDao.updateGoogleProjectNum(google_project_num, currentproject.getPk());
+
+		return "200";
+
+	}
 }

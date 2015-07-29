@@ -39,6 +39,9 @@ public class SettingDao implements SettingIDao{
 	public void updateGradeMoney(int grade_moneyl,int grade_moneym,int grade_moneys,String project_key){
 		jdbcTemplate.update("update setting set grade_moneyl=?,grade_moneym=?,grade_moneys=? where project_key=?", new Object[] {grade_moneyl, grade_moneym, grade_moneys, project_key });
 	}
+	public void updateGoogleProjectNum(String google_project_num,String project_key){
+		jdbcTemplate.update("update setting set google_project_num=? where project_key=?", new Object[] {google_project_num, project_key });
+	}
 	
 	public SettingInfo selectSettingInfo(String project_key){
 		System.out.println("project_key :" + project_key);
