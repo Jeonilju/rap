@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -97,7 +98,7 @@ public class MainActivity extends RAPBaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				
+				ShowDig("사용하지 않는 메뉴입니다.");
 			}
 		});
 	}
@@ -193,4 +194,20 @@ public class MainActivity extends RAPBaseActivity {
 		alert.setTitle("잔액 조회");
 		alert.show();
 	}
+	
+	private void ShowDig(String message) {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton("확인",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("안내");
+		alert.show();
+	}
+
 }

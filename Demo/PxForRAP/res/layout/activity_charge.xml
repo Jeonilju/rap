@@ -2,25 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="#6b746f">
      
     <LinearLayout 
         android:id="@+id/charge_layout_menu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
         
         <Button 
             android:id="@+id/charge_btn_main"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:background="#4596c2"
+            android:textColor="#ffffff"
             android:text=""/>
         
         <Button 
             android:id="@+id/charge_btn_sub"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="180dp"
+            android:layout_height="50dp"
+            android:background="#4596c2"
+            android:textColor="#ffffff"
             android:text=""/>
         
     </LinearLayout>
@@ -29,14 +35,14 @@
         android:id="@+id/charge_list_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/charge_layout_menu"
-        android:visibility="gone"/>
+        android:layout_above="@id/charge_layout_menu"
+        android:visibility="visible"/>
     
     <ListView 
         android:id="@+id/charge_list_sub"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/charge_layout_menu"
+        android:layout_above="@id/charge_layout_menu"
         android:visibility="gone"/>
 
 </RelativeLayout>

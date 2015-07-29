@@ -394,6 +394,12 @@ public class RAPAPIs {
 	///////////////////////														////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	public static HttpRequestBase getIAP_AllItems() {
+		String url = (RAPHttpClient.getBaseURL() + "/APIs/getIAP_AllItems?project_key=" + RAPSetting.getRAPKey());
+		HttpGet httpGet = new HttpGet(url);
+		return httpGet;
+	}
+	
 	public static HttpRequestBase getIAP_CategoryL(String CategoryL) {
 		String url = (RAPHttpClient.getBaseURL() + "/APIs/getIAP_CategoryL?project_key=" + RAPSetting.getRAPKey() + "&CategoryL=" + CategoryL );
 		HttpGet httpGet = new HttpGet(url);

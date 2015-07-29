@@ -7,13 +7,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.dangzicforrap.MainActivity"
-    android:background="@drawable/main_background" >
+    android:background="#6b746f" >
 
     <TextView
         android:id="@+id/main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="오늘의 PX" 
+        android:text="오늘의 PX"
         android:textSize="20sp"
         android:textColor="#ffffff"
         android:layout_centerHorizontal="true"
@@ -31,6 +31,8 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_margin="10dp"
+            android:background="#4596c2"
+            android:textColor="#ffffff"
             android:text="물건 구매하기" />
 
         <Button
@@ -38,6 +40,8 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_margin="10dp"
+            android:background="#4596c2"
+            android:textColor="#ffffff"
             android:layout_toRightOf="@id/main_btn_buy"
             android:text="잔여 포인트 \n조회" />
 
@@ -45,6 +49,8 @@
             android:id="@+id/main_btn_charge"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:background="#4596c2"
+            android:textColor="#ffffff"
             android:layout_below="@id/main_btn_buy"
             android:layout_margin="10dp"
             android:text="포인트 충전" />
@@ -55,6 +61,8 @@
             android:layout_height="120dp"
             android:layout_below="@id/main_btn_buy"
             android:layout_margin="10dp"
+            android:background="#4596c2"
+            android:textColor="#ffffff"
             android:layout_toRightOf="@id/main_btn_charge"
             android:text="구매 내역" />
         

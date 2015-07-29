@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.rap.analysismodels.OPcountInfo;
 import com.rap.idao.ActivityIDao;
 import com.rap.models.ActivityInfo;
 import com.rap.models.BestActivityInfo;

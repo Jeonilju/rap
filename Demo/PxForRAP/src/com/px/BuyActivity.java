@@ -9,12 +9,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -24,15 +23,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
 import com.example.android.trivialdrivesample.util.IabHelper;
-import com.example.android.trivialdrivesample.util.IabResult;
 import com.px.tool.Preference;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
@@ -59,133 +59,23 @@ public class BuyActivity extends RAPBaseActivity{
 	private ArrayAdapter<String> adapterM;
 	private ArrayAdapter<String> adapterS;
 	
-	private static final String TAG = "IAPSampleActivity";
+	private int mode = 0;
 	
+	private static final String TAG = "IAPSampleActivity";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_buy);
 		
+		mode = 0;
+		
 		initResourse();
 		initEvent();
-		
-		//initBillingService();
+		initSpiner();
 	}
 	
-//	private void initBillingService() {
-//
-//		String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwgA810Pm1Fcj2DzetUzbXXMZCTC0bDlA56/R/45NO/FZeeOWlNyNBSlBcp8c8v/5xzikJr3s8/3b/V0bjC0fuw+xY5I9y+Y7dAF7VDNbNspT9abT1gAZO2RU/XVi7ZPEriXmoYU7kgoR6y5/31Cx7GWuvEPuR63Fmi17mlJA5gnge1IfXoGLhzom/nro1dlrzv7zqA5N+HcE9GqS0uNDRq9mMeH0HaffUKfus8Pt9xlpo+hUwCegRax2SirjL71YQR1nGRG0D4heT/1wOB5d3Fi8u/LgbTQ0lSG9mbnmipjKy4BdAoNuoM5guzJ4mNbycUGxKf7jW/8vNddxZCbgfQIDAQAB"; // (구글에서 발급받은 바이너리키를 입력해줍니다)
-//
-//		mHelper = new IabHelper(this, base64EncodedPublicKey);
-//		mHelper.enableDebugLogging(true);
-//		mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-//			public void onIabSetupFinished(IabResult result) {
-//				if (!result.isSuccess()) {
-//					// 구매오류처리 ( 토스트하나 띄우고 결제팝업 종료시키면 되겠습니다 )
-//					Toast.makeText(BuyActivity.this, "결제모듈 초기화에 실패했습니다.", Toast.LENGTH_SHORT).show();
-//				}
-//
-//				AlreadyPurchaseItems();
-//				// AlreadyPurchaseItems();
-//				// 메서드는 구매목록을 초기화하는 메서드입니다.
-//				// v3으로 넘어오면서 구매기록이 모두 남게 되는데 재구매 가능한 상품( 게임에서는 코인같은아이템은 ) 구매후
-//				// 삭제해주어야 합니다.
-//				// 이 메서드는 상품 구매전 혹은 후에 반드시 호출해야합니다.
-//				// ( 재구매가 불가능한 1회성 아이템의경우 호출하면 안됩니다 )
-//			}
-//		});
-//		
-//		Intent intent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-//		// This is the key line that fixed everything for me
-//		intent.setPackage("com.android.vending");
-//
-//		bindService(intent, mServiceConn, Context.BIND_AUTO_CREATE);
-//		
-////		bindService(new Intent(
-////				"com.android.vending.billing.InAppBillingService.BIND"),
-////				mServiceConn, Context.BIND_AUTO_CREATE);
-//	}
-//
-//	public void Buy(String id_item) {
-//		// Var.ind_item = index;
-//		try {
-//			Bundle buyIntentBundle = mService.getBuyIntent(3, getPackageName(), id_item, "inapp", "test");
-//			PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-//
-//			if (pendingIntent != null) {
-//				 startIntentSenderForResult(
-//						 pendingIntent.getIntentSender(),
-//						 1001, new Intent(), Integer.valueOf(0), Integer.valueOf(0),
-//						 Integer.valueOf(0));
-//			} else {
-//				Toast.makeText(BuyActivity.this, "결제에러가 발생하였습니다.", Toast.LENGTH_SHORT).show();
-//				// 결제가 막혔다면
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		System.out.println("requestCode : " + requestCode);
-//		System.out.println("resultCode : " + resultCode);
-//		if (requestCode == 1001)
-//			if (resultCode == RESULT_OK) {
-//				if (!mHelper
-//						.handleActivityResult(requestCode, resultCode, data)) {
-//					super.onActivityResult(requestCode, resultCode, data);
-//
-//					int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
-//					String purchaseData = data
-//							.getStringExtra("INAPP_PURCHASE_DATA");
-//					String dataSignature = data
-//							.getStringExtra("INAPP_DATA_SIGNATURE");
-//
-//					// 여기서 아이템 추가 해주시면 됩니다.
-//					// 만약 서버로 영수증 체크후에 아이템 추가한다면, 서버로 purchaseData ,
-//					// dataSignature 2개 보내시면 됩니다.
-//					Toast.makeText(BuyActivity.this, "결제 성공", Toast.LENGTH_SHORT).show();
-//				} else {
-//					// 구매취소 처리 
-//					Toast.makeText(BuyActivity.this, "결제모듈 초기화에 실패했습니다.(2)", Toast.LENGTH_SHORT).show();
-//				}
-//			} else {
-//				// 구매취소 처리
-//				Toast.makeText(BuyActivity.this, "결제모듈 초기화에 실패했습니다.(3)", Toast.LENGTH_SHORT).show();
-//			}
-//		else {
-//			// 구매취소 처리
-//			Toast.makeText(BuyActivity.this, "결제모듈 초기화에 실패했습니다.(4)", Toast.LENGTH_SHORT).show();
-//		}
-//	}
-	
-	public void AlreadyPurchaseItems() {
-		try {
-			Bundle ownedItems = mService.getPurchases(3, getPackageName(), "inapp", null);
-			int response = ownedItems.getInt("RESPONSE_CODE");
-			if (response == 0) {
-				ArrayList purchaseDataList = ownedItems
-					.getStringArrayList("INAPP_PURCHASE_DATA_LIST");
-			String[] tokens = new String[purchaseDataList.size()];
-			for (int i = 0; i < purchaseDataList.size(); ++i) {
-				String purchaseData = (String) purchaseDataList.get(i);
-				JSONObject jo = new JSONObject(purchaseData);
-				tokens[i] = jo.getString("purchaseToken");
-				// 여기서 tokens를 모두 컨슘 해주기
-				mService.consumePurchase(3, getPackageName(), tokens[i]);
-			}
-		}
-
-		// 토큰을 모두 컨슘했으니 구매 메서드 처리
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-}
-
 	private void initResourse(){
-		
 		btn_categoryL = (Button) findViewById(R.id.iap_btn1);
 		btn_categoryM = (Button) findViewById(R.id.iap_btn2);
 		btn_categoryS = (Button) findViewById(R.id.iap_btn3);
@@ -222,9 +112,11 @@ public class BuyActivity extends RAPBaseActivity{
 			@Override
 			public void onClick(View v) {
 				try {
-					String categoryLName = sp_categoryL.getSelectedItem().toString();
-					HttpRequestBase req = RAPAPIs.GetCategoryM(categoryLName);
-					RAPHttpClient.getInstance().background(req, getCategoryM);
+					if(mode == 1){
+						String categoryLName = sp_categoryL.getSelectedItem().toString();
+						HttpRequestBase req = RAPAPIs.GetCategoryM(categoryLName);
+						RAPHttpClient.getInstance().background(req, getCategoryM);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -236,10 +128,12 @@ public class BuyActivity extends RAPBaseActivity{
 			@Override
 			public void onClick(View v) {
 				try {
-					String categoryLName = sp_categoryL.getSelectedItem().toString();
-					String categoryMName = sp_categoryM.getSelectedItem().toString();
-					HttpRequestBase req = RAPAPIs.GetCategoryS(categoryLName, categoryMName);
-					RAPHttpClient.getInstance().background(req, getCategoryS);
+					if(mode == 2){
+						String categoryLName = sp_categoryL.getSelectedItem().toString();
+						String categoryMName = sp_categoryM.getSelectedItem().toString();
+						HttpRequestBase req = RAPAPIs.GetCategoryS(categoryLName, categoryMName);
+						RAPHttpClient.getInstance().background(req, getCategoryS);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -250,15 +144,46 @@ public class BuyActivity extends RAPBaseActivity{
 
 			@Override
 			public void onClick(View v) {
-				String categoryLName = sp_categoryL.getSelectedItem().toString();
-				String categoryMName = sp_categoryM.getSelectedItem().toString();
-				String categorySName = sp_categoryS.getSelectedItem().toString();
-				
-				try {
-					HttpRequestBase req = RAPAPIs.getIAP_CategoryS(categoryLName, categoryMName, categorySName);
-					RAPHttpClient.getInstance().background(req, getIAPs);
-				} catch (IOException e) {
-					e.printStackTrace();
+				if(mode == 0){
+					try {
+						HttpRequestBase req = RAPAPIs.getIAP_AllItems();
+						RAPHttpClient.getInstance().background(req, getIAPs);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				else if(mode == 1){
+					String categoryLName = sp_categoryL.getSelectedItem().toString();
+					
+					try {
+						HttpRequestBase req = RAPAPIs.getIAP_CategoryL(categoryLName);
+						RAPHttpClient.getInstance().background(req, getIAPs);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				else if (mode == 2){
+					String categoryLName = sp_categoryL.getSelectedItem().toString();
+					String categoryMName = sp_categoryM.getSelectedItem().toString();
+					
+					try {
+						HttpRequestBase req = RAPAPIs.getIAP_CategoryM(categoryLName, categoryMName);
+						RAPHttpClient.getInstance().background(req, getIAPs);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					String categoryLName = sp_categoryL.getSelectedItem().toString();
+					String categoryMName = sp_categoryM.getSelectedItem().toString();
+					String categorySName = sp_categoryS.getSelectedItem().toString();
+					
+					try {
+						HttpRequestBase req = RAPAPIs.getIAP_CategoryS(categoryLName, categoryMName, categorySName);
+						RAPHttpClient.getInstance().background(req, getIAPs);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -275,6 +200,61 @@ public class BuyActivity extends RAPBaseActivity{
 		});
 	}
 
+	private void initSpiner(){
+		sp_categoryL.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				if(adapterM != null)
+					adapterM.clear();
+				if(adapterS != null)
+					adapterS.clear();
+				
+				((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+				mode = 1;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+		
+		sp_categoryM.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				if(adapterS != null)
+					adapterS.clear();
+				
+				((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+				mode = 2;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+		
+		sp_categoryS.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				((TextView)parent.getChildAt(0)).setTextColor(Color.WHITE);
+				mode = 3;				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -502,6 +482,30 @@ public class BuyActivity extends RAPBaseActivity{
 
 		AlertDialog alert = alt_bld.create();
 		alert.setTitle(item.getName());
+		alert.show();
+	}
+	
+	private void ShowDig(String message) {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(BuyActivity.this);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton("확인",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+							}
+						});
+
+		AlertDialog alert = alt_bld.create();
+
+		alert.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				finish();
+			}
+		});
+
+		alert.setTitle("");
 		alert.show();
 	}
 }

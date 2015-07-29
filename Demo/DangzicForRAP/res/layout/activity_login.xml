@@ -2,22 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background" >
+    android:background="#CBDDF1" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp" >
 
         <EditText
             android:id="@+id/login_id_edt"
             android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="40dp"
-            android:hint="아이디"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+			android:layout_margin="10dp"
+            android:hint="이메일"
+            android:textColor="#2A4574"
+            android:textColorHint="#552A4574" />
 
         <EditText
             android:id="@+id/login_pw_edt"
@@ -25,38 +26,36 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/login_id_edt"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="5dp"
-            android:hint="비밀번호"
-            android:password="true"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
-
-        <CheckBox
-            android:id="@+id/login_cb_autologin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/login_pw_edt"
-            android:layout_below="@id/login_pw_edt"
             android:layout_margin="10dp"
-            android:text="자동로그인"
-            android:textColor="#ffffff" />
+            android:hint="210.118.74.207"
+            android:password="true"
+            android:textColor="#2A4574"
+            android:textColorHint="#552A4574"/>
+    </RelativeLayout>
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/login_cb_autologin"
+            android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:padding="5dp" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/login_btn"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/login_btn" />
+                android:layout_width="180dp"
+                android:layout_height="80dp"
+                android:background="#657CA6"
+               	android:textColor="#2A4574"
+                android:text="당직 시작" />
             
-        </LinearLayout>
-    </RelativeLayout>
-
+            <Button
+                android:id="@+id/login_qna"
+                android:layout_width="180dp"
+                android:layout_height="80dp"
+                android:background="#657CA6"
+               	android:textColor="#2A4574"
+                android:text="사용설명 보기" />
+            
+	</LinearLayout>
+        
 </RelativeLayout>
