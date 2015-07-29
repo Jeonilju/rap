@@ -15,7 +15,12 @@ ${demo.css}
         
 		
 <script type="text/javascript">
+$(function() {
+	$("#basicuserinfo").attr('class','accordion-body collapse in');
+	$("#iapinfo2").attr('class','accordion-body collapse in');
+	});
 $( document ).ready(getsales_ranking());
+
 function getsales_ranking() {
 	$.ajax({
 		url : "sales_ranking_db",
@@ -77,7 +82,7 @@ function add_to_table(item_name,count){
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-					<jsp:include page="sidebar-nav.jsp" flush="false" />
+					<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->

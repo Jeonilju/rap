@@ -399,7 +399,8 @@ function registerGoogleProjectNum()
 			<!-- /#sidebar-wrapper -->
 
 			<!-- page-content-wrapper -->
-			<div id="page-content-wrapper">
+			<div id="page-content-wrapper" name="page-content-wrapper">
+			
 				<div class="container-fluid">
 					<!-- Item Categorization -->
 					<div class="row">
