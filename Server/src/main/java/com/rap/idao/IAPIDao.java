@@ -10,7 +10,7 @@ public interface IAPIDao {
 	void setDataSource(DataSource ds);
 	void create(String Key, String iap, int price_real, int price_main, int price_sub
 			, int type, String image, String discription
-			,String categoryL, String categoryM, String categoryS);
+			,String categoryL, String categoryM, String categoryS, String google_id);
 	
 	List<IAPInfo> select(String key);
 	List<IAPInfo> select(String key, String categoryL);
