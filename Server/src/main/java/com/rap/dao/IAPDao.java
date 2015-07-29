@@ -35,7 +35,7 @@ public class IAPDao implements IAPIDao{
 				, new Object[] { project_key, iap,  price_real, price_main, price_sub, type, image, description, categoryL, categoryM, categoryS});
 	}
 	public List<IAPInfo> select(String key) {
-		return jdbcTemplate.query("select * from iap where project_key = ?",
+		return jdbcTemplate.query("select * from iap where project_key = ? order by reg_date desc",
 		    	new Object[] { key }, new RowMapper<IAPInfo>() {
 		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -58,7 +58,7 @@ public class IAPDao implements IAPIDao{
 		    });
 	}
 	public List<IAPInfo> select(String key, String categoryL) {
-		return jdbcTemplate.query("select * from iap where project_key = ? AND categoryl = ?",
+		return jdbcTemplate.query("select * from iap where project_key = ? AND categoryl = ? order by reg_date desc",
 		    	new Object[] { key, categoryL }, new RowMapper<IAPInfo>() {
 		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -81,7 +81,7 @@ public class IAPDao implements IAPIDao{
 		    });
 	}
 	public List<IAPInfo> select(String key, String categoryL, String categoryM) {
-		return jdbcTemplate.query("select * from iap where project_key = ? AND categoryl = ? AND categorym = ?",
+		return jdbcTemplate.query("select * from iap where project_key = ? AND categoryl = ? AND categorym = ? order by reg_date desc",
 		    	new Object[] { key, categoryL, categoryM }, new RowMapper<IAPInfo>() {
 		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -105,7 +105,7 @@ public class IAPDao implements IAPIDao{
 	}
 	public List<IAPInfo> select(String key, String categoryL, String categoryM,
 			String categoryS) {
-		return jdbcTemplate.query("select * from iap where project_key = ? AND categoryl = ? AND categorym = ? AND categorys = ?",
+		return jdbcTemplate.query("select * from iap where project_key = ? AND categoryl = ? AND categorym = ? AND categorys = ? order by reg_date desc",
 		    	new Object[] { key, categoryL, categoryM, categoryS }, new RowMapper<IAPInfo>() {
 		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{
@@ -128,7 +128,7 @@ public class IAPDao implements IAPIDao{
 		    });
 	}
 	public IAPInfo selectItem(String key, int item_pk){
-		List<IAPInfo> result = jdbcTemplate.query("select * from iap where project_key = ? AND pk = ?",
+		List<IAPInfo> result = jdbcTemplate.query("select * from iap where project_key = ? AND pk = ? order by reg_date desc",
 		    	new Object[] { key, item_pk }, new RowMapper<IAPInfo>() {
 		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{

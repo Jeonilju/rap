@@ -37,6 +37,8 @@ function sendpushmsg(promotionname)
 				{
 					alert('푸시 메세지를 전송했습니다.');
 				}
+				else if(response == 'google_project_num')
+					alert('프로젝트 세팅에서 구글 프로젝트 키를 입력해주세요.');
 				else
 					alert('에러가 발생했습니다.');
 			}

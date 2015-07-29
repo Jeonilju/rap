@@ -54,14 +54,18 @@ function getItemlist()
 						price = list[i].price_real.toString() +'원';
 					else
 						price = '';
-					$('#itemlist').append("<div class='panel panel-default'><div class='panel-heading'><div class='row'>");
-					$('#itemlist').append("<div class='col-xs-3 text-center'><i class='fa fa-comments fa-5x'></i></div>");
-					$('#itemlist').append("<div class='col-xs-9'><div class='huge'><h4>"+list[i].iap+"</h4></div>");
-					$('#itemlist').append("<div>"+list[i].description+"</div></div></div></div>");
-					$('#itemlist').append("<div class='row'><div class='panel-body'>");
-					$('#itemlist').append("<span class='pull-right'>"+price+"</span>");
-					$('#itemlist').append("<div class='clearfix'></div></div></div></div><div class='panel-footer'></div><br>");
-				}
+					$('#itemlist').append("<div class='panel-heading clearfix'><h3 class='panel-title pull-left'>"+
+							list[i].iap+"</h3><a onclick='deleteItem()' style='cursor:pointer'><i class='fa fa-trash pull-right'></i></a></div>"
+							+"<div class='panel-body'>"
+							+"<div class='col-xs-3 text-center'><i class='fa fa-comments fa-5x'></i></div>"
+							+"<div class='col-xs-9'><div class='huge'><h4>"+list[i].iap+"</h4></div>"
+							+"<div>"+list[i].description+"</div></div>"
+							+"</div>"
+							+"<div class='panel-footer'><span class='pull-right'>"
+							+price
+							+"</span></div><br>");
+					//$('#itemlist').append("<a style='cursor:pointer' data-toggle='modal' data-target='#ItemEditModal' ><i class='fa fa-edit' style='margin-right: 4px;'></i></a>");
+					}
 			}
 		},
 		
@@ -258,9 +262,7 @@ function getCoinlist()
 						</div>
 					</div>
 					<br>
-					<div class="row">
-						<div id='itemlist'></div>
-					</div>
+					<div class="panel panel-default" id='itemlist'></div>
 			<!-- /#page wrapper -->
 		</div>
 		<!-- /#ëí¼ -->

@@ -192,9 +192,13 @@ public class RAP_PromotionController {
 		SettingInfo setting_info = settingDao.selectSettingInfo(project_key);
 		if(setting_info==null) return "error";
 
+		String google_project_num = setting_info.getGoogle_project_num();
+		if(google_project_num == null) return "google_project_num";
+		if(google_project_num.isEmpty()) return "google_project_num";
 		//사용자 리스트
 		List<UserInfo> userList = userDao.selectPromotionUserlist(project_key, grade_time, grade_money);
-		RAP_GCMManager.getInstance().sendPush(project_key,setting_info.getGoogle_project_num(), promotion.getPk(), promotion.getName(), promotion.getSummary(), promotion.getTarget_activity() , userList);
+		
+		RAP_GCMManager.getInstance().sendPush(project_key,google_project_num, promotion.getPk(), promotion.getName(), promotion.getSummary(), promotion.getTarget_activity() , userList);
 		
 		logger.info("푸시 메시지 전송");
 		
