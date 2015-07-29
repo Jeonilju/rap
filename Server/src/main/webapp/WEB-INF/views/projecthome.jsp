@@ -57,7 +57,7 @@ function deleteProject(projectname)
 				}
 				else
 				{
-					alert("에러")
+					alert("에러가 발생했습니다.")
 					return false;
 				}	
 			},

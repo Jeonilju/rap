@@ -56,7 +56,7 @@ if (request.getProtocol().equals("HTTP/1.1"))
 
 <!-- Contact Form JavaScript -->
 <script src="./resources/js/jqBootstrapValidation.js"></script>
-<script src="./resources/js/contact_me.js"></script>
+<!-- <script src="./resources/js/contact_me.js"></script>-->
 <!-- Custom Theme JavaScript -->
 <script src="./resources/js/sb-admin-2.js"></script>
 

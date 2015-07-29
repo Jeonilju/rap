@@ -96,8 +96,8 @@ public class PromotionDao implements PromotionIDao{
 		    });
 	}
 
-	public void update(String name, String summary, int grade_time, int grade_money, String project_key){
-		jdbcTemplate.update("update promotion set name=?,summary=?,grade_time=?,grade_money=? where project_key=?", new Object[] {name, summary, grade_time,grade_money, project_key });
+	public void update(String name, String summary, int grade_time, int grade_money, int pk){
+		jdbcTemplate.update("update promotion set name=?,summary=?,grade_time=?,grade_money=? where pk=?", new Object[] {name, summary, grade_time,grade_money, pk });
 	}
 	
 	public void deleteAll() {
