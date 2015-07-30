@@ -7,12 +7,21 @@
 <html>
 <!-- ÃÂ¬ÃÂÃÂÃÂ«ÃÂÃÂ¨ ÃÂ«ÃÂÃÂ¤ÃÂ«ÃÂ¹ÃÂÃÂªÃÂ²ÃÂÃÂ¬ÃÂÃÂ´ÃÂ¬ÃÂÃÂ ÃÂ«ÃÂ°ÃÂ ÃÂ¬ÃÂÃÂ¸ÃÂ­ÃÂÃÂ´ÃÂ«ÃÂ£ÃÂ¨ÃÂ«ÃÂÃÂ -->
 <jsp:include page="nav.jsp" flush = "false" />
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Highcharts Example</title>
-		<style type="text/css">
-${demo.css}
-		</style>
+<head>
+	<script src="./resources/js/highcharts.js"></script>
+	<script src="./resources/js/modules/data.js"></script>
+	<script src="./resources/js/modules/exporting.js"></script>
+	
+	<!-- Additional files for the Highslide popup effect -->
+	<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide-full.min.js"></script>
+	<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide.config.js" charset="utf-8"></script>
+	<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/media/com_demo/highslide.css" />
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Highcharts Example</title>
+	<style type="text/css">
+		${demo.css}
+	</style>
 <%
 	ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
 %>
@@ -44,18 +53,18 @@ function getpromotionlist()
 				
 				for(var i=0;i<listLen;i++)
 				{
-					$('#promotion_list').append("<option>"+list[i].name+"</option>");
+					$('#promotion_list').append("<option value=\""+list[i].name+"\">"+list[i].name+"</option>");
 				}
 				
 				if(listLen==0)
-				{	$('#promotion_list').append("<option>"+"No promotion"+"</option>");
+				{	$('#promotion_list').append("<option value=''>"+"No promotion"+"</option>");
 					
 				}
 
 				
 			}
 			else
-			{	$('#promotion_list').append("<option>"+"No promotion"+"</option>");
+			{	$('#promotion_list').append("<option value=''>"+"No promotion"+"</option>");
 
 			
 				
@@ -170,14 +179,6 @@ $('#container').highcharts({
 		
 	</head>
 	<body id="page-top" class="index">
-		<script src="./resources/js/highcharts.js"></script>
-		<script src="./resources/js/modules/data.js"></script>
-		<script src="./resources/js/modules/exporting.js"></script>
-		
-		<!-- Additional files for the Highslide popup effect -->
-		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide-full.min.js"></script>
-		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide.config.js" charset="utf-8"></script>
-		<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/media/com_demo/highslide.css" />
 		
 		<div class="container">
 			<div id="wrapper">
@@ -202,23 +203,20 @@ $('#container').highcharts({
 						</div>
 						<div class="row">
 							<div class="col-lg-12 text-center" >
-						
-
-							<div class="form-group">
-	<select class="selectpicker show-tick"  id="promotion_list" name="promotion_list" ></select> 
-								<div class='input-group date' id='datetimepicker1'>
-								
-									
-									<input id="Start" name="Start" type='text' class="form-control" /> <span
-										class="input-group-addon"> <span
-										class="fa fa-calendar" onClick="getoperation_count()"></span>
-									</span>
+								<div class="form-group">
+									<div class="col-lg-4">
+										<select class="selectpicker show-tick"  id="promotion_list" name="promotion_list">
+											<option value=''>No promotion</option>
+										</select> 
+									</div>
+									<div class='col-lg-8 input-group date' id='datetimepicker1'>
+										<input id="Start" name="Start" type='text' class="form-control" /> <span
+											class="input-group-addon"> <span
+											class="fa fa-calendar" onClick="getoperation_count()"></span>
+										</span>
+									</div>
 								</div>
-							</div>
-
-
-
-							<!-- chart -->
+								<!-- chart -->
 								<div id="container" style="min-width: 200px; height: 400px; margin: 0 auto" ></div>
 								<!-- /#chart -->
 							</div>

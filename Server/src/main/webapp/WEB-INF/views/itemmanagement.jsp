@@ -43,6 +43,12 @@ function Editclose()
 }
 function getItemlist()
 {
+	if(document.getElementById('Scategory1').value == '')
+		{
+		$('#itemlist').html("");
+		return false;
+		
+		}
 
 	$.ajax({
 		url : "itemlist_db",
@@ -436,7 +442,7 @@ function editItem()
 					<div class = "row">
 						<!-- 대분류 -->
 						<div class="dropdown form-group col-lg-2">
-							<select class="selectpicker" id="Lcategory1" name="Lcategory1" onchange="getMcategory('1')">
+							<select class="selectpicker" id="Lcategory1" name="Lcategory1" onchange="getMcategory('1','#itemlist')">
 								<option value='' selected>대분류</option>
 									<%
 										List<CategoryLInfo> categoryLlist = (List<CategoryLInfo>)request.getAttribute("categoryLlist");
@@ -453,7 +459,7 @@ function editItem()
 						</div>
 						<div class="dropdown form-group col-lg-2">
 						
-							<select class="selectpicker"  id="Mcategory1" name="Mcategory1" onchange="getScategory('1')">
+							<select class="selectpicker"  id="Mcategory1" name="Mcategory1" onchange="getScategory('1','#itemlist')">
 								<option value='' selected>중분류</option>
 							</select>
 							</div>

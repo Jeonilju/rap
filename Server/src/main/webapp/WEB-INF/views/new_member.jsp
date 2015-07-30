@@ -140,8 +140,8 @@ $(function() {
 							<div class="form-group">
 
 								<div class='input-group date' id='datetimepicker1'>
-									<select id="Type" name="Type"
-										class="selectpicker show-tick" style="width: 200px; margin-right: 20px;">
+									<select class="selectpicker show-tick" id="Type" name="Type"
+										style="width: 200px; margin-right: 20px;">
 										<option value="day">day</option>
 										<option value="month">month</option>
 										<option value="year">year</option>
