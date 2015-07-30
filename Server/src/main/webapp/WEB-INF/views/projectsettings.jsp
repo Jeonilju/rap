@@ -17,9 +17,21 @@ function getAllLcategory()
 }
 function registerVirtualMain()
 {
+	if(document.getElementById('virtual_main_name').value.length>22)
+	{
+	alert("주화폐 이름이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('virtual_main_description').value.length>50)
+	{
+	alert("주화폐 설명이 너무 깁니다.");
+	return false;
+	}
 	$.ajax({
 		url : "registerVirtualMain",
 		type : "POST",
+		cache : false,
+		async : false,
 		data :
 			{
 			virtual_main_name: document.getElementById('virtual_main_name').value,
@@ -36,6 +48,10 @@ function registerVirtualMain()
 				alert("이름을 입력해주세요.");
 			else if(response == "virtual_main_description")
 				alert("설명을 입력해주세요.");
+			else if(response == "Longvirtual_main_name")
+				alert("이름이 너무 깁니다.");
+			else if(response == "Longvirtual_main_description")
+				alert("설명이 너무 깁니다.");
 			else
 				alert("에러가 발생했습니다.");
 		},
@@ -49,6 +65,16 @@ function registerVirtualMain()
 }
 function registerVirtualSub()
 {
+	if(document.getElementById('virtual_sub_name').value.length>22)
+	{
+	alert("부화폐 이름이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('virtual_sub_description').value.length>50)
+	{
+	alert("부화폐 설명이 너무 깁니다.");
+	return false;
+	}
 	$.ajax({
 		url : "registerVirtualSub",
 		type : "POST",
@@ -68,6 +94,10 @@ function registerVirtualSub()
 				alert("이름을 입력해주세요.");
 			else if(response == "virtual_sub_description")
 				alert("설명을 입력해주세요.");
+			else if(response == "Longvirtual_sub_name")
+				alert("이름이 너무 깁니다.");
+			else if(response == "Longvirtual_sub_description")
+				alert("설명이 너무 깁니다.");
 			else
 				alert("에러가 발생했습니다.");
 		},
@@ -116,6 +146,22 @@ function coinlist_db()
 }
 function registerGradeMoney()
 {
+	if(document.getElementById('grade_moneyL').value > 2147438647 || document.getElementById('grade_moneyL').value < -2147438647)
+		{
+			alert('상 등급의 값이 너무 큽니다.');
+			return false;
+		}
+	if(document.getElementById('grade_moneyM').value > 2147438647 || document.getElementById('grade_moneyM').value < -2147438647)
+	{
+		alert('중 등급의 값이 너무 큽니다.');
+		return false;
+	}
+	if(document.getElementById('grade_moneyS').value > 2147438647 || document.getElementById('grade_moneyS').value < -2147438647)
+	{
+		alert('하 등급의 값이 너무 큽니다.');
+		return false;
+	}
+	
 	$.ajax({
 		url : "registerGradeMoney",
 		type : "POST",
@@ -182,6 +228,21 @@ function getGradeMoney()
 }
 function registerGradeTime()
 {
+	if(document.getElementById('grade_timeL').value > 2147438647 || document.getElementById('grade_timeL').value < -2147438647)
+	{
+		alert('상 등급의 값이 너무 큽니다.');
+		return false;
+	}
+	if(document.getElementById('grade_timeM').value > 2147438647 || document.getElementById('grade_timeM').value < -2147438647)
+	{
+		alert('중 등급의 값이 너무 큽니다.');
+		return false;
+	}
+	if(document.getElementById('grade_timeS').value > 2147438647 || document.getElementById('grade_timeS').value < -2147438647)
+	{
+		alert('하 등급의 값이 너무 큽니다.');
+		return false;
+	}
 	$.ajax({
 		url : "registerGradeTime",
 		type : "POST",
@@ -246,82 +307,7 @@ function getGradeTime()
 	}
 });
 }
-function EditGradeTime()
-{
-	$.ajax({
-	url : "EditGradeTime",
-	type : "POST",
-	data :
-		{
-		grade_time_input : document.getElementById('grade_time_input').value,
-		grade_time : document.getElementById('grade_time').value,
-		},
-	dataType : "text",
-	success : function(response) {
-		if(response == "grade_time_input")
-			alert("값을 입력해주세요.");
-		else if(response == "grade_time")
-			alert("사용시간 등급을 선택해주세요.");
-		else if(response == "Not Number")
-			alert("숫자를 입력해주세요.");
-		else if(response == "L")
-			alert("상 등급은 중 등급보다 값이 커야합니다.");
-		else if(response == "M")
-			alert("중 등급은 하 등급보다 값이 커야하고, 상 등급보다 값이 작아야합니다.");
-		else if(response == "S")
-			alert("하 등급은 중 등급보다 값이 작아야합니다.");
-		else if(response == "200")
-			alert("등급이 수정되었습니다.");
-		else
-			alert("에러가 발생했습니다.");
-	},
-	error : function(request, status, error) {
-		if (request.status != '0') {
-			alert("code : " + request.status + "\r\nmessage : "
-					+ request.reponseText + "\r\nerror : " + error);
-		}
-	}
-});
-	
-}
-function EditGradeMoney()
-{
-	$.ajax({
-	url : "EditGradeMoney",
-	type : "POST",
-	data :
-		{
-		grade_money_input : document.getElementById('grade_money_input').value,
-		grade_money : document.getElementById('grade_money').value,
-		},
-	dataType : "text",
-	success : function(response) {
-		if(response == "grade_money_input")
-			alert("값을 입력해주세요.");
-		else if(response == "grade_money")
-			alert("과금액 등급을 선택해주세요.");
-		else if(response == "Not Number")
-			alert("숫자를 입력해주세요.");
-		else if(response == "L")
-			alert("상 등급은 중 등급보다 값이 커야합니다.");
-		else if(response == "M")
-			alert("중 등급은 하 등급보다 값이 커야하고, 상 등급보다 값이 작아야합니다.");
-		else if(response == "S")
-			alert("하 등급은 중 등급보다 값이 작아야합니다.");
-		else if(response == "200")
-			alert("등급이 수정되었습니다.");
-		else
-			alert("에러가 발생했습니다.");
-	},
-	error : function(request, status, error) {
-		if (request.status != '0') {
-			alert("code : " + request.status + "\r\nmessage : "
-					+ request.reponseText + "\r\nerror : " + error);
-		}
-	}
-});
-	
-}
+
 function ProjectEdit()
 {
 	$.ajax({
@@ -363,6 +349,12 @@ function ProjectEdit()
 
 function registerGoogleProjectNum()
 {
+	if(document.getElementById('google_project_num_input').value>40)
+	{
+		alert('구글 아이디가 너무 깁니다.');
+		return false;
+	}
+	
 	$.ajax({
 		url : "registerGoogleProjectNum",
 		type : "POST",
@@ -376,6 +368,8 @@ function registerGoogleProjectNum()
 				alert("값을 입력해주세요.");
 			else if(response == "200")
 				alert("구글 프로젝트 넘버가 등록되었습니다.");
+			else if(response == "Longgoogle_project_num")
+				alert("구글 프로젝트 넘버가 너무 깁니다.");
 			else
 				alert("에러가 발생했습니다.");
 		},
@@ -473,10 +467,10 @@ function registerGoogleProjectNum()
 							<div class="col-md-8" style="padding: 5px">
 								<input type="text" class="form-control"
 									placeholder="Large Category" id="CategoryL" style="width: 200px">
-								<button class="btn" onclick="registerLcategory()">Register</button>
+								<button type="button" class="btn" onclick="registerLcategory()">Register</button>
 							</div>
 							<div class="col-md-4" style="padding: 5px">
-								<button class="btn pull-right" onclick="deleteLcategory('Lcategory1')">Delete</button>
+								<button type="button" class="btn pull-right" onclick="deleteLcategory('Lcategory1')">Delete</button>
 								<select id="Lcategory1" name="Lcategory1" class="selectpicker pull-right">
 									<option value='' selected>대분류</option>
 									<%
@@ -508,10 +502,10 @@ function registerGoogleProjectNum()
 									%>
 								</select> <input type="text" class="form-control"
 									placeholder="Medium Category" id="CategoryM" style="width: 200px">
-								<button class="btn" onclick="registerMcategory()">Register</button>
+								<button type="button" class="btn" onclick="registerMcategory()">Register</button>
 							</div>
 							<div class="col-md-4" style="padding: 5px">
-								<button class="btn pull-right" onclick="deleteMcategory('Mcategory2')">Delete</button>
+								<button type="button" class="btn pull-right" onclick="deleteMcategory('Mcategory2')">Delete</button>
 								<select class="selectpicker pull-right" id="Mcategory2" name="Mcategory2">
 									<option value='' selected>중분류</option>
 								</select>
@@ -535,10 +529,10 @@ function registerGoogleProjectNum()
 									<option value='' selected>중분류</option>
 								</select> <input type="text" class="form-control"
 									placeholder="Small Category" id="CategoryS" style="width: 200px">
-								<button class="btn" onclick="registerScategory()">Register</button>
+								<button type="button" class="btn" onclick="registerScategory()">Register</button>
 							</div>
 							<div class="col-md-4" style="padding: 5px">
-								<button class="btn pull-right" onclick="deleteScategory('Scategory3')">Delete</button>
+								<button type="button" class="btn pull-right" onclick="deleteScategory('Scategory3')">Delete</button>
 								<select class="selectpicker pull-right" id="Scategory3" name="Scategory3">
 									<option value="" selected>소분류</option>
 								</select>
@@ -569,12 +563,12 @@ function registerGoogleProjectNum()
 							if(mainlistcount == 0){
 								out.println("<div class='col-lg-6'><label>Main Coin Name</label><input placeholder='Main Coin Name' type='text' class='form-control' id='virtual_main_name'></div>");
 								out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_main_description' style='height: 45px'></textarea>"
-										+"<button class='btn' onclick='registerVirtualMain()'>Edit</button></div>");
+										+"<button type='button' class='btn' onclick='registerVirtualMain()'>Edit</button></div>");
 							}
 							else{
 								out.println("<div class='col-lg-6'><label>Main Coin Name</label><input placeholder="+mainlist.get(0).getName()+" type='text' class='form-control' id='virtual_main_name'></div>");
 								out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+mainlist.get(0).getDescription()+" class='form-control' id='virtual_main_description' style='height: 45px'></textarea>"
-										+"<button class='btn' onclick='registerVirtualMain()'>Edit</button></div>");
+										+"<button type='button' class='btn' onclick='registerVirtualMain()'>Edit</button></div>");
 							}
 								
 							%>
@@ -595,12 +589,12 @@ function registerGoogleProjectNum()
 								if(sublistcount == 0){
 									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder='Sub Coin Name' type='text' class='form-control' id='virtual_sub_name'></div>");
 									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
-											+"<button class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
+											+"<button type='button' class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
 								}
 								else{
 									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder="+sublist.get(0).getName()+" type='text' class='form-control' id='virtual_sub_name'></div>");
 									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+sublist.get(0).getDescription()+" class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
-											+"<button class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
+											+"<button type='button' class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
 								}
 							%>
 							</div>
@@ -637,7 +631,7 @@ function registerGoogleProjectNum()
 								<input type="text" class="form-control" placeholder="상(<%= moneyl %>)" id="grade_moneyL">
 								<input type="text" class="form-control" placeholder="중(<%= moneym %>)" id="grade_moneyM">
 								<input type="text" class="form-control" placeholder="하(<%= moneys %>)" id="grade_moneyS">
-								<button class="btn" onclick="registerGradeMoney()">Edit</button>
+								<button type='button' class="btn" onclick="registerGradeMoney()">Edit</button>
 							</form>
 						</div>
 					</div>
@@ -648,7 +642,7 @@ function registerGoogleProjectNum()
 							<input type="text" class="form-control" placeholder="상(<%= timel %>)" id="grade_timeL">
 							<input type="text" class="form-control" placeholder="중(<%= timem %>)" id="grade_timeM">
 							<input type="text" class="form-control" placeholder="하(<%= times %>)" id="grade_timeS">
-							<button class="btn" onclick="registerGradeTime()">Edit</button>
+							<button type='button' class="btn" onclick="registerGradeTime()">Edit</button>
 						</form>
 						</div>
 					</div>
@@ -663,7 +657,7 @@ function registerGoogleProjectNum()
 						<form class="form-inline">
 							<label style="padding:5px">Google Project Num</label>
 							<input type="text" class="form-control" placeholder="<%=google_num %>" id="google_project_num_input" style="width:500px">
-							<button class="btn" onclick="registerGoogleProjectNum()">Edit</button>
+							<button type='button' class="btn" onclick="registerGoogleProjectNum()">Edit</button>
 						</form>
 					</div>
 					<br><br>

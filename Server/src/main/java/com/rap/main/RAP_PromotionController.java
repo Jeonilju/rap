@@ -91,6 +91,10 @@ public class RAP_PromotionController {
 		if(summary == null) return "summary";
 		if(summary.isEmpty()) return "summary";
 		
+		//길이체크
+		if(name.length()>22) return "Longname";
+		if(summary.length()>100) return "Longsummary";
+		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
 		
@@ -262,6 +266,10 @@ public class RAP_PromotionController {
 		if(summary == null) return "summary";
 		if(summary.isEmpty()) return "summary";
 
+		//길이체크
+		if(name.length()>22) return "Longname";
+		if(summary.length()>100) return "Longsummary";
+		
 		String project_key = project.getPk();
 
 		PromotionInfo promotion = promotionDao.selectFromProject(project_key, promotionname);

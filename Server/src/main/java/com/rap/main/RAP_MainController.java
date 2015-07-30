@@ -66,6 +66,14 @@ public class RAP_MainController {
 			return "password_check";
 		if (password_check.isEmpty())
 			return "password_check";
+		
+		// 길이 체크
+		if (email.length()>50)
+			return "longemail";
+
+		// 길이 체크
+		if (password.length()>16)
+			return "longpassword";
 
 		// 패스워드 값이 같지 않을 때
 		logger.info(" 패스워드 값이 같지 않을 때");
@@ -133,6 +141,11 @@ public class RAP_MainController {
 		String email = request.getParameter("Signin_email");
 		String password = request.getParameter("Signin_password");
 
+		if(email.length()>50)
+			return "email";
+		if(password.length()>16)
+			return "password";
+		
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
 

@@ -161,6 +161,22 @@ function signup_db() {
 			{
 				alert('password를 입력해주세요.');
 			}
+			else if(response=='longemail')
+			{
+				alert('email이 너무 깁니다.');
+			}
+			else if(response=='longpassword')
+			{
+				alert('password가 너무 깁니다');
+			}
+			else if(response=='email')
+			{
+				alert('email을 입력해주세요.');
+			}
+			else if(response=='password')
+			{
+				alert('password를 입력해주세요.');
+			}
 			else if(response=='password_check')
 			{
 				alert('password confirm을 입력해주세요.');
@@ -187,7 +203,11 @@ function signup_db() {
 
 	});
 }
-
+function onEnterSignUp()
+{
+	var keyCode = window.event.keyCode;
+	if(keyCode==13) signup_db();
+}
 
 </script>
 <!-- SignUpModal -->
@@ -216,7 +236,7 @@ function signup_db() {
 					<div class="form-inline" style="padding:3px">
 						<label for="user_id" cond="">Password Confirm</label> <input
 							name="password_check" id="password_check" type="password" required cond=""
-							class="form-control" placeholder="Password Confirm" style="width:390px"  />
+							class="form-control" placeholder="Password Confirm" style="width:390px" onkeydown='onEnterSignUp()'  />
 					</div>
 				</div>
 
@@ -256,9 +276,24 @@ function signup_db() {
 				{
 					loginsuccess();
 				}
+				else if(response=='0')
+				{
+					alert("이메일이 존재하지 않습니다.");
+				}
+				else if(response=='3')
+				{
+					alert("비밀번호가 틀렸습니다.");
+				}
+				else if(response=='email')
+				{
+					alert("이메일이 너무 깁니다.");
+				}
+				else if(response=='password')
+				{
+					alert("비밀번호가 너무 깁니다.");
+				}
 				else
 				{
-					alert("아이디 또는 비번이 틀렸습니다. 다시 입력하세요.")
 					return false;
 				}	
 				
@@ -273,7 +308,11 @@ function signup_db() {
 	
 		});
 	}
-	
+	function onEnterSignIn()
+	{
+		var keyCode = window.event.keyCode;
+		if(keyCode==13) loginCheck();
+	}
 </script>
 
 <!-- SignInModal -->
@@ -296,7 +335,7 @@ function signup_db() {
 					<div class="form-group">
 						<label for="user_id" cond="">Password</label> <input name="Signin_password"
 							id="Signin_password" type="password" required cond="" class="form-control"
-							placeholder="Password" />
+							placeholder="Password" onkeydown='onEnterSignIn()' />
 					</div>
 				</div>
 				<div class="modal-footer">

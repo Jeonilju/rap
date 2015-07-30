@@ -229,6 +229,10 @@ public class RAP_CategoryController {
 			return "Enter Lcategory";
 		if (Lcategory.isEmpty())
 			return "Enter Lcategory";
+
+		// 길이체크
+		if (Lcategory.length()>22)
+			return "LongLcategory";
 		
 		Lcategory = Lcategory.replaceAll(" ", "");
 
@@ -288,6 +292,9 @@ public class RAP_CategoryController {
 		if (Mcategory.isEmpty())
 			return "Enter Mcategory";
 		logger.info("중분류 존재");
+		
+		if (Mcategory.length()>22)
+			return "LongMcategory";
 		
 		Mcategory = Mcategory.replaceAll(" ", "");
 
@@ -363,6 +370,9 @@ return "error";}
 			return "Enter Scategory";
 		logger.info("소분류 존재");
 
+		if (Scategory.length()>22)
+			return "LongScategory";
+		
 		Scategory = Scategory.replaceAll(" ", "");
 		
 		//대분류

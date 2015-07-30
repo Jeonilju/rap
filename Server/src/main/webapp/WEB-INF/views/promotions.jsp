@@ -163,8 +163,8 @@ function getPromotion(name)
 			{
 				var promotion = data.promotion;
 				
-				document.getElementById('EditPromotionName').placeholder = promotion.name;
-				document.getElementById('EditPromotionSummary').placeholder = promotion.summary;
+				document.getElementById('EditPromotionName').value = promotion.name;
+				document.getElementById('EditPromotionSummary').value = promotion.summary;
 				
 				getEditGrade(promotion.grade_money, promotion.grade_time);
 				getEditActivityList(promotion.target_activity);
@@ -243,6 +243,16 @@ function getEditActivityList(val)
 
 function editPromotion()
 {
+	if(document.getElementById('EditPromotionName').value.length>22)
+	{
+	alert("프로모션 이름이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('EditPromotionSummary').value.length>100)
+	{
+	alert("프로모션 이름이 너무 깁니다.");
+	return false;
+	}
 	
 	$.ajax({
 		url : "editPromotion",
@@ -270,6 +280,10 @@ function editPromotion()
 				alert("프로모션이 수정되었습니다.");
 				location.reload();
 				}
+			else if(response == 'Longname')
+				alert('이름이 너무 깁니다.');
+			else if(response == 'Longsummary')
+				alert('요약이 너무 깁니다.');
 			else
 				alert("에러가 발생했습니다.");
 		},
@@ -393,6 +407,16 @@ $(function(){
 })
 function registerPromotion() {
 
+	if(document.getElementById('PromotionName').value.length>22)
+	{
+	alert("프로모션 이름이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('PromotionSummary').value.length>100)
+	{
+	alert("프로모션 이름이 너무 깁니다.");
+	return false;
+	}
 	$.ajax({
 		url : "registerPromotion",
 		type : "POST",
@@ -418,6 +442,10 @@ function registerPromotion() {
 				alert('이름을 입력해주세요.');
 			else if(response == 'summary')
 				alert('요약을 입력해주세요.');
+			else if(response == 'Longname')
+				alert('이름이 너무 깁니다.');
+			else if(response == 'Longsummary')
+				alert('요약이 너무 깁니다.');
 			else if(response == 'target_activity')
 				alert('타겟 액티비티를 선택해주세요.');
 			else

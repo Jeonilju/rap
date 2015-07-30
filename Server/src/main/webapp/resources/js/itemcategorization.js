@@ -145,15 +145,23 @@ function registerLcategory() {
 			if(response == "200")
 				{
 				alert("대분류가 추가되었습니다.");
+				getAllLcategory();
 				}
 			else if(response == "Project Not Found")
-				alert("프로젝트가 존재하지 않습니다.");
+				{alert("프로젝트가 존재하지 않습니다.");
+				return false;}
 			else if(response == "Enter Lcategory")
-				alert("대분류명을 입력해주세요.");
+				{alert("대분류명을 입력해주세요.");
+				return false;}
 			else if(response == "Lcategory already exist")
-				alert("이미 같은 이름의 카테고리가 존재합니다.");
+				{alert("이미 같은 이름의 카테고리가 존재합니다.");
+				return false;}
+			else if(response == "LongLcategory")
+				{alert("대분류명이 너무 깁니다.");
+				return false;}
 			else
-				alert('에러가 발생했습니다.');
+				{alert('에러가 발생했습니다.');
+				return false;}
 		},
 
 		error : function(request, status, error) {
@@ -163,7 +171,6 @@ function registerLcategory() {
 			}
 		}
 	});
-	getAllLcategory();
 	
 }
 
@@ -192,6 +199,8 @@ function registerMcategory() {
 				alert("중분류명을 입력해주세요");
 			else if(response == "Mcategory already exist")
 				alert("이미 같은 이름의 카테고리가 존재합니다.");
+			else if(response == "LongMcategory")
+				alert("중분류명이 너무 깁니다.");
 			else
 				alert("에러가 발생했습니다.");
 		},
@@ -231,6 +240,8 @@ function registerScategory() {
 				alert("중분류명을 입력해주세요");
 			else if(response == "Enter Scategory")
 				alert("소분류명을 입력해주세요");
+			else if(response == "LongScategory")
+				alert("소분류명이 너무 깁니다.");
 			else if(response == "Scategory already exist")
 				alert("이미 같은 이름의 카테고리가 존재합니다.");
 			else
