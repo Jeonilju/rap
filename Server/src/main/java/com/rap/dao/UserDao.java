@@ -365,7 +365,7 @@ public class UserDao implements UserIDao {
 				
 				logger.info("currentTime: " + currentTime.toString() + ", size: " + info.size());
 				
-				if(info.size() != 0)
+				//if(info.size() != 0)
 					result.add(new NewmemberInfo(currentTime, info.size()));
 				
 				currentTime.setDate(currentTime.getDate()+1);
@@ -386,7 +386,7 @@ public class UserDao implements UserIDao {
 				logger.info("temp: " + temp.toString());
 				logger.info("currentTime: " + currentTime.toString() + ", size: " + info.size());
 				
-				if(info.size() != 0)
+				//if(info.size() != 0)
 					result.add(new NewmemberInfo(currentTime, info.size()));
 				
 				currentTime.setMonth(currentTime.getMonth()+1);

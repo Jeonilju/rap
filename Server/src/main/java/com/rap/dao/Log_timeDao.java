@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,7 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OPtimeInfo;
-import com.rap.models.Log_timeInfo;
+
+import net.sf.json.JSONObject;
 
 @Repository
 public class Log_timeDao{
@@ -206,4 +206,7 @@ public List<OPtimeInfo> count_operation_time(String project_key,Timestamp start)
 		
 		return result;
 	}
+
+
+
 }

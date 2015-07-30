@@ -1,11 +1,4 @@
-html, body {
-    margin:0;
-    padding:0;
-    font-family: "Lucida Grande", Verdana;
-    font-size: 0.9em;
-    text-align: center;
-    background-color:#F2F2F2;
-}
+
 
 input, select {
     font-size:0.9em;
@@ -27,23 +20,18 @@ a {
     color:#23A4FF;
 }
 
-#container {
-    width: 1000px;
-    height: 600px;
-    margin:0 auto;
-    position:relative;
-}
+
 
 #left-container, 
 #right-container, 
 #center-container {
-    height:600px;
-    position:absolute;
-    top:0;
+   height:200px;
+/*      position:absolute;
+    top:0; */
 }
 
 #left-container, #right-container {
-    width:200px;
+    width:800px;
     color:#686c70;
     text-align: left;
     overflow: auto;
@@ -61,10 +49,9 @@ a {
 }
 
 #right-container {
-    right:0;
-    background-image:url('col1.png');
-    background-position:center left;
-    border-right:1px solid #ddd;
+     right:0; 
+    background-image:url('col1.png');    
+    border-right:1px solid #ddd; 
 }
 
 #right-container h4{
@@ -72,10 +59,9 @@ a {
 }
 
 #center-container {
-    width:600px;
-    left:200px;
+    /* width:400px;
     background-color:#1a1a1a;
-    color:#ccc;
+    color:#ccc; */
 }
 
 .text {
@@ -99,7 +85,7 @@ a {
 
 #infovis {
     position:relative;
-    width:600px;
+    width:800px;
     height:600px;
     margin:auto;
     overflow:hidden;
