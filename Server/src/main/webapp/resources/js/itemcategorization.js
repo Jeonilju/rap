@@ -41,10 +41,18 @@ function getLcategory(id)
 		}
 	});
 }
-function getMcategory(id)
+function getMcategory(id, list)
 {
 	$('#Mcategory'+id).html("<option value='' selected>해당없음</option>");
 	$('#Scategory'+id).html("<option value='' selected>해당없음</option>");
+	
+	if(document.getElementById('Lcategory'+id).value == '')
+		{
+			$(list).html('');
+			$('#Mcategory'+id).selectpicker('refresh');
+			$('#Scategory'+id).selectpicker('refresh');
+			return false;
+		}
 	
 	$.ajax({
 		url : "Mcategory_db",
@@ -77,9 +85,17 @@ function getMcategory(id)
 		}
 	});
 }
-function getScategory(id)
+function getScategory(id, list)
 {
 	$('#Scategory'+id).html("<option value='' selected>해당없음</option>");
+
+	if(document.getElementById('Mcategory'+id).value == '')
+		{
+			$(list).html('');
+			
+			$('#Scategory'+id).selectpicker('refresh');
+			return false;
+		}
 	
 	$.ajax({
 		url : "Scategory_db",

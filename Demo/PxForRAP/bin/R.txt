@@ -411,7 +411,8 @@ int drawable abc_textfield_search_material 0x7f02003a
 int drawable ic_launcher 0x7f02003b
 int drawable login_btn 0x7f02003c
 int drawable main_background 0x7f02003d
-int drawable notification_template_icon_bg 0x7f02003e
+int drawable notification_template_icon_bg 0x7f02003f
+int drawable rap_demo_icon1 0x7f02003e
 int id action0 0x7f070075
 int id action_bar 0x7f070040
 int id action_bar_activity_content 0x7f07001d

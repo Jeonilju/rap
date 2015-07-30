@@ -36,7 +36,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-12">
-				<img src="./resources/image/profile3.png" width="150" height="150">
+				<img src="./resources/image/apiDocument.png" width="150" height="150">
 				<div class="intro-text">
 					<span class="name" style="font-size: 3em;">R.A.P</span> 
 					<span class="skills">Report - Analysis - Promotion</span>

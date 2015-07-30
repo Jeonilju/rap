@@ -1,10 +1,8 @@
 package com.px;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.http.client.methods.HttpRequestBase;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +21,6 @@ import com.rap.RAPSetting;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
-import com.rap.iap.RAPIapInfo;
 
 public class IntroActivity extends RAPBaseActivity{
 
@@ -35,7 +32,6 @@ public class IntroActivity extends RAPBaseActivity{
 		setContentView(R.layout.activity_intro);
 		RAPSetting.setRAPKey("1");
 		
-		RAPAPIs.GetVirtual_Main();
 		try {
 			HttpRequestBase req = RAPAPIs.CheckVirtual_Main();
 			RAPHttpClient.getInstance().background(req, getMainHandler);
@@ -80,18 +76,12 @@ public class IntroActivity extends RAPBaseActivity{
 			if(!Preference.getBoolean(IntroActivity.this, Preference.isFirst)){
 				// 처음 로그인
 				Preference.putBoolean(IntroActivity.this, Preference.isFirst, true);
-				ShowDig("모두에 당직에 오신것을 환영합니다.");
+				ShowDig("모두에 당직에 오신것을 환영합니다.\n처음 오신 여러분께 10000" + Preference.getString(IntroActivity.this, Preference.PREF_MAIN)
+						+ "와 10000" + Preference.getString(IntroActivity.this, Preference.PREF_SUB) + "를 드립니다.");
 				
 				try {
 					HttpRequestBase req = RAPAPIs.TakeVirtual_Sub(10000);
-					RAPHttpClient.getInstance().background(req, null);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				try {
-					HttpRequestBase req = RAPAPIs.TakeVirtual_Main(10000);
-					RAPHttpClient.getInstance().background(req, null);
+					RAPHttpClient.getInstance().background(req, takeCallback);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -208,5 +198,68 @@ public class IntroActivity extends RAPBaseActivity{
 		
 	};
 	
+	
+	Handler takeCallback = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(IntroActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						try {
+							HttpRequestBase req = RAPAPIs.TakeVirtual_Main(10000);
+							RAPHttpClient.getInstance().background(req, takeCallback2);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						break;
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
+	
+	Handler takeCallback2 = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg){
+			if(msg.what == -1) {
+				Toast.makeText(IntroActivity.this, "연결 실패 \n잠시후에 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+			}
+			else{
+				int status;
+				try {
+					JSONObject json = new JSONObject(msg.getData().getString("res"));
+					status = json.getInt("httpStatusCode");
+					
+					switch (status) {
+					case 200:
+						Intent intent= new Intent(IntroActivity.this, MainActivity.class);
+						startActivity(intent);
+						finish();
+						break;
+					default:
+						break;
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+	};
 	
 }

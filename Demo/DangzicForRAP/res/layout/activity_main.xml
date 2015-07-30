@@ -2,12 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.dangzicforrap.MainActivity"
-    android:background="@drawable/main_background" >
+    android:background="#CBDDF1" >
 
     <TextView
         android:id="@+id/main_title"
@@ -15,16 +11,47 @@
         android:layout_height="wrap_content"
         android:text="오늘의 당직" 
         android:textSize="20sp"
-        android:textColor="#ffffff"
+        android:textColor="#2A4574"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"/>
     
-    <ListView 
-        android:id="@+id/main_list"
+    <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/main_title"/>
+        android:layout_below="@id/main_title">
         
+        <LinearLayout
+            android:id="@+id/main_btn_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/main_reset"
+                android:layout_width="180dp"
+                android:layout_height="80dp"
+                android:background="#657CA6"
+               	android:textColor="#2A4574"
+                android:text="초기화" />
+            
+            <Button
+                android:id="@+id/main_send"
+                android:layout_width="180dp"
+                android:layout_height="80dp"
+                android:background="#657CA6"
+               	android:textColor="#2A4574"
+                android:text="제출" />
+            
+	</LinearLayout>
+    	
+        <ListView 
+        	android:id="@+id/main_list"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:layout_above="@id/main_btn_layout"/>
+        
+    </RelativeLayout>
 </RelativeLayout>

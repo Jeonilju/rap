@@ -52,7 +52,7 @@ if (request.getProtocol().equals("HTTP/1.1"))
 <script
 	src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 <script src="./resources/js/classie.js"></script>
-<script src="./resources/js/cbpAnimatedHeader.js"></script>
+<!-- <script src="./resources/js/cbpAnimatedHeader.js"></script>-->
 
 <!-- Contact Form JavaScript -->
 <script src="./resources/js/jqBootstrapValidation.js"></script>
@@ -349,6 +349,8 @@ function signup_db() {
 					<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
 						<li role="presentation"><a role="menuitem" href="sdk">Download</a></li>
 						<li role="presentation"><a role="menuitem" href="ApiDoc">Documentation</a></li>
+						<li role="presentation"><a role="menuitem" href="getStart">Get Start</a></li>
+						<li role="presentation"><a role="menuitem" href="QnA">QnA</a></li>
 					</ul></li>
 				
 				<%

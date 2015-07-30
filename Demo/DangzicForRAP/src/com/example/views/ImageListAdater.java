@@ -66,7 +66,7 @@ public class ImageListAdater extends BaseAdapter{
             if(contentList.get(position).isUsed()){
             	// 이미 한지역
             	text2.setText("완료");
-            	text2.setTextColor(Color.GREEN);
+            	text2.setTextColor(Color.parseColor("#2A4574"));
             }
             else{
             	// 해야될지역
