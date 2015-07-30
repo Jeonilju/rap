@@ -57,63 +57,67 @@
 					}
 				});
 			}
+
 		
-			function modify_chart(baby,ten,twenty,thirty,forty,old) {
-			    $('#container').highcharts({
-			        chart: {
-			            type: 'column'
-			        },
-			        title: {
-			            text: '연령 분포'
-			        },
-			        
-			        xAxis: {
-			            type: 'category',
-			            labels: {
-			                rotation: -45,
-			                style: {
-			                    fontSize: '13px',
-			                    fontFamily: 'Verdana, sans-serif'
-			                }
-			            }
-			        },
-			        yAxis: {
-			            min: 0,
-			            title: {
-			                text: 'Counts'
-			            }
-			        },
-			        legend: {
-			            enabled: false
-			        },
-			        tooltip: {
-			            pointFormat: 'Counts : <b>{point.y:.1f} </b>'
-			        },
-			        series: [{
-			            name: 'Population',
-			            data: [
-							['10s 이하', baby],   
-			                ['10s', ten],
-			                ['20s', twenty],
-			                ['30s', thirty],
-			                ['40s', forty],
-			                ['50s 이상', old]
-			            ],
-			            dataLabels: {
-			                enabled: true,
-			                rotation: -90,
-			                color: '#FFFFFF',
-			                align: 'right',
-			                format: '{point.y:.1f}', // one decimal
-			                y: 10, // 10 pixels down from the top
-			                style: {
-			                    fontSize: '13px',
-			                    fontFamily: 'Verdana, sans-serif'
-			                }
-			            }
-			        }]
-			    });
-			}
+		
+		
+		function modify_chart(baby,ten,twenty,thirty,forty,old) {
+		    $('#container').highcharts({
+		        chart: {
+		            type: 'column'
+		        },
+		        title: {
+		            text: ' '
+		        },
+		        
+		        xAxis: {
+		            type: 'category',
+		            labels: {
+		                rotation: -45,
+		                style: {
+		                    fontSize: '13px',
+		                    fontFamily: 'Verdana, sans-serif'
+		                }
+		            }
+		        },
+		        yAxis: {
+		            min: 0,
+		            title: {
+		                text: 'Counts'
+		            }
+		        },
+		        legend: {
+		            enabled: false
+		        },
+		        tooltip: {
+		            pointFormat: 'Counts : <b>{point.y:.1f} </b>'
+		        },
+		        series: [{
+		            name: 'Population',
+		            data: [
+						['under 10s', baby],   
+		                ['10s', ten],
+		                ['20s', twenty],
+		                ['30s', thirty],
+		                ['40s', forty],
+		                ['over 50s', old]
+		            ],
+		            dataLabels: {
+		                enabled: true,
+		                rotation: -45,
+		                color: '#FFFFFF',
+		                align: 'right',
+		                format: '{point.y:.1f}', // one decimal
+		                y: -15, // 10 pixels down from the top
+		                style: {
+		                    fontSize: '13px',
+		                    fontFamily: 'Verdana, sans-serif'
+		                }
+		            }
+		        }]
+		    });
+		}
+		
 		</script>
 	</head>
 	<body id="page-top" class="index">

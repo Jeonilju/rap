@@ -110,6 +110,27 @@ function getItemlist()
 
 function addItem()
 {
+
+	if(document.getElementById('ItemName').value.length>22)
+	{
+	alert("아이템 이름이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('ItemDescription').value.length>50)
+	{
+	alert("아이템 설명이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('GoogleID').value.length>25)
+	{
+	alert("Google ID가 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('ItemPrice').value>2147438647 || document.getElementById('ItemPrice').value< -2147438647 )
+	{
+	alert("가격이 너무 큽니다.");
+	return false;
+	}
 	
 	$.ajax({
 		url : "registerItem",
@@ -168,8 +189,14 @@ function addItem()
 			{
 				alert("실제결제의 경우 구글 아이디를 입력해주세요.");
 			}
-			else if(response=='Number')
+			else if(response=='LongItemPrice')
 				alert("금액이 너무 큽니다");
+			else if(response=='LongItemName')
+				alert("이름이 너무 깁니다.");
+			else if(response=='LongItemDescription')
+				alert("설명이 너무 깁니다.");
+			else if(response=='LongGoogleID')
+				alert("구글 아이디가 너무 깁니다.");
 			else if(response=='Coin')
 			{
 				alert("Coin을 선택해주세요.");
@@ -324,9 +351,9 @@ function getItem(name)
 				var main = data.main;
 				var sub = data.sub;
 				
-				document.getElementById('EditItemName').placeholder = item.name;
-				document.getElementById('EditItemDescription').placeholder = item.description;
-				document.getElementById('EditGoogleID').placeholder = item.google_id;
+				document.getElementById('EditItemName').value = item.name;
+				document.getElementById('EditItemDescription').value = item.description;
+				document.getElementById('EditGoogleID').value = item.google_id;
 				
 				$('#Editcoinlist').html("<option value='실제결제'>실제결제</option>");
 				$('#Editcoinlist').append("<option value=\""+main.name+"\">"+main.name+"</option>");
@@ -342,7 +369,7 @@ function getItem(name)
 				if(item.using_type == 3)
 					price = item.price_real;
 				
-				document.getElementById('EditItemPrice').placeholder = price;
+				document.getElementById('EditItemPrice').value = price;
 			}
 		}
 	});
@@ -352,6 +379,26 @@ function getItem(name)
 }
 function editItem()
 {
+	if(document.getElementById('EditItemName').value.length>22)
+	{
+	alert("아이템 이름이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('EditItemDescription').value.length>50)
+	{
+	alert("아이템 설명이 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('EditGoogleID').value.length>25)
+	{
+	alert("Google ID가 너무 깁니다.");
+	return false;
+	}
+	if(document.getElementById('EditItemPrice').value>2147438647 || document.getElementById('ItemPrice').value< -2147438647 )
+	{
+	alert("가격이 너무 큽니다.");
+	return false;
+	}
 	
 	$.ajax({
 		url : "editItem",
@@ -399,8 +446,14 @@ function editItem()
 			{
 				alert("Coin을 선택해주세요.");
 			}
-			else if(response=='Number')
+			else if(response=='LongItemPrice')
 				alert("금액이 너무 큽니다");
+			else if(response=='LongItemName')
+				alert("이름이 너무 깁니다.");
+			else if(response=='LongItemDescription')
+				alert("설명이 너무 깁니다.");
+			else if(response=='LongGoogleID')
+				alert("구글 아이디가 너무 깁니다.");
 			else
 			{
 				alert("에러가 발생했습니다.");

@@ -19,6 +19,9 @@
 		<style type="text/css">
 			${demo.css}
 		</style>
+
+	</head>
+	<body id="page-top" class="index">
 		
 		<script type="text/javascript">
 			$(function() {
@@ -77,10 +80,12 @@
 				});
 			}
 			
-			
 			function modify_chart(start_time,count) {
 			    $('#container').highcharts({
-			       
+			    	 title: {
+			             text: ' ',
+			             x: -20 //center
+			         },
 			        xAxis: {
 			            categories: start_time
 			        },

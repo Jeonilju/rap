@@ -129,7 +129,7 @@
 				        }]
 				    });
 			}
-			
+
 			function onLoaded(){
 				$('#start_date').datepicker("setDate", new Date()).on('changeDate', function (ev) {
 					getoperation_time();

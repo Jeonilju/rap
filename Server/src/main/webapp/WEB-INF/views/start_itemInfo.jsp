@@ -25,61 +25,71 @@
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>회원가입 및 프로젝트 등록</h2>
+								<h2>IAP</h2>
 							</div>
 						</div>
 						<br />
 						<div class="row">
 							
-							<h4>회원가입</h4>
+							<h4>Item 등록</h4>
 							
 							<p>
-							R.A.P 를 이용하시려면 우선 회원가입을 해야합니다.
+							아이템을 등록하고 관리할 수 있습니다. <br>
+							등록된 아이템은 SDK에서 호출을 통해 별도의 업데이트 없이 동적으로 변경이 가능합니다.<br>
 							</p>
 							
 							<p>
 								<br/>
-								<img src="./resources/image/started/SignUp1.png" width="500" height="300" style="margin: 10px;">
+								<img src="./resources/image/started/item_menu.png" width="350" height="350" style="margin: 10px;">
 								<br/>
-								우측 상단에 있는 Sign Up 버튼을 클릭하시면 회원가입을 진행 할 수 있는 창이 나타나게 됩니다.<br/>
-								해당 창에서 회원가입을 진행해주세요.
+								Virtual Store 탭을 클릭하시면 아이템을 관리할 수 있는 페이지로 이동하게 됩니다.<br>
+								이동한 페이지에서 Add an Item 버튼을 클릭하시면 아이템 등록을 할 수 있는 창이 나타납니다.<br>
 							</p>
 							
 							<p>
-								<img src="./resources/image/started/SignUp2.png" width="500" height="300" style="margin: 10px;">
+								<img src="./resources/image/started/item1.png" width="614" height="602" style="margin: 10px;">
 								<br/>
-								위의 창이 나타나게되면 이메일과 비밀번호를 입력하여 회원가입을 합니다.
+								아이템의 대분류, 중분류, 소분류를 선택하신 후 아이템의 이름, 설명을 입력합니다.<br>
+								<br>
+								RAP에서는 2가지의 가상화폐도 지원을 하는데 이 아이템을 어떤 화폐로 구매할지 선택할 수 있습니다.<br>
+								만약 현금결제를 원하신다면 Google Item Id를 입력하시면 됩니다.<br>
+								아이템의 가격도 입력해주시고 추가버튼을 누르시면 정상 등록된것을 확인하실 수 있습니다. 
 							</p>
 							
 							<p>
-								<img src="./resources/image/started/SignUp3.png" width="500" height="300" style="margin: 10px;">
+								<img src="./resources/image/started/item2.png" width="937" height="379" style="margin: 10px;">
 								<br/>
-								우측 상단에 있는 Sign In 버튼을 클릭하여 회원가입했던 이메일과 비밀번호를 통해 로그인합니다.
+								등록된 아이템은 카테고리를 설정하시면 보실 수 있습니다.
 							</p>
 							
 							<hr/>
-							<h4>프로젝트 등록</h4>
+							
+							<h4>Item 조회</h4>
 							<p>
-								<img src="./resources/image/started/Project1.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								로그인 후에 프로젝트를 등록해야합니다.<br/> 
-								Developer 탭을 클릭하시면 현재 등록된 프로젝트 리스트들이 나타나게됩니다.<br/> 
-								좌측 메뉴에 Register를 클릭하여 프로젝트를 등록합니다.<br/><br/>
+								아이템 조회는 4가지로 나뉘게 되는데<br> 
+								전체 아이템 조회, 대분류를 통한 아이템 조회, 중분류를 통한 아이템 조회, 그리고 소분류를 통한 아이템 조회가 가능합니다.<br>
+								각각은 다음과 같습니다.
 							</p>
 							
 							<p>
-								<img src="./resources/image/started/Project2.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								프로젝트는 프로젝트 이름과 Summary 그리고 Description을 입력하여 등록합니다.
+								<b>RAPAPIs.getIAP_AllItems()</b><br>
+								-전체 아이템 조회-
 							</p>
 							
 							<p>
-								<img src="./resources/image/started/Project3.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								위와같이 등록된 프로젝트들의 리스트를 볼 수 있습니다.<br/>
-								프로젝트는 최대 3개까지 등록이 가능합니다.
+								<b>RAPAPIs.getIAP_CategoryL(String 대분류명)</b><br>
+								-대분류 아이템 조회-
 							</p>
 							
+							<p>
+								<b>RAPAPIs.getIAP_CategoryM(String 대분류명, String 중분류명)</b><br>
+								-중분류 아이템 조회-
+							</p>
+							
+							<p>
+								<b>RAPAPIs.getIAP_CategoryS(String 대분류명, String 중분류명, String 소분류명)</b><br>
+								-소분류 아이템 조회-
+							</p>
 						</div>
 					</div>
 				</div>

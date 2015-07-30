@@ -65,7 +65,7 @@
 										type : 'pie'
 									},
 									title : {
-										text : '성비'
+										text : ' '
 									},
 									tooltip : {
 										pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'

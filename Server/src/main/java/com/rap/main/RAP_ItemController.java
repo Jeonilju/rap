@@ -144,21 +144,18 @@ public class RAP_ItemController {
 			return "ItemDescription";
 		logger.info("ItemDescription = "+ItemDescription);
 
+		if(ItemName.length()>22)
+			return "LongItemName";
+		if(ItemDescription.length()>50)
+			return "LongItemDescription";
+		if(GoogleID.length()>25)
+			return "LongGoogleID";
+		
 		//가격 입력값 검증
 		String temp;
 		if(ItemPrice.length() > 10)
-			return "Number";
-		else if(ItemPrice.length() == 10)
-		{
-			if(ItemPrice.charAt(0) > '2')
-				return "Number";
-
-			if(ItemPrice.charAt(0) == '2')
-			{
-			if(ItemPrice.charAt(1) > '0')
-				return "Number";
-			}
-		}
+			return "LongItemPrice";
+		
 		for(int i=0;i<ItemPrice.length();i++)
 		{
 			temp=ItemPrice.substring(i,i+1);
@@ -372,6 +369,15 @@ public class RAP_ItemController {
 			return "virtual_main_description";
 		if (virtual_main_description.isEmpty())
 			return "virtual_main_description";
+
+
+		// 길이 체크
+		if (virtual_main_name.length()>22)
+			return "Longvirtual_main_name";
+
+		// 길이 체크
+		if (virtual_main_description.length()>50)
+			return "Longvirtual_main_description";
 		
 		logger.info("정상적으로 입력");
 		
@@ -427,6 +433,14 @@ public class RAP_ItemController {
 			return "virtual_sub_description";
 		if (virtual_sub_description.isEmpty())
 			return "virtual_sub_description";
+
+		// 길이 체크
+		if (virtual_sub_name.length()>22)
+			return "Longvirtual_main_name";
+
+		// 길이 체크
+		if (virtual_sub_description.length()>50)
+			return "Longvirtual_main_description";
 		
 		logger.info("정상적으로 입력");
 		
@@ -748,203 +762,6 @@ public class RAP_ItemController {
 		return Integer.toString(result);
 	}
 	
-	/** 사용금액 등급 수정 */
-	@RequestMapping(value = "/EditGradeMoney", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
-	@ResponseBody
-	public String EditGradeMoney(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("grade_money_input") String grade_money_input, 
-			@RequestParam("grade_money") String grade_money) {
-		logger.info("EditGradeMoney pages");
-		
-		//UTF 인코딩
-		response.setContentType("text/html; charset=utf-8"); 
-
-		// 세션 객체 생성
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
-		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-			return "error";
-
-		String project_key = currentproject.getPk();
-
-		// 프로젝트 키 존재 X
-		if (project_key == null)
-			return "error";
-		if (project_key.isEmpty())
-			return "error";
-
-		logger.info("프로젝트 존재");
-
-		// 존재 X
-		if (grade_money_input == null)
-			return "grade_money_input";
-		if (grade_money_input.isEmpty())
-			return "grade_money_input";
-
-		// 존재 X
-		if (grade_money == null)
-			return "grade_money";
-		if (grade_money.isEmpty())
-			return "grade_money";
-		
-		logger.info("정상적으로 입력");
-		
-		//입력값 검증
-		String temp;
-		for(int i=0;i<grade_money_input.length();i++)
-		{
-			temp=grade_money_input.substring(i,i+1);
-			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
-					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
-					temp.equals("8")||temp.equals("9"))
-			{	continue;	}
-			else
-				return "Not Number";
-		}
-		
-		int input = Integer.parseInt(grade_money_input);
-		
-		List<SettingInfo> setting = settingDao.selectFromProject(project_key);
-		
-		if(setting.size() == 0) return "error";
-		int moneyl = setting.get(0).getGrade_moneyl();
-		int moneym = setting.get(0).getGrade_moneym();
-		int moneys = setting.get(0).getGrade_moneys();
-		
-		if(grade_money.equals("L"))
-		{
-			if(input>moneym)
-				moneyl=input;
-			else
-				return "L"; 
-		}
-		else if(grade_money.equals("M"))
-		{
-			if(input>moneys && input<moneyl)
-				moneym=input;
-			else
-				return "M"; 
-		}
-		else if(grade_money.equals("S"))
-		{
-			if(input<moneym)
-				moneys=input;
-			else
-				return "S";
-			
-		}
-		else
-		{
-			return "error";
-		}
-		
-		settingDao.updateGradeMoney(moneyl, moneym, moneys, project_key);
-		logger.info("업데이트 성공");
-		
-		return "200";
-	}
-
-	/** 사용시간 등급 수정 */
-	@RequestMapping(value = "/EditGradeTime", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
-	@ResponseBody
-	public String EditGradeTime(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("grade_time_input") String grade_time_input, 
-			@RequestParam("grade_time") String grade_time) {
-		logger.info("EditGradeTime pages");
-		
-		//UTF 인코딩
-		response.setContentType("text/html; charset=utf-8"); 
-
-		// 세션 객체 생성
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
-		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-			return "error";
-
-		String project_key = currentproject.getPk();
-
-		// 프로젝트 키 존재 X
-		if (project_key == null)
-			return "error";
-		if (project_key.isEmpty())
-			return "error";
-
-		logger.info("프로젝트 존재");
-
-		// 존재 X
-		if (grade_time_input == null)
-			return "grade_time_input";
-		if (grade_time_input.isEmpty())
-			return "grade_time_input";
-
-		// 존재 X
-		if (grade_time == null)
-			return "grade_time";
-		if (grade_time.isEmpty())
-			return "grade_time";
-		
-		logger.info("정상적으로 입력");
-		
-		//입력값 검증
-		String temp;
-		for(int i=0;i<grade_time_input.length();i++)
-		{
-			temp=grade_time_input.substring(i,i+1);
-			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
-					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
-					temp.equals("8")||temp.equals("9"))
-			{	continue;	}
-			else
-				return "Not Number";
-		}
-		
-		int input = Integer.parseInt(grade_time_input);
-		
-		List<SettingInfo> setting = settingDao.selectFromProject(project_key);
-		
-		if(setting.size() == 0) return "error";
-		int timel = setting.get(0).getGrade_timel();
-		int timem = setting.get(0).getGrade_timem();
-		int times = setting.get(0).getGrade_times();
-		
-		if(grade_time.equals("L"))
-		{
-			if(input>timem)
-				timel=input;
-			else
-				return "L"; 
-		}
-		else if(grade_time.equals("M"))
-		{
-			if(input>times && input<timel)
-				timem=input;
-			else
-				return "M"; 
-		}
-		else if(grade_time.equals("S"))
-		{
-			if(input<timem)
-				times=input;
-			else
-				return "S";
-			
-		}
-		else
-		{
-			return "error";
-		}
-		
-		settingDao.updateGradeTime(timel, timem, times, project_key);
-		logger.info("업데이트 성공");
-		
-		return "200";
-	}
-	
-
 	/** 아이템 삭제 */
 	@RequestMapping(value = "/deleteItem", method = RequestMethod.POST)
 	@ResponseBody
@@ -1131,21 +948,19 @@ public class RAP_ItemController {
 			return "ItemDescription";
 		logger.info("ItemDescription = "+ItemDescription);
 
+
+		if(ItemName.length()>22)
+			return "LongItemName";
+		if(ItemDescription.length()>50)
+			return "LongItemDescription";
+		if(GoogleID.length()>25)
+			return "LongGoogleID";
+		
 		//가격 입력값 검증
 		String temp;
 		if(ItemPrice.length() > 10)
-			return "Number";
-		else if(ItemPrice.length() == 10)
-		{
-			if(ItemPrice.charAt(0) > '2')
-				return "Number";
-
-			if(ItemPrice.charAt(0) == '2')
-			{
-			if(ItemPrice.charAt(1) > '0')
-				return "Number";
-			}
-		}
+			return "LongItemPrice";
+		
 		for(int i=0;i<ItemPrice.length();i++)
 		{
 			temp=ItemPrice.substring(i,i+1);

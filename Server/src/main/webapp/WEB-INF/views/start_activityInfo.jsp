@@ -25,59 +25,63 @@
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>회원가입 및 프로젝트 등록</h2>
+								<h2>Activity 정보 수집</h2>
 							</div>
 						</div>
 						<br />
 						<div class="row">
 							
-							<h4>회원가입</h4>
+							<h4>RAPBaseActivity 상속 </h4>
 							
-							<p>
-							R.A.P 를 이용하시려면 우선 회원가입을 해야합니다.
+							<p >
+							R.A.P를 통해 사용자가 앱에서 어떤 페이지를 가장 많이 보고있는지<br>
+							그리고 어떻게 이동하고있는지 그 흐름을 보다 쉽고 간편하게 확인할 수 있습니다.<br>
+							<br><br>
+							사용자에게 Activity에 대한 정보를 받기 위해선 2가지의 방법이 있습니다.<br>
+							첫번쨰로 RAPBaseActivity를 상속받는것입니다.<br>
 							</p>
 							
-							<p>
+							<p align="center">
 								<br/>
-								<img src="./resources/image/started/SignUp1.png" width="500" height="300" style="margin: 10px;">
+								<img src="./resources/image/started/activity_extends.png" width="354" height="22" style="margin: 10px;">
 								<br/>
-								우측 상단에 있는 Sign Up 버튼을 클릭하시면 회원가입을 진행 할 수 있는 창이 나타나게 됩니다.<br/>
-								해당 창에서 회원가입을 진행해주세요.
+								위와같이 extends를 통해 RAPBaseActivity를 상속받습니다.<br>
 							</p>
 							
-							<p>
-								<img src="./resources/image/started/SignUp2.png" width="500" height="300" style="margin: 10px;">
+							<p align="center">
+								<img src="./resources/image/started/onCreate.png" width="445" height="120" style="margin: 10px;">
+								<img src="./resources/image/started/onDestroy.png" width="445" height="120" style="margin: 10px;">
 								<br/>
-								위의 창이 나타나게되면 이메일과 비밀번호를 입력하여 회원가입을 합니다.
+								다음으로 <b>onCreate</b>와 <b>onDestroy</b>에 super 함수를 호출하는 코드를 삽입합니다.<br>
+								위와같이 코드 3줄을 삽입하는것을 통해 사용자가 어느 페이지에 자주 방문하는지, 그리고 어떤 경로를 통해<br>
+								이동하는지 확인할 수 있습니다.<br>
 							</p>
 							
-							<p>
-								<img src="./resources/image/started/SignUp3.png" width="500" height="300" style="margin: 10px;">
+							<p align="center">
+								<img src="./resources/image/started/best_activity.png" width="883" height="514" style="margin: 10px;">
 								<br/>
-								우측 상단에 있는 Sign In 버튼을 클릭하여 회원가입했던 이메일과 비밀번호를 통해 로그인합니다.
+								Best Activity는 위와같이 사용자가 가장 많이 방문한 Activity를 순서대로 볼 수 있습니다. <br>
+							</p>
+							
+							<p align="center">
+								<img src="./resources/image/started/activity_path.png" width="687" height="529" style="margin: 10px;">
+								<br/>
+								Activity Path는 어떤 경로로 이동하는지 볼 수 있습니다.<br>
+								Activity 이름을 클릭하시면 얼마나  이동했는가를 보실 수 있습니다.<br>
 							</p>
 							
 							<hr/>
-							<h4>프로젝트 등록</h4>
-							<p>
-								<img src="./resources/image/started/Project1.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								로그인 후에 프로젝트를 등록해야합니다.<br/> 
-								Developer 탭을 클릭하시면 현재 등록된 프로젝트 리스트들이 나타나게됩니다.<br/> 
-								좌측 메뉴에 Register를 클릭하여 프로젝트를 등록합니다.<br/><br/>
-							</p>
 							
-							<p>
-								<img src="./resources/image/started/Project2.png" width="500" height="300" style="margin: 10px;">
+							<h4>Activity 정보 수집</h4>
+							<p align="center">
+								<img src="./resources/image/started/activity_info.png" width="692" height="32" style="margin: 10px;">
 								<br/>
-								프로젝트는 프로젝트 이름과 Summary 그리고 Description을 입력하여 등록합니다.
-							</p>
-							
-							<p>
-								<img src="./resources/image/started/Project3.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								위와같이 등록된 프로젝트들의 리스트를 볼 수 있습니다.<br/>
-								프로젝트는 최대 3개까지 등록이 가능합니다.
+								두번쨰 방법은 사용자 정보를 수집했던 방식과 동일한 방식으로 Activity 정보를 수집하는것입니다.<br>
+								<br>
+								<b>RAPAPIs.ActivityInfo_Move(String 이전 Activity 이름, String 현재 Activiy 이름)</b><br>
+								<br>
+								위의 코드를 삽입함을 통해 사용자의 Activity간의 정보를 얻어낼 수 있습니다.<br>
+								Activity간의 관계를 잘 정의해야 하므로 RAPBaseActivity를 상속받아 사용하는것을 권장합니다.<br>
 							</p>
 							
 						</div>
