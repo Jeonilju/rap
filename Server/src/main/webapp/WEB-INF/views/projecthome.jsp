@@ -57,7 +57,7 @@ function deleteProject(projectname)
 				}
 				else
 				{
-					alert("에러")
+					alert("에러가 발생했습니다.")
 					return false;
 				}	
 			},
@@ -150,7 +150,7 @@ function register()
 							
 						</div>
 						<div class="panel-body">
-							<div>summary : <%= projectlist.get(i).getSummary() %></div>
+							<div style="font-family:sans-serif;">summary : <%= projectlist.get(i).getSummary() %></div>
 							<div>description : <%= projectlist.get(i).getDescription() %></div>
 							<div>projectkey : <%= projectlist.get(i).getPk() %></div>
 						</div>

@@ -14,6 +14,7 @@
 		<script src="./resources/js/modules/data.js"></script>
 		<script src="./resources/js/modules/exporting.js"></script>
 		
+<<<<<<< HEAD
 		<!-- Additional files for the Highslide popup effect -->
 		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide-full.min.js"></script>
 		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide.config.js" charset="utf-8"></script>
@@ -72,10 +73,7 @@
 				});
 			}
 
-
-
 			function add_to_table(item_name,count){
-				//민수 여기 사이즈 체크 필요
 				$("#table_body").empty();
 				
 				if(item_name.length>0){
@@ -97,6 +95,9 @@
 				$('#start_date').datepicker("setDate", new Date());
 				$('#end_date').datepicker("setDate", new Date());
 				
+				$("#basicuserinfo").attr('class','accordion-body collapse in');
+				$("#iapinfo2").attr('class','accordion-body collapse in');
+				
 				getsales_ranking();
 			}
 		
@@ -111,7 +112,7 @@
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-					<jsp:include page="sidebar-nav.jsp" flush="false" />
+					<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->

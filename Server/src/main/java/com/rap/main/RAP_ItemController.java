@@ -24,6 +24,7 @@ import com.rap.dao.Virtual_SubDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
+import com.rap.models.PromotionInfo;
 import com.rap.models.SettingInfo;
 import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
@@ -145,6 +146,19 @@ public class RAP_ItemController {
 
 		//가격 입력값 검증
 		String temp;
+		if(ItemPrice.length() > 10)
+			return "Number";
+		else if(ItemPrice.length() == 10)
+		{
+			if(ItemPrice.charAt(0) > '2')
+				return "Number";
+
+			if(ItemPrice.charAt(0) == '2')
+			{
+			if(ItemPrice.charAt(1) > '0')
+				return "Number";
+			}
+		}
 		for(int i=0;i<ItemPrice.length();i++)
 		{
 			temp=ItemPrice.substring(i,i+1);
@@ -189,8 +203,9 @@ public class RAP_ItemController {
 			//해당 이름의 주화폐까 없는 경우
 			if(mainlist.isEmpty())
 			{
-				//부화폐 리스트
-				List<Virtual_MainInfo> sublist = virtual_MainDao.select(project_key, Coin);
+				//부화폐 리스트				
+				List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key, Coin);
+
 				//항목이 없으면 에러
 				if(sublist.isEmpty())
 					return "error";
@@ -208,7 +223,7 @@ public class RAP_ItemController {
 		else if(price_real != -1)
 			using_type = 3;
 		
-		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, using_type, "", ItemDescription, Lcategory, Mcategory, Scategory);
+		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, using_type, "", ItemDescription, Lcategory, Mcategory, Scategory, GoogleID);
 		
 		return "200";
 	}
@@ -925,6 +940,278 @@ public class RAP_ItemController {
 		
 		settingDao.updateGradeTime(timel, timem, times, project_key);
 		logger.info("업데이트 성공");
+		
+		return "200";
+	}
+	
+
+	/** 아이템 삭제 */
+	@RequestMapping(value = "/deleteItem", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteItem(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("itemname") String itemname,
+			@RequestParam("Lcategory") String Lcategory,
+			@RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory) {
+		
+		logger.info("deleteItem Page");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		
+		ProjectInfo project = (ProjectInfo)session.getAttribute("currentproject");
+		if(project==null) return "error";
+		
+		String project_key = project.getPk();
+		if(project_key == null) return "error";
+		if(project_key.isEmpty()) return "error";
+		
+		if(itemname == null) return "itemname";
+		if(itemname.isEmpty()) return "itemname";
+
+		if(Lcategory == null) return "Lcategory";
+		if(Lcategory.isEmpty()) return "Lcategory";
+		
+		if(Mcategory == null) return "Mcategory";
+		if(Mcategory.isEmpty()) return "Mcategory";
+		
+		if(Scategory == null) return "Scategory";
+		if(Scategory.isEmpty()) return "Scategory";
+		
+		IAPInfo item = iapDao.select(project_key, Lcategory, Mcategory, Scategory, itemname);
+		if(item == null) return "error";
+		
+		iapDao.delete(item.getPk(), project_key);
+		
+		return "200";
+	}
+
+	/** 아이템*/
+	@RequestMapping(value = "/getitem", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String getitem(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("name") String name, 
+			@RequestParam("Lcategory") String Lcategory, 
+			@RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory) {
+		logger.info("getitem pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "";
+		if (project_key.isEmpty())
+			return "";
+
+		logger.info("프로젝트 존재");
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "";
+		if (Lcategory.isEmpty())
+			return "";
+		logger.info("대분류 존재");
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "";
+		if (Mcategory.isEmpty())
+			return "";
+		logger.info("중분류 존재");
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+			return "";
+		if (Scategory.isEmpty())
+			return "";
+		logger.info("소분류 존재");
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (name == null)
+			return "";
+		if (name.isEmpty())
+			return "";
+		logger.info("아이템이름 존재");
+		
+		IAPInfo item = iapDao.select(project_key, Lcategory, Mcategory, Scategory, name);
+		if(item == null) return "";
+
+		Virtual_MainInfo main = virtual_MainDao.selectOne(project_key);
+		Virtual_SubInfo sub = virtual_SubDao.selectOne(project_key);
+		
+		logger.info("아이템 존재");
+		
+		JSONObject jObject = new JSONObject();
+				
+		jObject.put("item", item);
+		jObject.put("main", main);
+		jObject.put("sub", sub);
+		logger.info(jObject.toString());
+
+		return jObject.toString();
+	}
+	/** 아이템 수정 */
+	@RequestMapping(value = "/editItem", method = RequestMethod.POST)
+	@ResponseBody
+	public String editItem(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("name") String name, 
+			@RequestParam("ItemName") String ItemName, 
+			@RequestParam("ItemDescription") String ItemDescription,
+			@RequestParam("GoogleID") String GoogleID,
+			@RequestParam("ItemPrice") String ItemPrice, 
+			@RequestParam("Lcategory") String Lcategory,
+			@RequestParam("Mcategory") String Mcategory,
+			@RequestParam("Scategory") String Scategory,
+			@RequestParam("Coin") String Coin) {
+		
+		logger.info("editItem pages");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+			return "error";
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+			return "error";
+		if (project_key.isEmpty())
+			return "error";
+
+		logger.info("프로젝트 = "+project_key);
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+			return "Lcategory";
+		if (Lcategory.isEmpty())
+			return "Lcategory";
+		logger.info("대분류 = "+Lcategory);
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+			return "Mcategory";
+		if (Mcategory.isEmpty())
+			return "Mcategory";
+		logger.info("중분류 = "+Mcategory);
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+			return "Scategory";
+		if (Scategory.isEmpty())
+			return "Scategory";
+		logger.info("소분류 = "+Scategory);
+
+		// 아이템명이 정상적으로 들어오지 않은 경우
+		if (ItemName == null)
+			return "ItemName";
+		if (ItemName.isEmpty())
+			return "ItemName";
+		logger.info("ItemName = "+ItemName);
+		
+		// 아이템명이 정상적으로 들어오지 않은 경우
+		if (ItemDescription == null)
+			return "ItemDescription";
+		if (ItemDescription.isEmpty())
+			return "ItemDescription";
+		logger.info("ItemDescription = "+ItemDescription);
+
+		//가격 입력값 검증
+		String temp;
+		if(ItemPrice.length() > 10)
+			return "Number";
+		else if(ItemPrice.length() == 10)
+		{
+			if(ItemPrice.charAt(0) > '2')
+				return "Number";
+
+			if(ItemPrice.charAt(0) == '2')
+			{
+			if(ItemPrice.charAt(1) > '0')
+				return "Number";
+			}
+		}
+		for(int i=0;i<ItemPrice.length();i++)
+		{
+			temp=ItemPrice.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else
+				return "ItemPrice";
+		}
+		logger.info("ItemPrice = "+ItemPrice);
+		
+		//화폐가 정상적으로 입력되지 않은 경우
+		if (Coin == null)
+			return "Coin";
+		if (Coin.isEmpty())
+			return "Coin";
+
+		logger.info("Coin = "+Coin);
+		int price_real=-1;
+		int price_main=-1;
+		int price_sub=-1;
+		int using_type=-1;
+		
+		//화폐목록
+		if(Coin.equals("실제결제"))
+		{
+			//실제 결제인데 구글아이디가 입력되지 않은 경우
+			if (GoogleID == null)
+				return "GoogleID";
+			if (GoogleID.isEmpty())
+				return "GoogleID";
+			logger.info("GoogleID = "+GoogleID);
+			
+			price_real = Integer.parseInt(ItemPrice);
+		}
+		else
+		{
+			//주화폐 리스트
+			List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key, Coin);
+			
+			//해당 이름의 주화폐까 없는 경우
+			if(mainlist.isEmpty())
+			{
+				//부화폐 리스트
+				List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key, Coin);
+				//항목이 없으면 에러
+				if(sublist.isEmpty())
+					return "error";
+				else
+					price_sub = Integer.parseInt(ItemPrice);
+			}
+			else
+				price_main = Integer.parseInt(ItemPrice);
+		}
+		
+		if(price_main != -1)
+			using_type = 1;
+		else if(price_sub != -1)
+			using_type = 2;
+		else if(price_real != -1)
+			using_type = 3;
+		
+		IAPInfo item = iapDao.select(project_key, Lcategory, Mcategory, Scategory, name);
+		if(item == null) return "error";
+		iapDao.update(ItemName, price_real, price_main, price_sub, using_type, ItemDescription, GoogleID, item.getPk(), project_key);
 		
 		return "200";
 	}

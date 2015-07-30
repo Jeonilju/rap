@@ -12,7 +12,10 @@ ${demo.css}
         
 		
 <script type="text/javascript">
-
+$(function() {
+	$("#basicuserinfo").attr('class','accordion-body collapse in');
+	$("#appinfo2").attr('class','accordion-body collapse in');
+	});
 function getoperation_count() {
 	var param = "type=" + document.getElementById('Type').value+
 				"&start=" + document.getElementById('Start').value;
@@ -119,7 +122,7 @@ $('#container').highcharts({
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-						<jsp:include page="sidebar-nav.jsp" flush="false" />
+						<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->

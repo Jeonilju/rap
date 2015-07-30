@@ -12,7 +12,10 @@
         
 		
 <script type="text/javascript">
-
+$(function() {
+	$("#basicuserinfo").attr('class','accordion-body collapse in');
+	$("#appinfo2").attr('class','accordion-body collapse in');
+	});
 	function getoperation_count() {
 		var param = "during=" + document.getElementById('during').value;
 
@@ -113,7 +116,7 @@
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-						<jsp:include page="sidebar-nav.jsp" flush="false" />
+						<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->
@@ -131,17 +134,15 @@
 						</div>
 						<div class="row">
 							<div class="col-lg-12 text-center" >
-							
-							<select class="selectpicker" id="during" name="during"  onchange="getoperation_count()">
-								<option value="0">최근 1주일</option>
-								<option value="1">최근 2주일</option>
-								<option value="2">최근 3주일</option>
-								<option value="3">최근 4주일</option>
-								<option value="4">최근 3개월</option>
-								<option value="5">최근 6개월</option>
-							</select>						
-
-							<!-- chart -->
+								<select class="selectpicker" id="during" name="during"  onchange="getoperation_count()">
+									<option value="0">최근 1주일</option>
+									<option value="1">최근 2주일</option>
+									<option value="2">최근 3주일</option>
+									<option value="3">최근 4주일</option>
+									<option value="4">최근 3개월</option>
+									<option value="5">최근 6개월</option>
+								</select>
+								<!-- chart -->
 								<div id="container" style="min-width: 200px; height: 400px; margin: 0 auto" ></div>
 								<!-- /#chart -->
 							</div>

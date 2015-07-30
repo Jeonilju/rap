@@ -14,7 +14,14 @@
 			ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
 			List<PromotionInfo> promotionList = (List<PromotionInfo>) request.getAttribute("promotionList");
 		%>
-
+		
+		<script type="text/javascript">
+			$(function() {
+				$("#basicuserinfo").attr('class','accordion-body collapse in');
+				$("#appinfo2").attr('class','accordion-body collapse in');
+			});
+		</script>
+		
 		<script src="./resources/js/highcharts.js"></script>
 		<script src="./resources/js/modules/data.js"></script>
 		<script src="./resources/js/modules/exporting.js"></script>
@@ -26,88 +33,86 @@
 		
 		<script type="text/javascript">
 
-				function getoperation_count() {
-					
-					var param = "promotion_pk=" + document.getElementById('promotion_list').value;
-					
-					//alert('param= '+param);
-					$.ajax({
-						url : "promotions_analysis_db",
-						type : "POST",
-						data : param,
-						dataType : "JSON",
-						success : function(data) {
+			function getDate(){
 				
-							if (data != null && data != "") {
-								var result=data.result;
-								modify_chart(result);
-							}
-						},
+				var param = "promotion_pk=" + document.getElementById('promotion_list').value;
 				
-						error : function(request, status, error) {
-							if(request.status == '200'){
-								
-							}
-							else if (request.status != '0') {
-								alert("code : " + request.status + "\r\nmessage : "
-										+ request.reponseText + "\r\nerror : " + error);
-							}
+				//alert('param= '+param);
+				$.ajax({
+					url : "promotions_analysis_db",
+					type : "POST",
+					data : param,
+					dataType : "JSON",
+					success : function(data) {
+						if (data != null && data != "") {
+							var result=data.result;
+							modify_chart(result);
 						}
-					});
-				}
-
-
-
-				function modify_chart(result) {
-				$('#container').highcharts({
-				    chart: {
-				        type: 'column'
-				    },
-				    title: {
-				    	text:' '
-				    },
-				    subtitle: {
-				    	
-				    },
-				    xAxis: {
-				        type: 'category',
-				        labels: {
-				            rotation: -45,
-				            style: {
-				                fontSize: '13px',
-				                fontFamily: 'Verdana, sans-serif'
-				            }
-				        }
-				    },
-				    yAxis: {
-				        min: 0,
-				        title: {
-				            text: 'Counts'
-				        }
-				    },
-				    legend: {
-				        enabled: false
-				    },
-				    tooltip: {
-				        pointFormat: '<b>{point.y:.1f} </b>'
-				    },
-				    series: [{
-				        name: 'Count',
-				        data: result,
-				        dataLabels: {
-				            enabled: true,
-				            rotation: -45,
-				            color: '#FFFFFF',
-				            align: 'right',
-				            format: '{point.y:.1f}', // one decimal
-				            y: -15, // 10 pixels down from the top
-				            style: {
-				                fontSize: '13px',
-				                fontFamily: 'Verdana, sans-serif'
-				            }
-				        }
-				    }]
+					},
+					error : function(request, status, error) {
+						if(request.status == '200'){
+							
+						}
+						else if (request.status != '0') {
+							alert("code : " + request.status + "\r\nmessage : "
+									+ request.reponseText + "\r\nerror : " + error);
+						}
+					}
 				});
+				
+			}
+			
+
+			function modify_chart(result) {
+			$('#container').highcharts({
+			    chart: {
+			        type: 'column'
+			    },
+			    title: {
+			    	text:' '
+			    },
+			    subtitle: {
+			    	
+			    },
+			    xAxis: {
+			        type: 'category',
+			        labels: {
+			            rotation: -45,
+			            style: {
+			                fontSize: '13px',
+			                fontFamily: 'Verdana, sans-serif'
+			            }
+			        }
+			    },
+			    yAxis: {
+			        min: 0,
+			        title: {
+			            text: 'Counts'
+			        }
+			    },
+			    legend: {
+			        enabled: false
+			    },
+			    tooltip: {
+			        pointFormat: '<b>{point.y:.1f} </b>'
+			    },
+			    series: [{
+			        name: 'Count',
+			        data: result,
+			        dataLabels: {
+			            enabled: true,
+			            rotation: -45,
+			            color: '#FFFFFF',
+			            align: 'right',
+			            format: '{point.y:.1f}', // one decimal
+			            y: -15, // 10 pixels down from the top
+			            style: {
+			                fontSize: '13px',
+			                fontFamily: 'Verdana, sans-serif'
+			            }
+			        }
+			    }]
+			});
 				
 				
 			}
@@ -122,7 +127,7 @@
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-						<jsp:include page="sidebar-nav.jsp" flush="false" />
+						<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
 				<!--  #sidebar-wrapper -->
@@ -141,7 +146,7 @@
 						<div class="row">
 							<div class="col-lg-12 text-center" >
 								<div class="form-group">
-									<select class="selectpicker show-tick"  id="promotion_list" name="promotion_list" >
+									<select class="selectpicker"  id="promotion_list" name="promotion_list" >
 										<%
 											for(PromotionInfo info : promotionList){
 												out.println("<option value=" + info.getPk() + ">" + info.getName() + "</option>");

@@ -37,6 +37,8 @@ function sendpushmsg(promotionname)
 				{
 					alert('푸시 메세지를 전송했습니다.');
 				}
+				else if(response == 'google_project_num')
+					alert('프로젝트 세팅에서 구글 프로젝트 키를 입력해주세요.');
 				else
 					alert('에러가 발생했습니다.');
 			}
@@ -70,7 +72,8 @@ function getpromotionlist()
 					
 					$('#plist').append("<div class='panel-heading clearfix'><h3 class='panel-title pull-left'>"
 							+list[i].name
-							+"</h3><i class='fa fa-trash pull-right'></i> <i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></div>"
+							+"</h3><a onclick='deletePromotion(\""+list[i].name+"\")' style='cursor:pointer'><i class='fa fa-trash pull-right'></i></a>"
+							+"<a onclick='getPromotion(\""+list[i].name+"\")' style='cursor:pointer'><i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></a></div>"
 							+"<div class='panel-body'><div>summary : "
 							+list[i].summary
 							+"</div><div>사용시간 등급 : "+time+"</div>"
@@ -98,7 +101,186 @@ function getpromotionlist()
 	});
 	
 }
+
+function deletePromotion(promotionname)
+{
+	if(confirm(promotionname+' 프로모션을 삭제하시겠습니까?'))
+	{
+		$.ajax({
+			url : "deletePromotion",
+			type : "POST",
+			data : 
+			{
+				promotionname : promotionname
+			},
+			cache : false,
+			async : false,
+			dataType : "text",
 	
+			success : function(response) {								
+				if(response=='200')
+				{
+					alert('삭제가 완료되었습니다.');
+					location.reload();
+				}
+				else
+				{
+					alert("에러가 발생했습니다.")
+					return false;
+				}	
+			},
+			error : function(request, status, error) {
+				if (request.status != '0') {
+					alert("code : " + request.status + "\r\nmessage : "
+							+ request.reponseText + "\r\nerror : " + error);
+				}
+			}
+	
+		});
+	}
+	else
+	{
+		alert('삭제가 취소되었습니다.');
+		return;
+	}
+}
+var promotionname;
+
+function getPromotion(name)
+{
+	promotionname = name;
+
+	$.ajax({
+		url : "getpromotion",
+		type : "POST",
+		data : 
+		{
+			name : name
+		},
+		dataType : "JSON",
+		success : function(data) {
+			if(data!=null && data!="")
+			{
+				var promotion = data.promotion;
+				
+				document.getElementById('EditPromotionName').placeholder = promotion.name;
+				document.getElementById('EditPromotionSummary').placeholder = promotion.summary;
+				
+				getEditGrade(promotion.grade_money, promotion.grade_time);
+				getEditActivityList(promotion.target_activity);
+			}
+			else
+			{
+				getEditGrade(0, 0);
+				getEditActivityList('');
+			}
+		}
+	});
+
+	$('#EditPromotionModal').modal();
+}
+
+function getEditGrade(money, time)
+{
+	if(money == 0)
+		$('#Editgrade_money').html("<option value='0' selected>전체</option>");
+	else
+		$('#Editgrade_money').html("<option value='0'>전체</option>");
+	for(var i=1;i<=4;i++)
+		{
+		if(money == i)
+			$('#Editgrade_money').append("<option value = '"+i+"' selected>"+i+"</option>");
+		else
+			$('#Editgrade_money').append("<option value = '"+i+"'>"+i+"</option>");
+		}
+	
+	if(time == 0)
+		$('#Editgrade_time').html("<option value='0' selected>전체</option>");
+	else
+		$('#Editgrade_time').html("<option value='0'>전체</option>");
+	for(var i=1;i<=4;i++)
+		{
+		if(time == i)
+			$('#Editgrade_time').append("<option value = '"+i+"' selected>"+i+"</option>");
+		else
+			$('#Editgrade_time').append("<option value = '"+i+"'>"+i+"</option>");
+		}
+		
+	$('#Editgrade_money').selectpicker('refresh');
+	$('#Editgrade_time').selectpicker('refresh');
+}
+function getEditActivityList(val)
+{
+	$.ajax({
+		url : "getactivitylist",
+		type : "POST",
+		dataType : "JSON",
+		success : function(data) {
+			
+			if(data!=null && data!="")
+			{
+				var list = data.activitylist;
+				var listLen = list.length;
+
+				if(val == '')
+ 					$('#Edittarget_activity').html("<option value='' selected>해당없음</option>");
+				else
+					$('#Edittarget_activity').html("<option value=''>해당없음</option>");
+				for(var i=0;i<listLen;i++)
+				{
+					if(val == list[i])
+						$('#Edittarget_activity').append("<option value = '"+list[i]+"' selected>"+list[i]+"</option>");
+					else
+						$('#Edittarget_activity').append("<option value = '"+list[i]+"'>"+list[i]+"</option>");
+						
+					$('#Edittarget_activity').selectpicker('refresh');
+				}
+				
+			}
+		}
+	});
+}
+
+function editPromotion()
+{
+	
+	$.ajax({
+		url : "editPromotion",
+		type : "POST",
+		data :
+			{
+			promotionname : promotionname,
+			name : document.getElementById('EditPromotionName').value,
+			summary : document.getElementById('EditPromotionSummary').value,
+			grade_money : document.getElementById('Editgrade_money').value,
+			grade_time : document.getElementById('Editgrade_time').value,
+			target_activity : document.getElementById('Edittarget_activity').value
+			},
+		dataType : "text",
+		success : function(response) {
+			if(response == "name")
+				alert("프로모션 이름을 입력해주세요.");
+			else if(response == "summary")
+				alert("프로모션 요약을 입력해주세요.");
+			else if(response == "overlap")
+				alert("같은 이름의 프로모션이 존재합니다.");
+			else if(response == "200")
+				{
+				$('#EditPromotionModal').modal('hide');
+				alert("프로모션이 수정되었습니다.");
+				location.reload();
+				}
+			else
+				alert("에러가 발생했습니다.");
+		},
+		error : function(request, status, error) {
+			if (request.status != '0') {
+				alert("code : " + request.status + "\r\nmessage : "
+						+ request.reponseText + "\r\nerror : " + error);
+			}
+		}
+	});
+}
 </script>
 
 <body>
@@ -267,7 +449,7 @@ function registerPromotion() {
 							<a href="#"> <img class="img-responsive"
 								src="http://placehold.it/700x400" alt="">
 							</a>
-							<p class="text-center">Item Image</p>
+							<p class="text-center">Promotion Image</p>
 						</div>
 						<div class="col-md-8 portfolio-item">
 
@@ -321,4 +503,77 @@ function registerPromotion() {
 	</div>
 </div>
 
+<!-- EditPromotionModal -->
+<div class="modal fade" id="EditPromotionModal" tabindex="-1" role="dialog"
+	aria-labelledby="EditPromotionModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="EditPromotionModalLabel">Promotion Edit</h4>
+			</div>
+
+			<form>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-4 portfolio-item">
+							<a href="#"> <img class="img-responsive"
+								src="http://placehold.it/700x400" alt="">
+							</a>
+							<p class="text-center">Promotion Image</p>
+						</div>
+						<div class="col-md-8 portfolio-item">
+
+							<div class="row">
+								<label>Promotion Name</label> <input type="text"
+									class="form-control" placeholder="" id="EditPromotionName"
+									name="EditPromotionName" required
+									data-validation-required-message="Please enter Promotion Name.">
+							</div>
+							<div class="row">
+								<label>Promotion Description</label> <input type="text"
+									class="form-control" placeholder=""
+									id="EditPromotionSummary" name="EditPromotionSummary" required
+									data-validation-required-message="Please enter Promotion Description.">
+							</div>
+							<div class="row form-inline" style="padding:5px">
+									<label style="padding-left:38px;padding-right:38px">과금액</label>
+									<select class="selectpicker" id="Editgrade_money" name="Editgrade_money">
+										<option value="0" selected>전체</option>
+										<option value="1">1 등급</option>
+										<option value="2">2 등급</option>
+										<option value="3">3 등급</option>
+										<option value="4">4 등급</option>
+									</select>
+							</div>
+							<div class="row form-inline" style="padding:5px">
+									<label style="padding-left:30px;padding-right:30px">사용시간</label> 
+									<select class="selectpicker" id="Editgrade_time" name="Editgrade_time">
+										<option value="0" selected>전체</option>
+										<option value="1">1 등급</option>
+										<option value="2">2 등급</option>
+										<option value="3">3 등급</option>
+										<option value="4">4 등급</option>
+									</select>
+							</div>
+							
+							<div class="row form-inline" style="padding:5px">
+									<label style="padding-left:10px;padding-right:10px">Target Activity</label> 
+									<select class="selectpicker" id="Edittarget_activity" name="Edittarget_activity"></select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success" onclick="editPromotion();">Edit</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+</div>
 </html>

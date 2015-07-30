@@ -52,11 +52,11 @@ if (request.getProtocol().equals("HTTP/1.1"))
 <script
 	src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 <script src="./resources/js/classie.js"></script>
-<script src="./resources/js/cbpAnimatedHeader.js"></script>
+<!-- <script src="./resources/js/cbpAnimatedHeader.js"></script>-->
 
 <!-- Contact Form JavaScript -->
 <script src="./resources/js/jqBootstrapValidation.js"></script>
-<script src="./resources/js/contact_me.js"></script>
+<!-- <script src="./resources/js/contact_me.js"></script>-->
 <!-- Custom Theme JavaScript -->
 <script src="./resources/js/sb-admin-2.js"></script>
 

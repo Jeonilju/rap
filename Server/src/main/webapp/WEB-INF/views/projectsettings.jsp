@@ -399,7 +399,8 @@ function registerGoogleProjectNum()
 			<!-- /#sidebar-wrapper -->
 
 			<!-- page-content-wrapper -->
-			<div id="page-content-wrapper">
+			<div id="page-content-wrapper" name="page-content-wrapper">
+			
 				<div class="container-fluid">
 					<!-- Item Categorization -->
 					<div class="row">
@@ -568,12 +569,12 @@ function registerGoogleProjectNum()
 							if(mainlistcount == 0){
 								out.println("<div class='col-lg-6'><label>Main Coin Name</label><input placeholder='Main Coin Name' type='text' class='form-control' id='virtual_main_name'></div>");
 								out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_main_description' style='height: 45px'></textarea>"
-										+"<button class='btn' onclick='registerVirtualMain()'>Register</button></div>");
+										+"<button class='btn' onclick='registerVirtualMain()'>Edit</button></div>");
 							}
 							else{
 								out.println("<div class='col-lg-6'><label>Main Coin Name</label><input placeholder="+mainlist.get(0).getName()+" type='text' class='form-control' id='virtual_main_name'></div>");
 								out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+mainlist.get(0).getDescription()+" class='form-control' id='virtual_main_description' style='height: 45px'></textarea>"
-										+"<button class='btn' onclick='registerVirtualMain()'>Register</button></div>");
+										+"<button class='btn' onclick='registerVirtualMain()'>Edit</button></div>");
 							}
 								
 							%>
@@ -594,12 +595,12 @@ function registerGoogleProjectNum()
 								if(sublistcount == 0){
 									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder='Sub Coin Name' type='text' class='form-control' id='virtual_sub_name'></div>");
 									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
-											+"<button class='btn' onclick='registerVirtualSub()'>Register</button></div>");
+											+"<button class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
 								}
 								else{
 									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder="+sublist.get(0).getName()+" type='text' class='form-control' id='virtual_sub_name'></div>");
 									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+sublist.get(0).getDescription()+" class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
-											+"<button class='btn' onclick='registerVirtualSub()'>Register</button></div>");
+											+"<button class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
 								}
 							%>
 							</div>
@@ -612,15 +613,31 @@ function registerGoogleProjectNum()
 							<h2>User Grade</h2>
 						</div>
 					</div>
+					<%
+						SettingInfo setting= (SettingInfo)request.getAttribute("setting");
+						int moneyl=0, moneym=0, moneys=0, timel=0, timem=0, times=0;
+						String google_num="";
+						
+						if(setting!=null)
+						{
+							moneyl = setting.getGrade_moneyl();
+							moneym = setting.getGrade_moneym();
+							moneys = setting.getGrade_moneys();
+							timel = setting.getGrade_timel();
+							timem = setting.getGrade_timem();
+							times = setting.getGrade_times();
+							google_num = setting.getGoogle_project_num();
+						}
+					%>
 					<hr class="star-primary"></hr>
 					<div class="row">
 						<div style="padding: 5px">
 							<form class="form-inline">
 								<label style="padding:5px">Money</label>
-								<input type="text" class="form-control" placeholder="상" id="grade_moneyL">
-								<input type="text" class="form-control" placeholder="중" id="grade_moneyM">
-								<input type="text" class="form-control" placeholder="하" id="grade_moneyS">
-								<button class="btn" onclick="registerGradeMoney()">Register</button>
+								<input type="text" class="form-control" placeholder="상(<%= moneyl %>)" id="grade_moneyL">
+								<input type="text" class="form-control" placeholder="중(<%= moneym %>)" id="grade_moneyM">
+								<input type="text" class="form-control" placeholder="하(<%= moneys %>)" id="grade_moneyS">
+								<button class="btn" onclick="registerGradeMoney()">Edit</button>
 							</form>
 						</div>
 					</div>
@@ -628,10 +645,10 @@ function registerGoogleProjectNum()
 						<div style="padding: 5px">
 						<form class="form-inline">
 							<label style="padding:5px">Time</label>
-							<input type="text" class="form-control" placeholder="상" id="grade_timeL">
-							<input type="text" class="form-control" placeholder="중" id="grade_timeM">
-							<input type="text" class="form-control" placeholder="하" id="grade_timeS">
-							<button class="btn" onclick="registerGradeTime()">Register</button>
+							<input type="text" class="form-control" placeholder="상(<%= timel %>)" id="grade_timeL">
+							<input type="text" class="form-control" placeholder="중(<%= timem %>)" id="grade_timeM">
+							<input type="text" class="form-control" placeholder="하(<%= times %>)" id="grade_timeS">
+							<button class="btn" onclick="registerGradeTime()">Edit</button>
 						</form>
 						</div>
 					</div>
@@ -645,8 +662,8 @@ function registerGoogleProjectNum()
 					<div class="row">
 						<form class="form-inline">
 							<label style="padding:5px">Google Project Num</label>
-							<input type="text" class="form-control" placeholder="상" id="google_project_num_input">
-							<button class="btn" onclick="registerGoogleProjectNum()">Register</button>
+							<input type="text" class="form-control" placeholder="<%=google_num %>" id="google_project_num_input" style="width:500px">
+							<button class="btn" onclick="registerGoogleProjectNum()">Edit</button>
 						</form>
 					</div>
 					<br><br>
