@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.MemberDao;
+import com.rap.dao.PromotionDao;
 import com.rap.dao.SettingDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.MemberInfo;
@@ -32,6 +33,9 @@ public class RAP_MainController {
 
 	@Autowired
 	private SettingDao settingDao;
+	
+	@Autowired
+	private PromotionDao promotionDao;
 	
 	/** RAP 홈 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
@@ -319,6 +323,8 @@ public class RAP_MainController {
 			return "projecthome";
 		}
 
+		request.setAttribute("promotionList", promotionDao.selectFromProject(currentproject.getPk()));
+		
 		return "promotions_analysis";
 	}
 

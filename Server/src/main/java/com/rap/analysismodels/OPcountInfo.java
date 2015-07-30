@@ -19,8 +19,8 @@ public class OPcountInfo {
 		this.count = count;
 	}
 	public OPcountInfo(Timestamp start, int count) {
-		super();
-		this.start = start;
+		
+		this.start = Timestamp.valueOf(start.toString());
 		this.count = count;
 	}
 	

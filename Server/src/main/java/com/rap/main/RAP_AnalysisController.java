@@ -38,7 +38,9 @@ import com.rap.dao.PayDao;
 import com.rap.dao.PromotionResultDao;
 import com.rap.dao.UserDao;
 import com.rap.models.BestActivityInfo;
+import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
+import com.rap.models.PromotionResultInfo;
 
 import net.sf.json.JSONObject;
 
@@ -163,74 +165,42 @@ public class RAP_AnalysisController {
 	@RequestMapping(value = "/new_member_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String New_member_Get(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("type") String type,
-			@RequestParam("start") String start) {
+			HttpServletResponse response
+			, @RequestParam("during") int during) {
 
-		Calendar cal;
-		Timestamp starttime = null;
-		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
-		start = start.replace("-", "");
-		String date = new String(start + "000000");
-		try {
-			sd.parse(date);
-			cal = sd.getCalendar();
-
-			starttime = new Timestamp(cal.getTime().getTime());
-
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		logger.info("new_member Tab" + "  type : " + type + " start : "
-				+ starttime.toString());
+		
+		logger.info("new_member Tab");
 
 		JSONObject jObject = new JSONObject();
 		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session
-				.getAttribute("currentproject");
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		if (currentproject == null)
 			return "";// 세션에 프로젝트 없는 경우
-
+		
 		String project_key = currentproject.getPk();
-		project_key = "";
 		if (project_key == null)
 			return "";
 		if (project_key.isEmpty())
 			return "";
-
-		List<NewmemberInfo> receive = userDao.count_new_member(project_key,
-				type, starttime);
-		// List<List<String>> result=new ArrayList<List<String>>();
+		
+		java.util.Date date= new java.util.Date();
+		Timestamp current = new Timestamp(date.getTime());
+		
+		List<NewmemberInfo> receive = userDao.count_new_member(project_key, current, during);
 		List<String> result = new ArrayList<String>();
-
+		
 		for (int i = 0; i < receive.size(); i++) {
-
-			List<String> templist = new ArrayList<String>();
-			// templist.add(0,Hourformatter.format((java.util.Date)
-			// receive.get(i).getStart()));
-
-			if (type.equals("day"))
-				templist.add(0, monthDayYearformatter
-						.format((java.util.Date) receive.get(i).getStart()));
-			if (type.equals("month"))
-				templist.add(
-						0,
-						monthYearformatter.format((java.util.Date) receive.get(
-								i).getStart()));
-			if (type.equals("year"))
-				templist.add(0, Yearformatter.format((java.util.Date) receive
-						.get(i).getStart()));
-
-			templist.add(1, receive.get(i).getCount() + "");
-			result.add(templist.toString());
+			
+			String year = "" + (receive.get(i).getStart().getYear() + 1900);
+			String month = receive.get(i).getStart().getMonth() + 1 > 9 ? "" + (receive.get(i).getStart().getMonth() + 1) : "0" + (receive.get(i).getStart().getMonth() + 1);
+			String day = receive.get(i).getStart().getDate() > 9 ? "" + receive.get(i).getStart().getDate() : "0" + receive.get(i).getStart().getDate();
+			result.add( "[" + year + month + day  + "," + receive.get(i).getCount() + "]" );
 		}
 
 		logger.info("NewmemberInfo : " + result.toString());
 		jObject.put("result", result.toString());
 		return jObject.toString();
-
 	}
 
 	@RequestMapping(value = "/deleted_member_db", method = RequestMethod.POST)
@@ -251,7 +221,6 @@ public class RAP_AnalysisController {
 			starttime = new Timestamp(cal.getTime().getTime());
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -267,7 +236,6 @@ public class RAP_AnalysisController {
 			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
-		project_key = "1";
 		if (project_key == null)
 			return "";
 		if (project_key.isEmpty())
@@ -309,90 +277,55 @@ public class RAP_AnalysisController {
 	@RequestMapping(value = "/operation_count_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String Operation_count_Get(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("type") String type,
-			@RequestParam("start") String start) {
+			HttpServletResponse response
+			, @RequestParam("start_date") String start_date
+			, @RequestParam("end_date") String end_date
+			, @RequestParam("sex_num") int sex_num
+			, @RequestParam("age") int age
+			, @RequestParam("grade_using") int grade_using
+			, @RequestParam("grade_time") int grade_time) {
 
-		Calendar cal;
-		Timestamp starttime = null;
-		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
-		start = start.replace("-", "");
-		String date = new String(start + "000000");
-		try {
-			sd.parse(date);
-			cal = sd.getCalendar();
+		try{
+			start_date = start_date + " 00:00:00.0";
+			end_date = end_date + " 00:00:00.0";
+			
+			Timestamp start_time = Timestamp.valueOf(start_date);
+			Timestamp end_time = Timestamp.valueOf(end_date);
+			
+			JSONObject jObject = new JSONObject();
+			HttpSession session = request.getSession();
+			ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-			starttime = new Timestamp(cal.getTime().getTime());
-			logger.info("operation_count Tab" + "  type : " + type
-					+ " start : " + starttime.toString());
-		} catch (ParseException e) {
-			e.printStackTrace();
+			if (currentproject == null)
+				return "[[0,0]]";// 세션에 프로젝트 없는 경우
+
+			String project_key = currentproject.getPk();
+			if (project_key == null || project_key.isEmpty())
+				return "[[0,0]]";
+
+			List<OPcountInfo> receive = log_timeDao.getOperationCount(
+					project_key, start_time, end_time, sex_num, age, grade_time, grade_using);
+			List<String> result = new ArrayList<String>();
+			
+			if(receive.size() == 0)
+				return "[[0,0]]";
+			
+			for (int i = 0; i < receive.size(); i++) {
+				
+				String year = "" + (receive.get(i).getStart().getYear() + 1900);
+				String month = receive.get(i).getStart().getMonth() + 1 > 9 ? "" + (receive.get(i).getStart().getMonth() + 1) : "0" + (receive.get(i).getStart().getMonth() + 1);
+				String date = receive.get(i).getStart().getDate() > 9 ? "" + receive.get(i).getStart().getDate() : "0" + receive.get(i).getStart().getDate();
+				
+				result.add( "[" + year + month + date  + "," + receive.get(i).getCount() + "]" );
+			}
+
+			logger.info("OPcountInfo : " + result.toString());
+			jObject.put("result", result.toString());
+			return jObject.toString();
 		}
-
-		JSONObject jObject = new JSONObject();
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session
-				.getAttribute("currentproject");
-
-		if (currentproject == null)
-			return "";// 세션에 프로젝트 없는 경우
-
-		String project_key = currentproject.getPk();
-		project_key = "1";
-		if (project_key == null)
-			return "";
-		if (project_key.isEmpty())
-			return "";
-
-		/*
-		 * List<OPcountInfo>
-		 * result=log_timeDao.count_operation_count(project_key,type,starttime);
-		 * List<String> start_time=new ArrayList<String>(); List<Integer>
-		 * count=new ArrayList<Integer>();
-		 */
-
-		List<OPcountInfo> receive = log_timeDao.count_operation_count(
-				project_key, type, starttime);
-		// List<List<String>> result=new ArrayList<List<String>>();
-		List<String> result = new ArrayList<String>();
-
-		for (int i = 0; i < receive.size(); i++) {
-
-			List<String> templist = new ArrayList<String>();
-			// templist.add(0,Hourformatter.format((java.util.Date)
-			// receive.get(i).getStart()));
-
-			if (type.equals("day"))
-				templist.add(0, monthDayYearformatter
-						.format((java.util.Date) receive.get(i).getStart()));
-			if (type.equals("month"))
-				templist.add(
-						0,
-						monthYearformatter.format((java.util.Date) receive.get(
-								i).getStart()));
-			if (type.equals("year"))
-				templist.add(0, Yearformatter.format((java.util.Date) receive
-						.get(i).getStart()));
-
-			templist.add(1, receive.get(i).getCount() + "");
-			result.add(templist.toString());
+		catch(Exception e){
+			return "[[0,0]]";
 		}
-
-		logger.info("OPcountInfo : " + result.toString());
-		jObject.put("result", result.toString());
-		return jObject.toString();
-
-		/*
-		 * for (int i = 0; i < result.size(); i++) {
-		 * 
-		 * //start_time.add(i,result.get(i).getStart().getYear()+"/"+result.get(i
-		 * ).getStart().getMonth()+"/"+result.get(i).getStart().getDate());
-		 * count.add(result.get(i).getCount()); } logger.info("start_time" +
-		 * start_time.toString());
-		 * 
-		 * jObject.put("start_time", start_time); jObject.put("count", count);
-		 * 
-		 * return jObject.toString();
-		 */
 	}
 
 	@RequestMapping(value = "/operation_time_db", method = RequestMethod.POST)
@@ -412,7 +345,6 @@ public class RAP_AnalysisController {
 			starttime = new Timestamp(cal.getTime().getTime());
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -427,7 +359,6 @@ public class RAP_AnalysisController {
 			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
-		project_key = "1";
 		if (project_key == null)
 			return "";
 		if (project_key.isEmpty())
@@ -545,65 +476,35 @@ public class RAP_AnalysisController {
 		return jObject.toString();
 	}
 
+	// TODO 작업중
 	@RequestMapping(value = "/promotions_analysis_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String Promotions_analysis_Get(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("start") String start,
-			@RequestParam("promotion") String promotion) {
+			HttpServletResponse response
+			, @RequestParam("promotion_pk") int promotion_pk) {
 
-		Calendar cal;
-		Timestamp starttime = null;
-		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
-		start = start.replace("-", "");
-		String date = new String(start + "000000");
-		try {
-			sd.parse(date);
-			cal = sd.getCalendar();
-
-			starttime = new Timestamp(cal.getTime().getTime());
-
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		logger.info("promotions_analysis Tab" + " start : "
-				+ starttime.toString() + " promotions_name: " + promotion);
+		
+		logger.info("promotions_analysis Tab");
 
 		JSONObject jObject = new JSONObject();
 		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session
-				.getAttribute("currentproject");
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		if (currentproject == null)
 			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
-		project_key = "1";
 		if (project_key == null)
 			return "";
 		if (project_key.isEmpty())
 			return "";
 
-		List<Promotion_resultInfo> receive = promotionResultDao
-				.count_promotion_result(project_key, starttime, promotion);
+		List<PromotionResultInfo> receive = promotionResultDao.select(project_key, promotion_pk);
 		List<String> result = new ArrayList<String>();
-
+		
 		for (int i = 0; i < receive.size(); i++) {
-
+			
 			List<String> templist = new ArrayList<String>();
-
-			// if(type.equals("day"))
-			templist.add(0, monthDayYearformatter
-					.format((java.util.Date) receive.get(i).getStart()));
-			/*
-			 * if(type.equals("month"))
-			 * templist.add(0,monthYearformatter.format((java.util.Date)
-			 * receive.get(i).getStart())); if(type.equals("year"))
-			 * templist.add(0,Yearformatter.format((java.util.Date)
-			 * receive.get(i).getStart()));
-			 */
-			templist.add(1, receive.get(i).getCount() + "");
 			result.add(templist.toString());
 		}
 
@@ -613,16 +514,33 @@ public class RAP_AnalysisController {
 
 	}
 
-	@RequestMapping(value = "/sales_ranking_db", method = RequestMethod.POST)
+	@RequestMapping(value = "/sales_ranking_db", method = RequestMethod.POST,  produces = "text/plain;charset=UTF-8")
 	@ResponseBody
-	public String sales_ranking_Get(HttpServletRequest request,
-			HttpServletResponse response) {
+	public String sales_ranking_Get(HttpServletRequest request
+			, @RequestParam("start_date") String start_date
+			, @RequestParam("end_date") String end_date
+			, @RequestParam("sex_num") int sex_num
+			, @RequestParam("age") int age
+			, @RequestParam("grade_using") int grade_using
+			, @RequestParam("grade_time") int grade_time
+			, HttpServletResponse response) {
 		logger.info("sales_ranking_db Tab");
 
+		if(start_date.equals("") || end_date.equals("")){
+			return "";
+		}
+		
+		start_date = start_date + " 00:00:00.0";
+		end_date = end_date + " 00:00:00.0";
+		
+		logger.info("end_date: " + end_date);
+		
+		Timestamp start_time = Timestamp.valueOf(start_date);
+		Timestamp end_time = Timestamp.valueOf(end_date);
+		
 		JSONObject jObject = new JSONObject();
 		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session
-				.getAttribute("currentproject");
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		if (currentproject == null)
 			return "";// 세션에 프로젝트 없는 경우
@@ -634,7 +552,7 @@ public class RAP_AnalysisController {
 		if (project_key.isEmpty())
 			return "";
 
-		List<SalesRankingInfo> receive = iapDao.countsales_ranking(project_key);
+		List<IAPInfo> receive = iapDao.getRankingCount(project_key, start_time, end_time, sex_num, age, grade_time, grade_using);
 
 		int size = receive.size();
 		if (size > 10)
@@ -643,9 +561,9 @@ public class RAP_AnalysisController {
 		List<Integer> count = new ArrayList<Integer>();
 
 		for (int i = 0; i < size; i++) {
+			logger.info("item_name: " + receive.get(i).getName());
 			item_name.add(receive.get(i).getName());
 			count.add(receive.get(i).getCount());
-
 		}
 
 		jObject.put("item_name", item_name);
@@ -671,7 +589,6 @@ public class RAP_AnalysisController {
 			starttime = new Timestamp(cal.getTime().getTime());
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -687,7 +604,6 @@ public class RAP_AnalysisController {
 			return "";// 세션에 프로젝트 없는 경우
 
 		String project_key = currentproject.getPk();
-		project_key = "1";
 		if (project_key == null)
 			return "";
 		if (project_key.isEmpty())

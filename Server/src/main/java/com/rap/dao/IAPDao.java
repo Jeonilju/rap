@@ -2,6 +2,7 @@ package com.rap.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -181,11 +182,57 @@ public class IAPDao implements IAPIDao{
 		        new Object[] { key, categoryL , categoryM, categoryS});	
 	}
 	
-	
-	
-	
-	
-	
+	public List<IAPInfo> getRankingCount(String project_key, Timestamp start_date, Timestamp end_date, int sex, int age, int grade_time, int grade_using){
+		
+		String query = "";
+		if(sex != 0){
+			query += "AND user.sex = " + sex;
+		}
+		if(age != 0){
+			query += " AND user.age >= " + sex + " AND user.age < " + (sex + 10);
+		}
+		if(grade_time != 0){
+			query += " AND user.grade_time = " + grade_time;
+		}
+		if(grade_using != 0){
+			query += " AND user.grade_money = " + grade_using;
+		}
+		
+		
+		return jdbcTemplate.query("select *, count(iap.pk) from iap, log_pay, user "
+				+ "where iap.project_key = ? "
+				+ "AND log_pay.project_key = ? "
+				+ "AND user.project_key = ?"
+				+ "AND iap.pk = log_pay.item_pk "
+				+ "AND log_pay.username = user.name "
+				+ "AND log_pay.reg_date >= ? "
+				+ "AND log_pay.reg_date <= ? "
+				+ query
+				+ " group by iap.pk"
+				+ " order by count(iap.pk) DESC",
+		    	new Object[] { project_key, project_key, project_key, start_date, end_date }, new RowMapper<IAPInfo>() {
+		    	public IAPInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new IAPInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("iap")
+		    				, resultSet.getInt("price_real")
+		    				, resultSet.getInt("price_main")
+		    				, resultSet.getInt("price_sub")
+		    				, resultSet.getInt("using_type")
+		    				, resultSet.getString("google_id")
+		    				, resultSet.getString("image")
+		    				, resultSet.getString("description")
+		    				, resultSet.getTimestamp("reg_date")
+		    				, resultSet.getString("categoryl")
+		    				, resultSet.getString("categorym")
+		    				, resultSet.getString("categorys")
+		    				, resultSet.getInt("count(iap.pk)"));
+		    	}
+		    });
+		
+	}
 	
 	public List<SalesRankingInfo> countsales_ranking(String project_key) {
 		return jdbcTemplate.query("select iap,count(*) AS count from iap inner join log_pay on iap.pk=log_pay.item_pk where iap.project_key=?  GROUP BY iap ORDER BY count desc",

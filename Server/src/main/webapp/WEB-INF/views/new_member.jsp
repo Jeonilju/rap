@@ -1,13 +1,12 @@
-<!DOCTYPE HTML>
-<html>
-<!-- Ã¬ÂÂÃ«ÂÂ¨ Ã«ÂÂ¤Ã«Â¹ÂÃªÂ²ÂÃ¬ÂÂ´Ã¬ÂÂ Ã«Â°Â Ã¬ÂÂ¸Ã­ÂÂ´Ã«Â£Â¨Ã«ÂÂ -->
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html lang="en">
 <jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Highcharts Example</title>
+		<title>신규 사용자 통계</title>
 
 		<style type="text/css">
-${demo.css}
+			${demo.css}
 		</style>
 		
         
@@ -15,8 +14,7 @@ ${demo.css}
 <script type="text/javascript">
 
 	function getoperation_count() {
-		var param = "type=" + document.getElementById('Type').value + "&start="
-				+ document.getElementById('Start').value;
+		var param = "during=" + document.getElementById('during').value;
 
 		$.ajax({
 			url : "new_member_db",
@@ -26,17 +24,16 @@ ${demo.css}
 			success : function(data) {
 
 				if (data != null && data != "") {
-
-					//var start_time=data.start_time;
 					var result = data.result;
-					//alert(start_time.toString());
 					modify_chart(result);
-
 				}
 			},
 
 			error : function(request, status, error) {
-				if (request.status != '0') {
+				if(request.status != '200'){
+					
+				}
+				else if (request.status != '0') {
 					alert("code : " + request.status + "\r\nmessage : "
 							+ request.reponseText + "\r\nerror : " + error);
 				}
@@ -134,24 +131,15 @@ ${demo.css}
 						</div>
 						<div class="row">
 							<div class="col-lg-12 text-center" >
-							<div class="form-group">
-
-								<div class='input-group date' id='datetimepicker1'>
-									<select id="Type" name="Type"
-										class="selectpicker show-tick" style="width: 200px; margin-right: 20px;">
-										<option value="day">day</option>
-										<option value="month">month</option>
-										<option value="year">year</option>
-									</select> 
-									
-									<input id="Start" name="Start" type='text' class="form-control" /> <span
-										class="input-group-addon"> <span
-										class="fa fa-calendar" onClick="getoperation_count()"></span>
-									</span>
-								</div>
-							</div>
-
-
+							
+							<select class="selectpicker" id="during" name="during"  onchange="getoperation_count()">
+								<option value="0">최근 1주일</option>
+								<option value="1">최근 2주일</option>
+								<option value="2">최근 3주일</option>
+								<option value="3">최근 4주일</option>
+								<option value="4">최근 3개월</option>
+								<option value="5">최근 6개월</option>
+							</select>						
 
 							<!-- chart -->
 								<div id="container" style="min-width: 200px; height: 400px; margin: 0 auto" ></div>
