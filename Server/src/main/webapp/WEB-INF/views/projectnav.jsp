@@ -99,6 +99,8 @@ function ccc()
 																	<li><a href="best_activity">Best activity</a></li>																	
 																	<li><a href="promotions_analysis">Promotions
 																			analysis</a></li>
+																			<li><a href="activity_path">Activity path</a></li>
+																			
 																	
 																</ul>
 															</div>

@@ -369,4 +369,20 @@ public class RAP_MainController {
 
 		return "IAP_amount";
 	}
+	
+	@RequestMapping(value = "/activity_path", method = RequestMethod.GET)
+	public String MainController_activity_path(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		logger.info("activity_path Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
+
+		return "activity_path";
+	}
 }
