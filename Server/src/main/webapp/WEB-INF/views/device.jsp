@@ -58,10 +58,10 @@ ${demo.css}
 							type : 'pie'
 						},
 						title : {
-							text : 'title'
+						  	text:' '
 						},
 						tooltip : {
-							pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+							pointFormat : '{point.percentage:.1f}%</b>'
 						},
 						plotOptions : {
 							pie : {

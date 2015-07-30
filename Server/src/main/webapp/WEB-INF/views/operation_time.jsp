@@ -55,6 +55,7 @@ ${demo.css}
 			            type: 'column'
 			        },
 			        title: {
+			          	text:' '
 			        },
 			        subtitle: {    },
 			        xAxis: {

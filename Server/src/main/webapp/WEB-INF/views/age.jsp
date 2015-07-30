@@ -59,7 +59,7 @@ $(function() {
 		            type: 'column'
 		        },
 		        title: {
-		            text: 'title'
+		            text: ' '
 		        },
 		        
 		        xAxis: {
@@ -96,11 +96,11 @@ $(function() {
 		            ],
 		            dataLabels: {
 		                enabled: true,
-		                rotation: -90,
+		                rotation: -45,
 		                color: '#FFFFFF',
 		                align: 'right',
 		                format: '{point.y:.1f}', // one decimal
-		                y: 10, // 10 pixels down from the top
+		                y: -15, // 10 pixels down from the top
 		                style: {
 		                    fontSize: '13px',
 		                    fontFamily: 'Verdana, sans-serif'

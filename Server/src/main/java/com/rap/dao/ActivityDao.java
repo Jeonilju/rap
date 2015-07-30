@@ -127,6 +127,7 @@ public class ActivityDao implements ActivityIDao {
 				newobj2.put("nodeFrom", receive2.get(k).getFrom());
 				JSONObject newobj3= new JSONObject();
 				newobj3.put("count", receive2.get(k).getCount().toString());
+				newobj3.put("from", receive2.get(k).getFrom());
 				newobj2.put("data",newobj3);
 				small.add(newobj2);
 			}

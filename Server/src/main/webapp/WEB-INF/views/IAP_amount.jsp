@@ -50,7 +50,10 @@ function getoperation_count() {
 
 function modify_chart(start_time,count) {
     $('#container').highcharts({
-       
+    	 title: {
+             text: ' ',
+             x: -20 //center
+         },
         xAxis: {
             categories: start_time
         },
