@@ -3,25 +3,29 @@ package com.example.dangzicforrap;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ListView;
 
 import com.example.models.ImageInfo;
 import com.example.models.Preference;
 import com.example.views.ImageListAdater;
+import com.example.views.SendDialog;
 
 public class MainActivity extends Activity {
 
 	private ListView mylist;
 	private ArrayList<ImageInfo> adapterList;
 	private ImageListAdater adapter;
+	
+	private Button resetBtn, sendBtn;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,9 @@ public class MainActivity extends Activity {
 		adapter = new ImageListAdater(MainActivity.this, adapterList);
 		mylist = (ListView) findViewById(R.id.main_list);
 		mylist.setAdapter(adapter);
+		
+		resetBtn = (Button) findViewById(R.id.main_reset);
+		sendBtn = (Button) findViewById(R.id.main_send);
 	}
 	
 	private void initEvent(){
@@ -88,41 +95,55 @@ public class MainActivity extends Activity {
 				intent.putExtra("type", adapterList.get(position).getArea());
 				intent.putExtra("isUsed", adapterList.get(position).isUsed());
 				startActivity(intent);
-				finish();
+			}
+		});
+		
+		resetBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				for(int n=1;n < 36;n++){
+					Preference.putBoolean(MainActivity.this, "" + n + "_.jpg", false);
+				}
+				ShowDig("초기화되었습니다.");
+			}
+		});
+		
+		sendBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				SendDialog dig = new SendDialog(MainActivity.this);
+				dig.show();
 			}
 		});
 	}
-	
-	
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
 		for(int n=1;n < 36;n++){
-			if(Preference.getBoolean(MainActivity.this, "" + n + ".jpg")){
+			if(Preference.getBoolean(MainActivity.this, "" + n + "_.jpg")){
 				adapterList.get(n-1).setUsed(true);
 			}
 		}
 		
 	}
+	
+	private void ShowDig(String message) {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(MainActivity.this);
+		alt_bld.setMessage(message)
+				.setCancelable(false)
+				.setPositiveButton("확인",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						});
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		AlertDialog alert = alt_bld.create();
+		alert.setTitle("안내");
+		alert.show();
 	}
 }

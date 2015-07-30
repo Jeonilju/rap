@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import com.example.models.Preference;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,6 +23,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.models.Preference;
 
 public class CameraActivity extends Activity {
 
@@ -95,109 +95,109 @@ public class CameraActivity extends Activity {
 		if(type.equals("시너지")){
 			Log.i(TAG, "시너지");
 			imageView.setImageBitmap(assetsRead("1.jpg"));
-			fileName = "1.jpg";
+			fileName = "1_.jpg";
 		} else if (type.equals("다이나믹")) {
 			imageView.setImageBitmap(assetsRead("2.jpg"));
-			fileName = "2.jpg";
+			fileName = "2_.jpg";
 		} else if (type.equals("스마트")) {
 			imageView.setImageBitmap(assetsRead("3.jpg"));
-			fileName = "3.jpg";
+			fileName = "3_.jpg";
 		} else if (type.equals("북카페")) {
 			imageView.setImageBitmap(assetsRead("4.jpg"));
-			fileName = "4.jpg";
+			fileName = "4_.jpg";
 		} else if (type.equals("복사기")) {
 			imageView.setImageBitmap(assetsRead("5.jpg"));
-			fileName = "5.jpg";
+			fileName = "5_.jpg";
 		} else if (type.equals("3층 화장실 (세면대)")) {
 			imageView.setImageBitmap(assetsRead("6.jpg"));
-			fileName = "6.jpg";
+			fileName = "6_.jpg";
 		} else if (type.equals("3층 화장실 (핸드타올)")) {
 			imageView.setImageBitmap(assetsRead("7.jpg"));
-			fileName = "7.jpg";
+			fileName = "7_.jpg";
 		} else if (type.equals("스마트 TV")) {
 			imageView.setImageBitmap(assetsRead("8.jpg"));
-			fileName = "8.jpg";
+			fileName = "8_.jpg";
 		} else if (type.equals("프리룸")) {
 			imageView.setImageBitmap(assetsRead("9.jpg"));
-			fileName = "9.jpg";
+			fileName = "9_.jpg";
 		} else if (type.equals("체력단련실 (런닝머신)")) {
 			imageView.setImageBitmap(assetsRead("10.jpg"));
-			fileName = "10.jpg";
+			fileName = "10_.jpg";
 		} else if (type.equals("체력단련실 (벤치)")) {
 			imageView.setImageBitmap(assetsRead("11.jpg"));
-			fileName = "11.jpg";
+			fileName = "11_.jpg";
 		} else if (type.equals("애니콜")) {
 			imageView.setImageBitmap(assetsRead("12.jpg"));
-			fileName = "12.jpg";
+			fileName = "12_.jpg";
 		} else if (type.equals("센스")) {
 			imageView.setImageBitmap(assetsRead("13.jpg"));
-			fileName = "13.jpg";
+			fileName = "13_.jpg";
 		} else if (type.equals("지펠")) {
 			imageView.setImageBitmap(assetsRead("14.jpg"));
-			fileName = "14.jpg";
+			fileName = "14_.jpg";
 		} else if (type.equals("갤럭시")) {
 			imageView.setImageBitmap(assetsRead("15.jpg"));
-			fileName = "15.jpg";
+			fileName = "15_.jpg";
 		} else if (type.equals("에덴")) {
 			imageView.setImageBitmap(assetsRead("16.jpg"));
-			fileName = "16.jpg";
+			fileName = "16_.jpg";
 		} else if (type.equals("4층 화상실 (세면대)")) {
 			imageView.setImageBitmap(assetsRead("17.jpg"));
-			fileName = "17.jpg";
+			fileName = "17_.jpg";
 		} else if (type.equals("4층 화장실 (핸드타올)")) {
 			imageView.setImageBitmap(assetsRead("18.jpg"));
-			fileName = "18.jpg";
+			fileName = "18_.jpg";
 		} else if (type.equals("샤워실 (거울)")) {
 			imageView.setImageBitmap(assetsRead("19.jpg"));
-			fileName = "19.jpg";
+			fileName = "19_.jpg";
 		} else if (type.equals("샤워실 (바닥)")) {
 			imageView.setImageBitmap(assetsRead("20.jpg"));
-			fileName = "20.jpg";
+			fileName = "20_.jpg";
 		} else if (type.equals("샤워실 (벽면)")) {
 			imageView.setImageBitmap(assetsRead("21.jpg"));
-			fileName = "21.jpg";
+			fileName = "21_.jpg";
 		} else if (type.equals("샤워실 (선반)")) {
 			imageView.setImageBitmap(assetsRead("22.jpg"));
-			fileName = "22.jpg";
+			fileName = "22_.jpg";
 		} else if (type.equals("샤워실 (세제)")) {
 			imageView.setImageBitmap(assetsRead("23.jpg"));
-			fileName = "23.jpg";
+			fileName = "23_.jpg";
 		} else if (type.equals("샤워실 (바구니)")) {
 			imageView.setImageBitmap(assetsRead("24.jpg"));
-			fileName = "24.jpg";
+			fileName = "24_.jpg";
 		} else if (type.equals("탕비실 (인덕션)")) {
 			imageView.setImageBitmap(assetsRead("25.jpg"));
-			fileName = "25.jpg";
+			fileName = "25_.jpg";
 		} else if (type.equals("탕비실 (싱크대)")) {
 			imageView.setImageBitmap(assetsRead("26.jpg"));
-			fileName = "26.jpg";
+			fileName = "26_.jpg";
 		} else if (type.equals("탕비실 (자판기)")) {
 			imageView.setImageBitmap(assetsRead("27.jpg"));
-			fileName = "27.jpg";
+			fileName = "27_.jpg";
 		} else if (type.equals("탕비실 (식탁)")) {
 			imageView.setImageBitmap(assetsRead("28.jpg"));
-			fileName = "28.jpg";
+			fileName = "28_.jpg";
 		} else if (type.equals("탕비실 (밥솥)")) {
 			imageView.setImageBitmap(assetsRead("29.jpg"));
-			fileName = "29.jpg";
+			fileName = "29_.jpg";
 		} else if (type.equals("탕비실 (식기)")) {
 			imageView.setImageBitmap(assetsRead("30.jpg"));
-			fileName = "30.jpg";
+			fileName = "30_.jpg";
 		} else if (type.equals("수면실 (매트릭스)")) {
 			imageView.setImageBitmap(assetsRead("31.jpg"));
-			fileName = "31.jpg";
+			fileName = "31_.jpg";
 		} else if (type.equals("수면실 (이불 배개)")) {
 			imageView.setImageBitmap(assetsRead("32.jpg"));
-			fileName = "32.jpg";
+			fileName = "32_.jpg";
 		} else if (type.equals("수면실 (요)")) {
 			imageView.setImageBitmap(assetsRead("33.jpg"));
-			fileName = "33.jpg";
+			fileName = "33_.jpg";
 		} else if (type.equals("수면실 (락커)")) {
 			imageView.setImageBitmap(assetsRead("34.jpg"));
-			fileName = "34.jpg";
+			fileName = "34_.jpg";
 		} else if (type.equals("건조실")) {
 			imageView.setImageBitmap(assetsRead("35.jpg"));
-			fileName = "35.jpg";
+			fileName = "35_.jpg";
 		} else if (type.equals("Best")) {
 
 		} else if (type.equals("Worst")) {
@@ -208,110 +208,110 @@ public class CameraActivity extends Activity {
 	private void initSampleImage2(String type){
 		if(type.equals("시너지")){
 			Log.i(TAG, "시너지");
-			imageView.setImageBitmap(assetsRead2("1.jpg"));
-			fileName = "1.jpg";
+			imageView.setImageBitmap(assetsRead2("1_.jpg"));
+			fileName = "1_.jpg";
 		} else if (type.equals("다이나믹")) {
-			imageView.setImageBitmap(assetsRead2("2.jpg"));
-			fileName = "2.jpg";
+			imageView.setImageBitmap(assetsRead2("2_.jpg"));
+			fileName = "2_.jpg";
 		} else if (type.equals("스마트")) {
-			imageView.setImageBitmap(assetsRead2("3.jpg"));
-			fileName = "3.jpg";
+			imageView.setImageBitmap(assetsRead2("3_.jpg"));
+			fileName = "3_.jpg";
 		} else if (type.equals("북카페")) {
-			imageView.setImageBitmap(assetsRead2("4.jpg"));
-			fileName = "4.jpg";
+			imageView.setImageBitmap(assetsRead2("4_.jpg"));
+			fileName = "4_.jpg";
 		} else if (type.equals("복사기")) {
-			imageView.setImageBitmap(assetsRead2("5.jpg"));
-			fileName = "5.jpg";
+			imageView.setImageBitmap(assetsRead2("5_.jpg"));
+			fileName = "5_.jpg";
 		} else if (type.equals("3층 화장실 (세면대)")) {
-			imageView.setImageBitmap(assetsRead2("6.jpg"));
-			fileName = "6.jpg";
+			imageView.setImageBitmap(assetsRead2("6_.jpg"));
+			fileName = "6_.jpg";
 		} else if (type.equals("3층 화장실 (핸드타올)")) {
-			imageView.setImageBitmap(assetsRead2("7.jpg"));
-			fileName = "7.jpg";
+			imageView.setImageBitmap(assetsRead2("7_.jpg"));
+			fileName = "7_.jpg";
 		} else if (type.equals("스마트 TV")) {
-			imageView.setImageBitmap(assetsRead2("8.jpg"));
-			fileName = "8.jpg";
+			imageView.setImageBitmap(assetsRead2("8_.jpg"));
+			fileName = "8_.jpg";
 		} else if (type.equals("프리룸")) {
-			imageView.setImageBitmap(assetsRead2("9.jpg"));
-			fileName = "9.jpg";
+			imageView.setImageBitmap(assetsRead2("9_.jpg"));
+			fileName = "9_.jpg";
 		} else if (type.equals("체력단련실 (런닝머신)")) {
-			imageView.setImageBitmap(assetsRead2("10.jpg"));
-			fileName = "10.jpg";
+			imageView.setImageBitmap(assetsRead2("10_.jpg"));
+			fileName = "10_.jpg";
 		} else if (type.equals("체력단련실 (벤치)")) {
-			imageView.setImageBitmap(assetsRead2("11.jpg"));
-			fileName = "11.jpg";
+			imageView.setImageBitmap(assetsRead2("11_.jpg"));
+			fileName = "11_.jpg";
 		} else if (type.equals("애니콜")) {
-			imageView.setImageBitmap(assetsRead2("12.jpg"));
-			fileName = "12.jpg";
+			imageView.setImageBitmap(assetsRead2("12_.jpg"));
+			fileName = "12_.jpg";
 		} else if (type.equals("센스")) {
-			imageView.setImageBitmap(assetsRead2("13.jpg"));
-			fileName = "13.jpg";
+			imageView.setImageBitmap(assetsRead2("13_.jpg"));
+			fileName = "13_.jpg";
 		} else if (type.equals("지펠")) {
-			imageView.setImageBitmap(assetsRead2("14.jpg"));
-			fileName = "14.jpg";
+			imageView.setImageBitmap(assetsRead2("14_.jpg"));
+			fileName = "14_.jpg";
 		} else if (type.equals("갤럭시")) {
-			imageView.setImageBitmap(assetsRead2("15.jpg"));
-			fileName = "15.jpg";
+			imageView.setImageBitmap(assetsRead2("15_.jpg"));
+			fileName = "15_.jpg";
 		} else if (type.equals("에덴")) {
-			imageView.setImageBitmap(assetsRead2("16.jpg"));
-			fileName = "16.jpg";
+			imageView.setImageBitmap(assetsRead2("16_.jpg"));
+			fileName = "16_.jpg";
 		} else if (type.equals("4층 화상실 (세면대)")) {
-			imageView.setImageBitmap(assetsRead2("17.jpg"));
-			fileName = "17.jpg";
+			imageView.setImageBitmap(assetsRead2("17_.jpg"));
+			fileName = "17_.jpg";
 		} else if (type.equals("4층 화장실 (핸드타올)")) {
-			imageView.setImageBitmap(assetsRead2("18.jpg"));
-			fileName = "18.jpg";
+			imageView.setImageBitmap(assetsRead2("18_.jpg"));
+			fileName = "18_.jpg";
 		} else if (type.equals("샤워실 (거울)")) {
-			imageView.setImageBitmap(assetsRead2("19.jpg"));
-			fileName = "19.jpg";
+			imageView.setImageBitmap(assetsRead2("19_.jpg"));
+			fileName = "19_.jpg";
 		} else if (type.equals("샤워실 (바닥)")) {
-			imageView.setImageBitmap(assetsRead2("20.jpg"));
-			fileName = "20.jpg";
+			imageView.setImageBitmap(assetsRead2("20_.jpg"));
+			fileName = "20_.jpg";
 		} else if (type.equals("샤워실 (벽면)")) {
-			imageView.setImageBitmap(assetsRead2("21.jpg"));
-			fileName = "21.jpg";
+			imageView.setImageBitmap(assetsRead2("21_.jpg"));
+			fileName = "21_.jpg";
 		} else if (type.equals("샤워실 (선반)")) {
-			imageView.setImageBitmap(assetsRead2("22.jpg"));
-			fileName = "22.jpg";
+			imageView.setImageBitmap(assetsRead2("22_.jpg"));
+			fileName = "22_.jpg";
 		} else if (type.equals("샤워실 (세제)")) {
-			imageView.setImageBitmap(assetsRead2("23.jpg"));
-			fileName = "23.jpg";
+			imageView.setImageBitmap(assetsRead2("23_.jpg"));
+			fileName = "23_.jpg";
 		} else if (type.equals("샤워실 (바구니)")) {
-			imageView.setImageBitmap(assetsRead2("24.jpg"));
-			fileName = "24.jpg";
+			imageView.setImageBitmap(assetsRead2("24_.jpg"));
+			fileName = "24_.jpg";
 		} else if (type.equals("탕비실 (인덕션)")) {
-			imageView.setImageBitmap(assetsRead2("25.jpg"));
-			fileName = "25.jpg";
+			imageView.setImageBitmap(assetsRead2("25_.jpg"));
+			fileName = "25_.jpg";
 		} else if (type.equals("탕비실 (싱크대)")) {
-			imageView.setImageBitmap(assetsRead2("26.jpg"));
-			fileName = "26.jpg";
+			imageView.setImageBitmap(assetsRead2("26_.jpg"));
+			fileName = "26_.jpg";
 		} else if (type.equals("탕비실 (자판기)")) {
-			imageView.setImageBitmap(assetsRead2("27.jpg"));
-			fileName = "27.jpg";
+			imageView.setImageBitmap(assetsRead2("27_.jpg"));
+			fileName = "27_.jpg";
 		} else if (type.equals("탕비실 (식탁)")) {
-			imageView.setImageBitmap(assetsRead2("28.jpg"));
-			fileName = "28.jpg";
+			imageView.setImageBitmap(assetsRead2("28_.jpg"));
+			fileName = "28__.jpg";
 		} else if (type.equals("탕비실 (밥솥)")) {
-			imageView.setImageBitmap(assetsRead2("29.jpg"));
-			fileName = "29.jpg";
+			imageView.setImageBitmap(assetsRead2("29_.jpg"));
+			fileName = "29_.jpg";
 		} else if (type.equals("탕비실 (식기)")) {
-			imageView.setImageBitmap(assetsRead2("30.jpg"));
-			fileName = "30.jpg";
+			imageView.setImageBitmap(assetsRead2("30_.jpg"));
+			fileName = "30_.jpg";
 		} else if (type.equals("수면실 (매트릭스)")) {
-			imageView.setImageBitmap(assetsRead2("31.jpg"));
-			fileName = "31.jpg";
+			imageView.setImageBitmap(assetsRead2("31_.jpg"));
+			fileName = "31_.jpg";
 		} else if (type.equals("수면실 (이불 배개)")) {
-			imageView.setImageBitmap(assetsRead2("32.jpg"));
-			fileName = "32.jpg";
+			imageView.setImageBitmap(assetsRead2("32_.jpg"));
+			fileName = "32_.jpg";
 		} else if (type.equals("수면실 (요)")) {
-			imageView.setImageBitmap(assetsRead2("33.jpg"));
-			fileName = "33.jpg";
+			imageView.setImageBitmap(assetsRead2("33_.jpg"));
+			fileName = "33_.jpg";
 		} else if (type.equals("수면실 (락커)")) {
-			imageView.setImageBitmap(assetsRead2("34.jpg"));
-			fileName = "34.jpg";
+			imageView.setImageBitmap(assetsRead2("34_.jpg"));
+			fileName = "34_.jpg";
 		} else if (type.equals("건조실")) {
-			imageView.setImageBitmap(assetsRead2("35.jpg"));
-			fileName = "35.jpg";
+			imageView.setImageBitmap(assetsRead2("35_.jpg"));
+			fileName = "35_.jpg";
 		} else if (type.equals("Best")) {
 
 		} else if (type.equals("Worst")) {

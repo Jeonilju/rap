@@ -24,6 +24,8 @@
 	        android:layout_margin="10dp"
 	        android:layout_toRightOf="@id/buy_row_image"
 	        android:layout_centerVertical="true"
+	        android:textColor="#ffffff"
+	        android:textSize="15sp"
 	        android:text="아이템 이름" />
 
     	<Button 
@@ -32,6 +34,8 @@
     	    android:layout_height="wrap_content"
     	    android:text="구매"
     	    android:layout_margin="10dp"
+    	    android:background="#4596c2"
+    	    android:textColor="#ffffff"
     	   	android:layout_alignParentRight="true"/>
     	
     </RelativeLayout>

@@ -109,6 +109,17 @@ public class RAP_APIsIAPController {
 	//////////											////////////
 	////////////////////////////////////////////////////////////////
 	
+	/** 모든 아이탬 검색 */
+	@RequestMapping(value = "/APIs/getIAP_AllItems", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String getIAP_AllItems(HttpServletRequest request
+			, @RequestParam("project_key") String project_key) {
+		logger.info("모든 아이템 조회");
+		String json = new Gson().toJson(iapSDao.select(project_key));
+		
+		return json;
+	}
+
 	/** 대분류를 통해 아이탬 검색 */
 	@RequestMapping(value = "/APIs/getIAP_CategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody

@@ -19,8 +19,8 @@ public class NewmemberInfo {
 		this.count = count;
 	}
 	public NewmemberInfo(Timestamp start, int count) {
-		super();
-		this.start = start;
+		
+		this.start = Timestamp.valueOf(start.toString());
 		this.count = count;
 	}
 	

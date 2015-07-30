@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.MemberDao;
+import com.rap.dao.PromotionDao;
 import com.rap.dao.SettingDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.MemberInfo;
@@ -32,7 +33,10 @@ public class RAP_MainController {
 
 	@Autowired
 	private SettingDao settingDao;
-	
+
+	@Autowired
+	private PromotionDao promotionDao;
+
 	/** RAP 홈 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String MainController_index(HttpServletRequest request) {
@@ -198,8 +202,7 @@ public class RAP_MainController {
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -214,8 +217,7 @@ public class RAP_MainController {
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -224,18 +226,18 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/operation_count", method = RequestMethod.GET)
-	public String MainController_operation_count(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_operation_count(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("operation_count Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
-		
+
 		return "operation_count";
 	}
 
@@ -246,8 +248,7 @@ public class RAP_MainController {
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -256,14 +257,14 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/new_member", method = RequestMethod.GET)
-	public String MainController_new_member(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_new_member(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("new_member Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -272,14 +273,14 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/best_activity", method = RequestMethod.GET)
-	public String MainController_best_activity(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_best_activity(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("best_activityr Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -294,8 +295,7 @@ public class RAP_MainController {
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -304,14 +304,14 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/operation_time", method = RequestMethod.GET)
-	public String MainController_operation_time(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_operation_time(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("operation_time Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -320,30 +320,32 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/promotions_analysis", method = RequestMethod.GET)
-	public String MainController_promotions_analysis(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_promotions_analysis(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("promotions_analysis Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
+
+		request.setAttribute("promotionList", promotionDao.selectFromProject(currentproject.getPk()));
 
 		return "promotions_analysis";
 	}
 
 	@RequestMapping(value = "/sales_ranking", method = RequestMethod.GET)
-	public String MainController_sales_ranking(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_sales_ranking(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("sales_ranking Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -352,14 +354,14 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/deleted_member", method = RequestMethod.GET)
-	public String MainController_deleted_member(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_deleted_member(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("deleted_member Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
@@ -368,18 +370,34 @@ public class RAP_MainController {
 	}
 
 	@RequestMapping(value = "/IAP_amount", method = RequestMethod.GET)
-	public String MainController_IAP_amount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public String MainController_IAP_amount(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 		logger.info("IAP_amount Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 		// 세션에 프로젝트 존재 X
-		if (currentproject == null)
-		{
+		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
 
 		return "IAP_amount";
+	}
+
+	@RequestMapping(value = "/activity_path", method = RequestMethod.GET)
+	public String MainController_activity_path(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		logger.info("activity_path Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null) {
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
+
+		return "activity_path";
 	}
 }

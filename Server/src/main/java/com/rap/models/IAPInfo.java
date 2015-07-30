@@ -18,6 +18,8 @@ public class IAPInfo {
 	private String categorym;
 	private String categorys;
 	
+	private int count;
+	
 	public IAPInfo(int pk, String key, String iap
 			, int price_real, int price_main, int price_sub, int using_type, String google_id
 			, String imagePath, String description, Timestamp reg_date
@@ -36,6 +38,28 @@ public class IAPInfo {
 		this.categoryl = categoryl;
 		this.categorym = categorym;
 		this.categorys = categorys;
+	}
+	
+	public IAPInfo(int pk, String key, String iap
+			, int price_real, int price_main, int price_sub, int using_type, String google_id
+			, String imagePath, String description, Timestamp reg_date
+			, String categoryl, String categorym, String categorys
+			, int count) {
+		this.pk = pk;
+		this.key = key;
+		this.name = iap;
+		this.price_real = price_real;
+		this.price_main = price_main;
+		this.price_sub = price_sub;
+		this.google_id = google_id;
+		this.using_type = using_type;
+		this.imagePath = imagePath;
+		this.description = description;
+		this.reg_date = reg_date;
+		this.categoryl = categoryl;
+		this.categorym = categorym;
+		this.categorys = categorys;
+		this.count = count;
 	}
 	
 	public int getPk() {
@@ -139,6 +163,14 @@ public class IAPInfo {
 
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 	
 }

@@ -1,7 +1,9 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
+encoding//src/main/java/com/rap/main/RAP_AnalysisController.java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding//src/main/webapp/WEB-INF/views/best_activity.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/getStart.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/itemmanagement.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/operation_count.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/operation_time.jsp=UTF-8

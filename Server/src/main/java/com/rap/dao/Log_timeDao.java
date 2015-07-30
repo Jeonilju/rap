@@ -16,7 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OPtimeInfo;
-import com.rap.models.Log_timeInfo;
+
+import net.sf.json.JSONObject;
 
 @Repository
 public class Log_timeDao{
@@ -29,6 +30,52 @@ public class Log_timeDao{
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 		logger.info("Updated DataSource ---> " + ds);
 		logger.info("Updated jdbcTemplate ---> " + jdbcTemplate);		
+	}
+	
+	public List<OPcountInfo> getOperationCount(String project_key, Timestamp start_date, Timestamp end_date, int sex, int age, int grade_time, int grade_using){
+		Timestamp currentTime = start_date;
+		
+		String query = "";
+		if(sex != 0){
+			query += "AND user.sex = " + sex;
+		}
+		if(age != 0){
+			query += " AND user.age >= " + sex + " AND user.age < " + (sex + 10);
+		}
+		if(grade_time != 0){
+			query += " AND user.grade_time = " + grade_time;
+		}
+		if(grade_using != 0){
+			query += " AND user.grade_money = " + grade_using;
+		}
+		
+		List<OPcountInfo> result = new ArrayList<OPcountInfo>();
+		
+		while(currentTime.compareTo(end_date) <= 0){
+			List<OPcountInfo> info = jdbcTemplate.query(
+					//"select count(log_time.start), log_time.start from log_time JOIN user where log_time.project_key=? AND DATEDIFF(log_time.start, ?) <= 1 and log_time.name = user.name;" + query,
+					"select * from log_time JOIN user where log_time.project_key=? AND log_time.start > ? AND DATEDIFF(log_time.start, ?) <= 1 and log_time.name = user.name " + query,
+					new Object[] { project_key, currentTime, currentTime}, new RowMapper<OPcountInfo>() {
+						public OPcountInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+							return new OPcountInfo(
+									resultSet.getTimestamp("log_time.start")
+									, 1);
+						}
+					});
+			
+			if(info.size() != 0)
+				//result.add(new OPcountInfo(currentTime, info.get(0).getCount()));
+				result.add(new OPcountInfo(currentTime, info.size()));
+			
+			currentTime.setDate(currentTime.getDate()+1);
+		}
+		
+		
+		for(int n=0;n < result.size();n++){
+			logger.info("result: " + result.get(n).getStart());
+		}
+		
+		return result;
 	}
 	
 	public List<OPcountInfo> count_operation_count(String project_key, String type, Timestamp start) {
@@ -87,8 +134,6 @@ public class Log_timeDao{
 				}
 				start.setMonth(start.getMonth()+1);
 			}
-			
-			
 		}
 		
 		if (type.equals("year")) {
@@ -161,4 +206,7 @@ public List<OPtimeInfo> count_operation_time(String project_key,Timestamp start)
 		
 		return result;
 	}
+
+
+
 }

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        
+        <Spinner 
+            android:id="@+id/sp_user1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        
+        <EditText 
+            android:id="@+id/et_user1"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="당직자 001"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        
+        <Spinner 
+            android:id="@+id/sp_user2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        
+        <EditText 
+            android:id="@+id/et_user2"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="당직자 002"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        
+        <Spinner 
+            android:id="@+id/sp_orderer"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        
+        <EditText 
+            android:id="@+id/et_orderer"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="검사자"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp">
+        
+        <Button 
+            android:id="@+id/send_send_btn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:background="#657CA6"
+            android:textColor="#2A4574"
+            android:text="보내기"/>
+        
+        <Button 
+            android:id="@+id/send_cansel_btn"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:background="#657CA6"
+            android:textColor="#2A4574"
+            android:text="닫기"/>
+        
+    </LinearLayout>
+    
+</LinearLayout>

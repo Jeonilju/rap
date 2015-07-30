@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.rap.analysismodels.NewmemberInfo;
+import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OSInfo;
 import com.rap.idao.UserIDao;
 import com.rap.models.DeviceInfo;
@@ -287,104 +289,110 @@ public class UserDao implements UserIDao {
 		return OS_version;
 	}
 
-	public List<NewmemberInfo> count_new_member(String project_key, String type, Timestamp start) {
+	public List<NewmemberInfo> count_new_member(String project_key, Timestamp end_date, int during) {
 		
 		logger.info("count new_member");
-		// SELECT DISTINCT email FROM table;
 		
-		List<NewmemberInfo> OPcount = null;
+		java.util.Date date= new java.util.Date();
+		Timestamp currentTime = new Timestamp(date.getTime());
+		
+		if(during == 0){
+			// 최근 1주일
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(date); 
+			c.add(Calendar.DATE, -7);
+			date = c.getTime();
+			
+			currentTime = new Timestamp(date.getTime());
+		}
+		else if (during == 1) {
+			// 최근 2주일
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(date); 
+			c.add(Calendar.DATE, -14);
+			date = c.getTime();
+			
+			currentTime = new Timestamp(date.getTime());
+		} else if (during == 2) {
+			// 최근 3주일
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(date); 
+			c.add(Calendar.DATE, -21);
+			date = c.getTime();
+			
+			currentTime = new Timestamp(date.getTime());
+		} else if (during == 3) {
+			// 최근 1개월
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(date); 
+			c.add(Calendar.MONTH, -1);
+			date = c.getTime();
+			
+			currentTime = new Timestamp(date.getTime());
+		} else if (during == 4) {
+			// 최근 3개월
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(date); 
+			c.add(Calendar.MONTH, -3);
+			date = c.getTime();
+			
+			currentTime = new Timestamp(date.getTime());
+		} else if (during == 5) {
+			// 최근 6개월
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(date); 
+			c.add(Calendar.MONTH, -6);
+			date = c.getTime();
+			
+			currentTime = new Timestamp(date.getTime());
+		}
+		
 		List<NewmemberInfo> result = new ArrayList<NewmemberInfo>();
-		if (type.equals("day")) {
-			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 day))AND DATE(reg_date)>=DATE(?) GROUP BY DATE(reg_date) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<NewmemberInfo>() {
-						public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new NewmemberInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
-						}
-					});
 		
-			int index=0;
-			for (int i = 0; i < 7; i++) {			
-				if(OPcount.size()>0&&OPcount.get(index).getStart().equals(start)){
-					result.add(i,OPcount.get(index));
-					if(index<OPcount.size()-1)
-					index++;	
-				}
-				else{
-					Timestamp c=new Timestamp(start.getTime());
-					NewmemberInfo a = new NewmemberInfo(c, 0);
-					result.add(i, a);
-				}
-				start.setDate(start.getDate()+1);
-			}
-		}
-		
-		if (type.equals("month")) {
-			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 month))AND DATE(reg_date)>=DATE(?) GROUP BY MONTH(reg_date) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<NewmemberInfo>() {
-						public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new NewmemberInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
-						}
-					});
-			for (int i = 0; i < OPcount.size(); i++) {				
-				logger.info("q"+"month : "+OPcount.get(i).getCount()+ " count : "+OPcount.get(i).getCount());
-			}
+		while(currentTime.compareTo(end_date) <= 0) {
 			
-			int index=0;
-			
-			for (int i = 0; i < 7; i++) {			
-				if(OPcount.size()>0&&OPcount.get(index).getStart().getMonth()==start.getMonth()){
-					result.add(i,OPcount.get(index));
-					if(index<OPcount.size()-1)
-						index++;					
-				}
-				else{
-					Timestamp c=new Timestamp(start.getTime());
-					NewmemberInfo a = new NewmemberInfo(c, 0);
-					result.add(i, a);
-				}
-				start.setMonth(start.getMonth()+1);
-				//logger.info(""+result.get(i).getCount());
+			if(during == 0 || during == 1 || during == 2 || during == 3){
+				
+				List<NewmemberInfo> info = jdbcTemplate.query(
+						"select * from user where project_key=? AND DATE(reg_date) = DATE(?)",
+						new Object[] { project_key, currentTime}, new RowMapper<NewmemberInfo>() {
+							public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+								return new NewmemberInfo(
+										resultSet.getTimestamp("reg_date")
+										, 1);
+							}
+						});
+				
+				logger.info("currentTime: " + currentTime.toString() + ", size: " + info.size());
+				
+				//if(info.size() != 0)
+					result.add(new NewmemberInfo(currentTime, info.size()));
+				
+				currentTime.setDate(currentTime.getDate()+1);
 			}
-			
+			else{
+				Timestamp temp = Timestamp.valueOf(currentTime.toString());
+				temp.setMonth(temp.getMonth()+1);
+				
+				List<NewmemberInfo> info = jdbcTemplate.query(
+						"select * from user where project_key=? AND DATE(reg_date) >= DATE(?) AND DATE(reg_date) <= DATE(?)",
+						new Object[] { project_key, currentTime, temp}, new RowMapper<NewmemberInfo>() {
+							public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+								return new NewmemberInfo(
+										resultSet.getTimestamp("reg_date")
+										, 1);
+							}
+						});
+				logger.info("temp: " + temp.toString());
+				logger.info("currentTime: " + currentTime.toString() + ", size: " + info.size());
+				
+				//if(info.size() != 0)
+					result.add(new NewmemberInfo(currentTime, info.size()));
+				
+				currentTime.setMonth(currentTime.getMonth()+1);
+			}
 			
 		}
-		
-		if (type.equals("year")) {
-			OPcount = jdbcTemplate.query(
-					"select count(*),DATE(reg_date) AS ForDate from user where project_key=? AND reg_date<TIMESTAMP(DATE_ADD(?, INTERVAL 7 year))AND DATE(reg_date)>=DATE(?) GROUP BY YEAR(reg_date) ORDER BY ForDate",
-					new Object[] { project_key, start,start}, new RowMapper<NewmemberInfo>() {
-						public NewmemberInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-							return new NewmemberInfo(resultSet.getTimestamp("ForDate"), resultSet.getInt("count(*)"));
-						}
-					});
-			for (int i = 0; i < OPcount.size(); i++) {				
-				logger.info("q"+OPcount.get(i).getStart().getYear());
-			}
-			
-			int index=0;
-			
-			for (int i = 0; i < 7; i++) {			
-				if(OPcount.size()>0&&OPcount.get(index).getStart().getYear()==start.getYear()){
-					result.add(i,OPcount.get(index));
-					if(index<OPcount.size()-1)
-						index++;					
-				}
-				else{
-					Timestamp c=new Timestamp(start.getTime());
-					NewmemberInfo a = new NewmemberInfo(c, 0);
-					result.add(i, a);
-				}
-				start.setYear(start.getYear()+1);
-				//logger.info("year"+result.get(i).getCount());
-			}/*
-			for (int i = 0; i < 7; i++) {		
-				logger.info("year : "+result.get(i).getStart());
-				}*/
-		}
-
-
 		
 		return result;
 	}
