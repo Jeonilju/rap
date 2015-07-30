@@ -39,6 +39,24 @@ function registerProject(){
 				alert("등록가능한 프로젝트 수를 초과했습니다.");
 				return false;
 			}
+			//길이 체크
+			else if(response=='project_name')
+			{
+				alert("프로젝트 이름이 너무 깁니다.");
+				return false;
+			}
+			//길이 체크
+			else if(response=='summary')
+			{
+				alert("프로젝트 요약이 너무 깁니다.");
+				return false;
+			}
+			//길이 체크
+			else if(response=='description')
+			{
+				alert("프로젝트 설명이 너무 깁니다.");
+				return false;
+			}
 			else
 			{
 				alert("예기치못한 에러 발생.");

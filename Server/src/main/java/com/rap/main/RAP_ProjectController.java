@@ -107,6 +107,13 @@ public class RAP_ProjectController {
 		
 		int member_pk = member.getPk();
 
+		if(project_name.length()>22)
+			return "project_name";
+		if(summary.length()>100)
+			return "summary";
+		if(description.length()>250)
+			return "description";
+		
 		//현재 사용자의 프로젝트 리스트		
 		List<ProjectInfo> projectlist = projectDao.selectFromMemberPK(member_pk);
 
@@ -332,6 +339,8 @@ public class RAP_ProjectController {
 		
 		if(google_project_num == null) return "google_project_num";
 		if(google_project_num.isEmpty()) return "google_project_num";
+		
+		if(google_project_num.length()>40) return "Longgoogle_project_num";
 		
 		if(currentproject == null)
 		{
