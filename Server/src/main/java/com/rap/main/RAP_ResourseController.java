@@ -38,12 +38,12 @@ public class RAP_ResourseController {
 		return "getStart";
 	}
 	
-	/** QnA 탭 */
-	@RequestMapping(value = "/QnA", method = RequestMethod.GET)
+	/** FAQ 탭 */
+	@RequestMapping(value = "/FAQ", method = RequestMethod.GET)
 	public String ResourseController_QnA(HttpServletRequest request) {
-		logger.info("QnA Page");
+		logger.info("FAQ Page");
 
-		return "QnA";
+		return "FAQ";
 	}
 	
 	/** start_projectSetting 탭 */

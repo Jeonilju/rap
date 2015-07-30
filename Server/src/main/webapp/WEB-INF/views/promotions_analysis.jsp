@@ -6,13 +6,17 @@
 	<jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Highcharts Example</title>
+		<title>RAP</title>
 		<style type="text/css">
 			${demo.css}
 		</style>
 		<%
 			ProjectInfo currentproject = (ProjectInfo)session.getAttribute("currentproject");
 			List<PromotionInfo> promotionList = (List<PromotionInfo>) request.getAttribute("promotionList");
+			
+			if(promotionList.size() == 0){
+				out.println("<script>alert('" + "등록된 프로모션이 없습니다. 등록후에 사용해주세요" + "');</script>");
+			}
 		%>
 		
 		<script type="text/javascript">
@@ -21,6 +25,8 @@
 				$("#appinfo2").attr('class','accordion-body collapse in');
 			});
 		</script>
+		
+		<script src="./resources/js/bootstrap-datepicker.js"></script>
 		
 		<script src="./resources/js/highcharts.js"></script>
 		<script src="./resources/js/modules/data.js"></script>
@@ -33,11 +39,25 @@
 		
 		<script type="text/javascript">
 
-			function getDate(){
+			function getData(){
+				var sex = document.getElementsByName('sex');
+				var sex_num = 0;
+				for (var i = 0, length = sex.length; i < length; i++) {
+				    if (sex[i].checked) {
+				    	sex_num = i;
+				        break;
+				    }
+				}
+				var age = document.getElementById('age').value;
+				var grade_using = document.getElementById('grade_using').value;
+				var grade_time = document.getElementById('grade_time').value;
 				
-				var param = "promotion_pk=" + document.getElementById('promotion_list').value;
+				var param = "sex_num=" + sex_num +
+							"&age=" + age +
+							"&grade_using=" + grade_using +
+							"&grade_time=" + grade_time +
+							"&promotion_pk=" + document.getElementById('promotion_list').value;
 				
-				//alert('param= '+param);
 				$.ajax({
 					url : "promotions_analysis_db",
 					type : "POST",
@@ -51,7 +71,7 @@
 					},
 					error : function(request, status, error) {
 						if(request.status == '200'){
-							
+							alert("데이터가 존재하지 않습니다.");
 						}
 						else if (request.status != '0') {
 							alert("code : " + request.status + "\r\nmessage : "
@@ -116,11 +136,15 @@
 				
 				
 			}
+			
+			function onLoaded(){
+				getData();
+			}
 		</script>
 		
 	</head>
 	
-	<body id="page-top" class="index">
+	<body id="page-top" class="index" onload="onLoaded();">
 		
 		<div class="container">
 			<div id="wrapper">
@@ -130,10 +154,6 @@
 						<jsp:include page="projectnav.jsp" flush="false" />
 					</ul>
 				</div>
-				<!--  #sidebar-wrapper -->
-				
-				
-				<!--  page-wrapper -->
 				<div id="page-content-wrapper">
 					<div class="container-fluid">
 						<!-- Application Registration -->
@@ -144,9 +164,53 @@
 							</div>
 						</div>
 						<div class="row">
+							<div>
+								<div class="span6" style="margin: 10px">
+									<label>성별</label>
+									<input type="radio" id="sex_none" name="sex" value="전체"  onchange="getData();">전체
+									<input type="radio" id="sex_man" name="sex" value="남자"  onchange="getData();">남자
+									<input type="radio" id="sex_woman" name="sex" valud="여자"  onchange="getData();">여자	
+								</div>
+								<div class="span6" style="margin: 10px">
+									<label>연령</label>
+									<select class="selectpicker" id="age" name="age"  onchange="getData();">
+										<option value="0">전체</option>
+										<option value="10">10대</option>
+										<option value="20">20대</option>
+										<option value="30">30대</option>
+										<option value="40">40대</option>
+										<option value="50">50대</option>
+										<option value="60">60대</option>
+										<option value="70">70대</option>
+										<option value="80">80대</option>
+										<option value="90">90대</option>
+									</select>	
+								</div>
+								<div class="span6" style="margin: 10px">
+									<label>사용시간 등급</label>
+									<select class="selectpicker" id="grade_time" name="grade_time"  onchange="getData();">
+										<option value="0">전체</option>
+										<option value="1">1등급</option>
+										<option value="2">2등급</option>
+										<option value="3">3등급</option>
+										<option value="4">4등급</option>
+									</select>	
+								</div>
+								<div class="span6" style="margin: 10px">
+									<label>사용시간 등급</label>
+									<select class="selectpicker" id="grade_using" name="grade_using"  onchange="getData();">
+										<option value="0">전체</option>
+										<option value="1">1등급</option>
+										<option value="2">2등급</option>
+										<option value="3">3등급</option>
+										<option value="4">4등급</option>
+									</select>	
+								</div>
+							</div>
+								
 							<div class="col-lg-12 text-center" >
-								<div class="form-group">
-									<select class="selectpicker"  id="promotion_list" name="promotion_list" >
+								<div class="pull-right">
+									<select class="selectpicker"  id="promotion_list" name="promotion_list" onchange="getData()">
 										<%
 											for(PromotionInfo info : promotionList){
 												out.println("<option value=" + info.getPk() + ">" + info.getName() + "</option>");

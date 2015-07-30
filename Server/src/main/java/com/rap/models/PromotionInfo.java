@@ -1,5 +1,7 @@
 package com.rap.models;
 
+import java.sql.Timestamp;
+
 public class PromotionInfo {
 	private int pk;
 	private String project_key;
@@ -8,8 +10,9 @@ public class PromotionInfo {
 	private int grade_time;
 	private int grade_money;
 	private String target_activity;
+	private Timestamp reg_date;
 	
-	public PromotionInfo(int pk, String project_key, String name, String summary, int grade_time, int grade_money, String target_activity){
+	public PromotionInfo(int pk, String project_key, String name, String summary, int grade_time, int grade_money, String target_activity, Timestamp reg_date){
 		this.pk = pk;
 		this.project_key = project_key;
 		this.name = name;
@@ -17,6 +20,7 @@ public class PromotionInfo {
 		this.grade_time = grade_time;
 		this.grade_money = grade_money;
 		this.target_activity = target_activity;
+		this.reg_date = reg_date;
 	}
 
 	public String getTarget_activity() {
@@ -75,4 +79,13 @@ public class PromotionInfo {
 		this.grade_money = grade_money;
 	}
 
+	public Timestamp getReg_date() {
+		return reg_date;
+	}
+
+	public void setReg_date(Timestamp reg_date) {
+		this.reg_date = reg_date;
+	}
+
+	
 }
