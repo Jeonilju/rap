@@ -46,7 +46,7 @@
 		<li role="presentation"><a role="menuitem" href="itemmanagement">Virtual Store</a></li>
 		<li role="presentation"><a role="menuitem" href="promotions">Promotions</a></li>	
 		<li role="presentation">			
-			<div class="container">
+		
 				<div class="row">
 					<div class="span12">
 						<div class="menu">
@@ -97,6 +97,7 @@
 																	<li><a href="operation_time">Operation time</a></li>
 																	<li><a href="best_activity">Best activity</a></li>																	
 																	<li><a href="promotions_analysis">Promotions analysis</a></li>
+																	<li><a href="activity_path">Activity path</a></li>
 																</ul>
 															</div>
 														</div>
@@ -122,7 +123,7 @@
 							</div>
 						</div>
 						<!-- /accordion -->
-					</div>
+					
 				</div>
 			</div>
 		</li>

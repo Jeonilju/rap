@@ -157,8 +157,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RAP_MainActivity.this,
-						SampleActivity1.class);
+				Intent intent = new Intent(RAP_MainActivity.this, SampleActivity1.class);
 				startActivity(intent);
 			}
 		});
@@ -167,8 +166,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RAP_MainActivity.this,
-						SampleActivity2.class);
+				Intent intent = new Intent(RAP_MainActivity.this, SampleActivity2.class);
 				startActivity(intent);
 			}
 		});
@@ -177,8 +175,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RAP_MainActivity.this,
-						SampleActivity3.class);
+				Intent intent = new Intent(RAP_MainActivity.this, SampleActivity3.class);
 				startActivity(intent);
 			}
 		});
@@ -187,8 +184,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RAP_MainActivity.this,
-						SampleActivity4.class);
+				Intent intent = new Intent(RAP_MainActivity.this, SampleActivity4.class);
 				startActivity(intent);
 			}
 		});
@@ -197,8 +193,7 @@ public class RAP_MainActivity extends RAPBaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RAP_MainActivity.this,
-						SampleActivity5.class);
+				Intent intent = new Intent(RAP_MainActivity.this, SampleActivity5.class);
 				startActivity(intent);
 			}
 		});
