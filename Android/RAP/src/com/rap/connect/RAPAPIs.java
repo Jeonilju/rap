@@ -1,9 +1,11 @@
 package com.rap.connect;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -14,6 +16,8 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
 
@@ -192,7 +196,7 @@ public class RAPAPIs {
 	 * @param lat 위도
 	 * @param lon 경도
 	 * */
-	public static HttpRequestBase UserInfo_Location(double lat, double lon) throws UnsupportedEncodingException{
+	public static HttpRequestBase UserInfo_Location(Context mContext, double lat, double lon) throws UnsupportedEncodingException{
 	
 		Log.i(TAG, "사용자 위치정보 API 호출");
 		Log.i(TAG, "lat/len: " + lat + "/" + lon);
@@ -203,7 +207,8 @@ public class RAPAPIs {
 		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
 		nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
 		nameValuePairs.add(new BasicNameValuePair("lat", "" + lat));
-		nameValuePairs.add(new BasicNameValuePair("len", "" + lon));
+		nameValuePairs.add(new BasicNameValuePair("lon", "" + lon));
+		nameValuePairs.add(new BasicNameValuePair("location", getAddress(mContext, lat, lon)));
 		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
 		httpPost.setEntity(entityRequest);
 		
@@ -226,17 +231,128 @@ public class RAPAPIs {
 		}
 		Log.i(TAG, "lat/lon: " + userLocation.getLatitude() + "/" + userLocation.getLongitude());
 		
-		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/location");
-		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
-		nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
-		nameValuePairs.add(new BasicNameValuePair("lat", "" + RAPUser.getLocation(mContext).getLatitude()));
-		nameValuePairs.add(new BasicNameValuePair("lon", "" + RAPUser.getLocation(mContext).getLongitude()));
-		UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
-		httpPost.setEntity(entityRequest);
+		Location manager = RAPUser.getLocation(mContext);
 		
-		return httpPost;
+		if(manager == null) {
+			HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/location");
+			httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
+			nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
+			nameValuePairs.add(new BasicNameValuePair("lat", "" + 0));
+			nameValuePairs.add(new BasicNameValuePair("lon", "" + 0));
+			nameValuePairs.add(new BasicNameValuePair("location", "null"));
+			UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+			
+			return httpPost;
+		}
+		else{
+			HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/location");
+			httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));
+			nameValuePairs.add(new BasicNameValuePair("key", "" + RAPSetting.getRAPKey()));
+			nameValuePairs.add(new BasicNameValuePair("lat", "" + manager.getLatitude()));
+			nameValuePairs.add(new BasicNameValuePair("lon", "" + manager.getLongitude()));
+			nameValuePairs.add(new BasicNameValuePair("location", getAddress(mContext, manager.getLatitude(), manager.getLongitude())));
+			UrlEncodedFormEntity entityRequest = new UrlEncodedFormEntity(nameValuePairs, "utf-8");
+			httpPost.setEntity(entityRequest);
+			
+			return httpPost;
+		}
+	}
+	
+	/**
+     * 위도,경도로 주소취득
+     * @param lat
+     * @param lng
+     * @return 주소
+     */
+	public static String getAddress(Context context, double lat, double lng) {
+		String address = null;
+
+		// 위치정보를 활용하기 위한 구글 API 객체
+		Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+		// 주소 목록을 담기 위한 HashMap
+		List<Address> list = null;
+
+		try {
+			list = geocoder.getFromLocation(lat, lng, 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (list == null) {
+			Log.e("getAddress", "주소 데이터 얻기 실패");
+			return "none";
+		}
+
+		if (list.size() > 0) {
+			Address addr = list.get(0);
+			address = addr.getAdminArea();
+			
+			if(address.contains("경기")){
+				address = "kr-kg";
+			}
+			else if(address.contains("전라북도")){
+				address = "kr-cb";
+			}
+			else if(address.contains("경상남도")){
+				address = "kr-kn";
+			}
+			else if(address.contains("전라남도")){
+				address = "kr-2685";
+			}
+			else if(address.contains("부산")){
+				address = "kr-pu";
+			}
+			else if(address.contains("충청남도")){
+				address = "kr-gn";
+			}
+			else if(address.contains("충청북도")){
+				address = "kr-gb";
+			}
+			else if(address.contains("경상북도")){
+				address = "kr-2688";
+			}
+			else if(address.contains("대전")){
+				address = "kr-tj";
+			}
+			else if(address.contains("세종")){
+				address = "kr-sj";
+			}
+			else if(address.contains("울산")){
+				address = "kr-ul";
+			}
+			else if(address.contains("인천")){
+				address = "kr-in";
+			}
+			else if(address.contains("강원")){
+				address = "kr-kw";
+			}
+			else if(address.contains("제주")){
+				address = "kr-cj";
+			}
+			else if(address.contains("서울")){
+				address = "kr-so";
+			}
+			else if(address.contains("대구")){
+				address = "kr-tg";
+			}
+			else if(address.contains("광주")){
+				address = "kr-kj";
+			}
+			else{
+				address = "none";
+			}
+		}
+
+		Log.i(TAG, "address: " + address);
+		
+		return address;
+
 	}
 	
 	/** 

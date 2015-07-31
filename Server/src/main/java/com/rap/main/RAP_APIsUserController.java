@@ -1,6 +1,7 @@
 package com.rap.main;
 
 import java.sql.Timestamp;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.code.geocoder.Geocoder;
 import com.rap.dao.ActivityDao;
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
@@ -98,10 +100,11 @@ public class RAP_APIsUserController {
 			@RequestParam("key") String key, 
 			@RequestParam("name") String name, 
 			@RequestParam("lon") double lon, 
-			@RequestParam("lat") double lat){
+			@RequestParam("lat") double lat,
+			@RequestParam("location") String location){
 		logger.info("APIs: " + "위치 설정");
 		isRight(key, response);
-		userDao.setPosition(key, name, lat, lon);
+		userDao.setPosition(key, name, lat, lon, location);
 		
 		return "200";
 	}

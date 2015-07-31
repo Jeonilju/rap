@@ -61,7 +61,7 @@ public class LoginActivity extends Activity{
 				}
 				else{
 					if(ipStr.equals("")){
-						ipStr = "210.118.74.207";
+						ipStr = "192.168.219.125";
 					}
 					Preference.putString(LoginActivity.this, "SAVED_IP", ipStr);
 					Preference.putString(LoginActivity.this, "SAVED_EMAIL", emailStr);

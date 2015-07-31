@@ -28,7 +28,6 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:hint="210.118.74.207"
-            android:password="true"
             android:textColor="#2A4574"
             android:textColorHint="#552A4574"/>
     </RelativeLayout>

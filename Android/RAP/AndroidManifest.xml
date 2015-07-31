@@ -28,7 +28,6 @@
     
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
             android:name="com.rap.example.RAP_MainActivity"
@@ -39,14 +38,6 @@
                 <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
         </activity>
-        
-        <activity android:name="com.rap.activity.RAPBaseActivity"></activity>
-        <activity android:name="com.rap.example.IAPSampleActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.rap.example.SampleActivity1" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.rap.example.SampleActivity2" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.rap.example.SampleActivity3" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.rap.example.SampleActivity4" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.rap.example.SampleActivity5" android:screenOrientation="portrait"></activity>
         
     	<!-- GCM Receiver -->
 		<receiver

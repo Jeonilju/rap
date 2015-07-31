@@ -14,7 +14,7 @@ public interface UserIDao {
 	void setGCM(String project_key, String name, String gcm_id);
 	void setGradeTime(String project_key, String name, int grage_time);
 	void setGradeMoney(String project_key, String name, int grage_money);
-	void setPosition(String project_key, String name, double position_let, double position_lon);
+	void setPosition(String project_key, String name, double position_let, double position_lon, String location);
 	void setOsVersion(String project_key, String name, String os_version);
 	void setDevice(String project_key, String name, String device_vertion);
 	void setAge(String project_key, String name, int age);

@@ -67,11 +67,11 @@ public class UserDao implements UserIDao {
 				new Object[] { grade_money, project_key, name });
 	}
 
-	public void setPosition(String project_key, String name, double position_let, double position_lon) {
+	public void setPosition(String project_key, String name, double position_let, double position_lon, String location) {
 		isExist(project_key, name);
 		jdbcTemplate.update(
-				"update user set " + " position_let = ?," + " position_lon = ?" + " where project_key = ? AND name = ?",
-				new Object[] { position_let, position_lon, project_key, name });
+				"update user set " + " position_let = ?," + " position_lon = ?, location = ?" + " where project_key = ? AND name = ?",
+				new Object[] { position_let, position_lon, location, project_key, name });
 	}
 
 	public void setOsVersion(String project_key, String name, String os_version) {

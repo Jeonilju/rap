@@ -16,12 +16,15 @@ import android.widget.Spinner;
 
 import com.example.connector.Sender;
 import com.example.dangzicforrap.R;
+import com.rap.connect.RAPHttpClient;
 
 public class SendDialog extends Dialog implements android.view.View.OnClickListener{
 
 private static final String TAG = "PointUsingListDialog";
 	
 	private Context mContext;
+
+	private SendDialog me;
 	
 	private Button sendBtn, canselBtn;
 	private EditText user1, user2, order;
@@ -44,6 +47,8 @@ private static final String TAG = "PointUsingListDialog";
 		initResource();
 		initEvent();
 		init();
+		
+		me = this;
 	}
 	
 	private void init(){
@@ -93,19 +98,32 @@ private static final String TAG = "PointUsingListDialog";
 
 	private void SendData(){
 		
-		String user1_str = "", user2_str = "", order_str = "";
-		user1_str = user1.getText().toString();
-		user2_str = user2.getText().toString();
-		order_str = order.getText().toString();
+		String user1_str = "", user2_str = "", order_str = ""
+				, user1_num, user2_num, order_num;
+		
+		user1_num = sp_user1.getSelectedItem().toString();
+		user2_num = sp_user2.getSelectedItem().toString();
+		order_num = sp_order.getSelectedItem().toString();
+		
+		user1_str = user1_num + " " + user1.getText().toString();
+		user2_str = user2_num + " " + user2.getText().toString();
+		order_str = order_num + " " + order.getText().toString();
 		
 		if(user1_str.equals("") || user2_str.equals("") || order_str.equals("") ){
 			ShowDig("항목을 입력해주세요.");
 			return;
 		}
 		else{
-			dialog = ProgressDialog.show(mContext, "", "데이터베이스 생성중입니다.\n잠시만 기다려주세요.\n( 최초 1회만 수행합니다. )", true);
-			Sender send = new Sender(mContext, CompleteParser);
-			send.run();
+			dialog = ProgressDialog.show(mContext, "", "데이터 전송중입니다. 잠시만 기다려주세요)", true);
+
+			final String message = user1_str + "`" + user2_str + "`" + order_str;
+			
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					Sender send = new Sender(mContext, CompleteParser, message);
+				}
+			}).start();
 		}
 	}
 	
@@ -144,6 +162,8 @@ private static final String TAG = "PointUsingListDialog";
 			if(msg.what == -1){
 				if(dialog != null){
 					dialog.dismiss();
+					ShowDig("전송이 완료되었습니다.");
+					me.dismiss();
 				}
 			}
 			else{

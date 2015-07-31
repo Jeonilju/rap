@@ -18,39 +18,12 @@ public final class R {
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
          */
-        public static int activity_horizontal_margin=0x7f040000;
-        public static int activity_vertical_margin=0x7f040001;
-    }
-    public static final class drawable {
-        public static int ic_launcher=0x7f020000;
-    }
-    public static final class id {
-        public static int iap_btn=0x7f060005;
-        public static int input_btn=0x7f06000d;
-        public static int input_et=0x7f06000c;
-        public static int input_man=0x7f06000e;
-        public static int input_woman=0x7f06000f;
-        public static int page_001=0x7f060006;
-        public static int page_002=0x7f060007;
-        public static int page_003=0x7f060008;
-        public static int page_004=0x7f060009;
-        public static int page_005=0x7f06000a;
-        public static int page_name=0x7f06000b;
-        public static int user_age=0x7f060002;
-        public static int user_device=0x7f060004;
-        public static int user_location=0x7f060001;
-        public static int user_os=0x7f060003;
-        public static int user_sex=0x7f060000;
-    }
-    public static final class layout {
-        public static int activity_rap__main=0x7f030000;
-        public static int activity_sample1=0x7f030001;
-        public static int dialog_input=0x7f030002;
-        public static int dialog_sex=0x7f030003;
+        public static int activity_horizontal_margin=0x7f020000;
+        public static int activity_vertical_margin=0x7f020001;
     }
     public static final class string {
-        public static int action_settings=0x7f050002;
-        public static int app_name=0x7f050000;
-        public static int hello_world=0x7f050001;
+        public static int action_settings=0x7f030002;
+        public static int app_name=0x7f030000;
+        public static int hello_world=0x7f030001;
     }
 }

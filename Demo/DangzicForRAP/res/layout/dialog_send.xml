@@ -20,6 +20,7 @@
             android:id="@+id/et_user1"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:text="전일주"
             android:hint="당직자 001"/>
         
     </LinearLayout>
@@ -40,6 +41,7 @@
             android:id="@+id/et_user2"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:text="전일주"
             android:hint="당직자 002"/>
         
     </LinearLayout>
@@ -60,6 +62,7 @@
             android:id="@+id/et_orderer"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:text="전일주"
             android:hint="검사자"/>
         
     </LinearLayout>

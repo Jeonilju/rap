@@ -17,9 +17,8 @@ import android.util.Log;
 
 public class RAPHttpClient {
 
-	//public static final String HOST = "192.168.0.20";
-	public static final String HOST = "192.168.219.125";
-	//public static final String HOST = "210.118.74.208";
+	//public static final String HOST = "192.168.219.125";
+	public static final String HOST = "210.118.74.208";
 	public static final int PORT = 8080;
 	
 	private static final String TAG = "RAPHttpClient";

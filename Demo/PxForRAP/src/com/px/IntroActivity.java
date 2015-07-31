@@ -30,7 +30,7 @@ public class IntroActivity extends RAPBaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
-		//RAPSetting.setRAPKey("1");
+		RAPSetting.setRAPKey("1");
 		
 		try {
 			HttpRequestBase req = RAPAPIs.CheckVirtual_Main();
