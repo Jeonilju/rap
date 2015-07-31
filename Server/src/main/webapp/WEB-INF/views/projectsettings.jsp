@@ -587,12 +587,12 @@ function registerGoogleProjectNum()
 									sublistcount = sublist.size();
 									
 								if(sublistcount == 0){
-									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder='Sub Coin Name' type='text' class='form-control' id='virtual_sub_name'></div>");
+									out.println("<div class='col-lg-6'><label style='padding-left:5px;padding-right:5px'>Sub Coin Name</label><input placeholder='Sub Coin Name' type='text' class='form-control' id='virtual_sub_name'></div>");
 									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder='Description' class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
 											+"<button type='button' class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
 								}
 								else{
-									out.println("<div class='col-lg-6'><label>Sub Coin Name</label><input placeholder="+sublist.get(0).getName()+" type='text' class='form-control' id='virtual_sub_name'></div>");
+									out.println("<div class='col-lg-6'><label style='padding-left:5px;padding-right:5px'>Sub Coin Name</label><input placeholder="+sublist.get(0).getName()+" type='text' class='form-control' id='virtual_sub_name'></div>");
 									out.println("<div class='col-lg-6'><label>Description</label><textarea placeholder="+sublist.get(0).getDescription()+" class='form-control' id='virtual_sub_description' style='height: 45px'></textarea>"
 											+"<button type='button' class='btn' onclick='registerVirtualSub()'>Edit</button></div>");
 								}
@@ -636,9 +636,9 @@ function registerGoogleProjectNum()
 						</div>
 					</div>
 					<div class="row">
-						<div style="padding: 5px">
+						<div>
 						<form class="form-inline">
-							<label style="padding:5px">Time</label>
+							<label style='padding-left:14px;padding-right:14px'>Time</label>
 							<input type="text" class="form-control" placeholder="상(<%= timel %>)" id="grade_timeL">
 							<input type="text" class="form-control" placeholder="중(<%= timem %>)" id="grade_timeM">
 							<input type="text" class="form-control" placeholder="하(<%= times %>)" id="grade_timeS">
