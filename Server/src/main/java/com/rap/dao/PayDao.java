@@ -114,6 +114,45 @@ public class PayDao implements PayIDao{
 		    	}
 		    });
 	}
+	
+	public List<PayInfo> select(String project_key, Timestamp start, Timestamp end, int sex, int age, int grade_time, int grade_using, int money) {
+		
+		String query = "";
+		if(sex != 0){
+			query += "AND user.sex = " + sex;
+		}
+		if(age != 0){
+			query += " AND user.age >= " + sex + " AND user.age < " + (sex + 10);
+		}
+		if(grade_time != 0){
+			query += " AND user.grade_time = " + grade_time;
+		}
+		if(grade_using != 0){
+			query += " AND user.grade_money = " + grade_using;
+		}
+		
+		query += " AND log_pay.type = " + money;
+		
+		return jdbcTemplate.query("select * from log_pay "
+				+ "join user "
+				+ "where log_pay.project_key = ? "
+				+ " AND log_pay.username = user.name " + query
+				+ " order by log_pay.reg_date asc",
+		    	new Object[] { project_key }, new RowMapper<PayInfo>() {
+		    	public PayInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new PayInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("username")
+		    				, resultSet.getInt("type")
+		    				, resultSet.getInt("price")
+		    				, resultSet.getInt("item_pk")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+	}
+	
 	public void deleteAll() {
 		jdbcTemplate.update("delete from log_pay");
 	}
@@ -121,20 +160,9 @@ public class PayDao implements PayIDao{
 		jdbcTemplate.update("delete from log_pay where project_key = ?", new Object[] { key });
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-public List<IAPamountInfo> count_IAP_amount(String project_key, String type, Timestamp start) {
+	public List<IAPamountInfo> count_IAP_amount(String project_key, String type, Timestamp start) {
 		
 		logger.info("count new_member");
-		// SELECT DISTINCT email FROM table;
-		
 		List<IAPamountInfo> OPcount = null;
 		List<IAPamountInfo> result = new ArrayList<IAPamountInfo>();
 		if (type.equals("day")) {

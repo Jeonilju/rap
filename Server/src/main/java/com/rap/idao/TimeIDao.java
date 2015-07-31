@@ -12,7 +12,7 @@ public interface TimeIDao {
 	void create(String Key, String name, Timestamp start, Timestamp end);
 	
 	List<TimeInfo> select(String key);
-	List<TimeInfo> select(String key, Timestamp start, Timestamp end);
+	List<TimeInfo> select(String key, Timestamp start, Timestamp end, int sex, int age, int grade_time, int grade_using);
 	
 	void deleteAll();
 	void delete(String pk);

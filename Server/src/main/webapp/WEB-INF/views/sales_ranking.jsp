@@ -14,7 +14,6 @@
 		<script src="./resources/js/modules/data.js"></script>
 		<script src="./resources/js/modules/exporting.js"></script>
 		
-<<<<<<< HEAD
 		<!-- Additional files for the Highslide popup effect -->
 		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide-full.min.js"></script>
 		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide.config.js" charset="utf-8"></script>
@@ -30,7 +29,7 @@
 				var sex_num = 0;
 				for (var i = 0, length = sex.length; i < length; i++) {
 				    if (sex[i].checked) {
-				    	sex_num = i + 1;
+				    	sex_num = i;
 				        break;
 				    }
 				}
@@ -63,7 +62,7 @@
 			
 					error : function(request, status, error) {
 						if(request.status == '200'){
-							
+							alert("데이터가 존재하지 않습니다.");
 						}
 						else if (request.status != '0') {
 							alert("code : " + request.status + "\r\nmessage : "
@@ -92,8 +91,12 @@
 		<script type="text/javascript">
 			
 			function onLoading(){
-				$('#start_date').datepicker("setDate", new Date());
-				$('#end_date').datepicker("setDate", new Date());
+				$('#start_date').datepicker("setDate", new Date()).on('changeDate', function (ev) {
+					getsales_ranking();
+				});
+				$('#end_date').datepicker("setDate", new Date()).on('changeDate', function (ev) {
+					getsales_ranking();
+				});;
 				
 				$("#basicuserinfo").attr('class','accordion-body collapse in');
 				$("#iapinfo2").attr('class','accordion-body collapse in');
@@ -131,12 +134,13 @@
 						<div>
 							<div class="span6" style="margin: 10px">
 								<label>기간</label>
-								<input class="datepicker" id="start_date" name="start_date" data-date-format="yyyy-mm-dd" onchange="getsales_ranking()">
+								<input class="datepicker" id="start_date" name="start_date" data-date-format="yyyy-mm-dd" >
 								<label> ~ </label>
-								<input class="datepicker" id="end_date" name="end_date" data-date-format="yyyy-mm-dd"  onchange="getsales_ranking();">	
+								<input class="datepicker" id="end_date" name="end_date" data-date-format="yyyy-mm-dd" >	
 							</div>
 							<div class="span6" style="margin: 10px">
 								<label>성별</label>
+								<input type="radio" id="sex_none" name="sex" value="전체"  onchange="getsales_ranking();">전체
 								<input type="radio" id="sex_man" name="sex" value="남자"  onchange="getsales_ranking();">남자
 								<input type="radio" id="sex_woman" name="sex" valud="여자"  onchange="getsales_ranking();">여자	
 							</div>

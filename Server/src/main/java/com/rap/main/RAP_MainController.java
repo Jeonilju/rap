@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.rap.dao.CategoryLDao;
 import com.rap.dao.MemberDao;
 import com.rap.dao.PromotionDao;
 import com.rap.dao.SettingDao;
-import com.rap.models.CategoryLInfo;
+import com.rap.dao.Virtual_MainDao;
+import com.rap.dao.Virtual_SubDao;
 import com.rap.models.MemberInfo;
 import com.rap.models.ProjectInfo;
 
@@ -37,6 +37,12 @@ public class RAP_MainController {
 	@Autowired
 	private PromotionDao promotionDao;
 
+	@Autowired
+	private Virtual_MainDao virtual_MainDao;
+	
+	@Autowired
+	private Virtual_SubDao virtual_SubDao;
+	
 	/** RAP 홈 */
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String MainController_index(HttpServletRequest request) {
@@ -332,6 +338,8 @@ public class RAP_MainController {
 			return "projecthome";
 		}
 
+		logger.info( "프로모션 갯수: " + promotionDao.selectFromProject(currentproject.getPk()).size());
+		
 		request.setAttribute("promotionList", promotionDao.selectFromProject(currentproject.getPk()));
 
 		return "promotions_analysis";
@@ -369,19 +377,24 @@ public class RAP_MainController {
 		return "deleted_member";
 	}
 
-	@RequestMapping(value = "/IAP_amount", method = RequestMethod.GET)
-	public String MainController_IAP_amount(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@RequestMapping(value = "/IAP_amount", method = RequestMethod.GET,  produces = "text/plain;charset=UTF-8")
+	public String MainController_IAP_amount(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		logger.info("IAP_amount Page");
 		HttpSession session = request.getSession();
 		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
-
+		
 		// 세션에 프로젝트 존재 X
 		if (currentproject == null) {
 			response.sendRedirect("projecthome");
 			return "projecthome";
 		}
-
+		
+		logger.info("화폐: " + virtual_MainDao.select(currentproject.getPk()).get(0).getName());
+		logger.info("화폐: " + virtual_SubDao.select(currentproject.getPk()).get(0).getName());
+		
+		request.setAttribute("virtual_main", virtual_MainDao.select(currentproject.getPk()).get(0).getName());
+		request.setAttribute("virtual_sub", virtual_SubDao.select(currentproject.getPk()).get(0).getName());
+		
 		return "IAP_amount";
 	}
 

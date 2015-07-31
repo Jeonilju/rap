@@ -98,10 +98,8 @@ public class ActivityDao implements ActivityIDao {
 		logger.info("count activity path");
 		
 		List<JSONObject> result = new ArrayList<JSONObject>();
-		 List<String> receive = jdbcTemplate.query(
-				 "select activity_name from activity_log where project_key=? group by activity_name",
-					/*"select start AS ForDate,count(*) from log_time where project_key=? AND start<TIMESTAMP(DATE_ADD(?, INTERVAL 1 day)) "
-					+ "AND DATE(start)>=DATE(?) GROUP BY hour(start) ORDER BY ForDate",*/
+		List<String> receive = jdbcTemplate.query(
+				"select activity_name from activity_log where project_key=? group by activity_name",
 					new Object[] { project_key}, new RowMapper<String>() {
 						public String mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 							return new String(resultSet.getString("activity_name"));
@@ -121,6 +119,7 @@ public class ActivityDao implements ActivityIDao {
 							}
 						});
 			List<JSONObject> small = new ArrayList<JSONObject>();
+			
 			for(int k=0;k<receive2.size();k++){
 				JSONObject newobj2= new JSONObject();
 				newobj2.put("nodeTo", receive2.get(k).getTo());

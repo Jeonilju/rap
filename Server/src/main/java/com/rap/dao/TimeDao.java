@@ -81,8 +81,24 @@ public class TimeDao implements TimeIDao{
 		    });
 	}
 	
-	public List<TimeInfo> select(String project_key, Timestamp start, Timestamp end){
-		return jdbcTemplate.query("select * from log_time where project_key = ? AND start >= ? AND end <= ?",
+	public List<TimeInfo> select(String project_key, Timestamp start, Timestamp end, int sex, int age, int grade_time, int grade_using){
+		String query = "";
+		if(sex != 0){
+			query += "AND user.sex = " + sex;
+		}
+		if(age != 0){
+			query += " AND user.age >= " + sex + " AND user.age < " + (sex + 10);
+		}
+		if(grade_time != 0){
+			query += " AND user.grade_time = " + grade_time;
+		}
+		if(grade_using != 0){
+			query += " AND user.grade_money = " + grade_using;
+		}
+		
+		return jdbcTemplate.query("select * from log_time JOIN user "
+				+ "where log_time.project_key = ? AND log_time.start >= ? AND log_time.end <= ?"
+				+ " AND log_time.name = user.name " + query,
 		    	new Object[] { project_key, start, end }, new RowMapper<TimeInfo>() {
 		    	public TimeInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{

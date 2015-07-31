@@ -5,11 +5,11 @@
 </li>
 <li class="sidebar-brand">
 	<a href="#">
-		Get Start
+		Get Started
 	</a>
 </li>
 <li>
-	<a href="getStart">Get Start</a>
+	<a href="getStart">Get Started</a>
 	<a href="start_projectSetting">How to Project Setting</a>
 	<a href="start_SDKSetting">How to SDK Setting</a>
 	<a href="start_userInfo">How to get User Info</a>
