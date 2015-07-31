@@ -369,7 +369,7 @@ function onEnterSignUp()
 		<div class="collapse navbar-collapse"
 			id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="nav nav-tabs">
+				<li class="nav">
 					<a href="index">Home</a>
 				</li>
 
