@@ -24,6 +24,7 @@ import com.rap.dao.CategoryMDao;
 import com.rap.dao.CategorySDao;
 import com.rap.dao.IAPDao;
 import com.rap.dao.PayDao;
+import com.rap.dao.ProjectDao;
 import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.dao.Virtual_MainDao;
@@ -35,6 +36,9 @@ import com.rap.models.UserInfo;
 public class RAP_APIsIAPController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RAP_APIsIAPController.class);
+	
+	@Autowired
+	private ProjectDao projectDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -69,8 +73,10 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getCategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getCategoryL(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key) {
 		logger.info("대분류 조회");
+		isRight(project_key, response);
 		
 		String json = new Gson().toJson(categoryLDao.select(project_key));
 		return json;
@@ -79,10 +85,12 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getCategoryM", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getCategoryM(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL) {
 		CategoryL = StringPattern.parseUTF(CategoryL);
 		logger.info("중분류 조회: " + CategoryL);
+		isRight(project_key, response);
 		
 		String json = new Gson().toJson(categoryMDao.select(project_key, CategoryL));
 		
@@ -92,12 +100,14 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getCategoryS", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getCategoryS(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL
 			, @RequestParam("CategoryM") String CategoryM) {
 		CategoryL = StringPattern.parseUTF(CategoryL);
 		CategoryM = StringPattern.parseUTF(CategoryM);
 		logger.info("소분류 조회: " + CategoryL + ", " + CategoryM);
+		isRight(project_key, response);
 
 		String json = new Gson().toJson(categorySDao.select(project_key, CategoryL, CategoryM));
 		return json;
@@ -113,8 +123,10 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getIAP_AllItems", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_AllItems(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key) {
 		logger.info("모든 아이템 조회");
+		isRight(project_key, response);
 		String json = new Gson().toJson(iapSDao.select(project_key));
 		
 		return json;
@@ -124,9 +136,11 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getIAP_CategoryL", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryL(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL) {
 		logger.info("APIs Tab");
+		isRight(project_key, response);
 
 		CategoryL = StringPattern.parseUTF(CategoryL);
 		String json = new Gson().toJson(iapSDao.select(project_key, CategoryL));
@@ -138,10 +152,12 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getIAP_CategoryM", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryM(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL
 			, @RequestParam("CategoryM") String CategoryM) {
 		logger.info("APIs Tab");
+		isRight(project_key, response);
 
 		CategoryL = StringPattern.parseUTF(CategoryL);
 		CategoryM = StringPattern.parseUTF(CategoryM);
@@ -155,6 +171,7 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/getIAP_CategoryS", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String getIAP_CategoryS(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("CategoryL") String CategoryL
 			, @RequestParam("CategoryM") String CategoryM
@@ -163,6 +180,7 @@ public class RAP_APIsIAPController {
 		CategoryM = StringPattern.parseUTF(CategoryM);
 		CategoryS = StringPattern.parseUTF(CategoryS);
 		logger.info("아이템 반환: " + CategoryL + ", " + CategoryM + ", " + CategoryS);
+		isRight(project_key, response);
 		String json = new Gson().toJson(iapSDao.select(project_key, CategoryL, CategoryM, CategoryS));
 		return json;
 	}
@@ -176,8 +194,10 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/checkVirtualMain", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualMain(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key) {
 		logger.info("/APIs/checkVirtualMain");
+		isRight(project_key, response);
 
 		String json = new Gson().toJson(virtual_mainDao.selectOne(project_key));
 		return json;
@@ -186,8 +206,10 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/checkVirtualSub", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualSub(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key) {
 		logger.info("APIs Tab");
+		isRight(project_key, response);
 
 		String json = new Gson().toJson(virtual_subDao.selectOne(project_key));
 		return json;
@@ -199,9 +221,11 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/GetVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String checkVirtualSub(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User) {
 		logger.info("Main 가상화폐 조회: " + project_key + ", " + User);
+		isRight(project_key, response);
 
 		UserInfo userInfo = userDao.selectUser(project_key, User);
 		JSONObject jsonObj = new JSONObject();
@@ -216,10 +240,12 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/UseVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String UseVirtualMain(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
 		logger.info("Main 가상화폐 사용");
+		isRight(project_key, response);
 
 		userDao.useVirtual_main(project_key, User, money);
 		
@@ -232,10 +258,12 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/TakeVirtualMain", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String TakeVirtualMain(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
 		logger.info("Main 가상화폐 추가");
+		isRight(project_key, response);
 
 		userDao.getVirtual_main(project_key, User, money);
 		
@@ -248,9 +276,11 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/GetVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String GetVirtualSub(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User) {
 		logger.info("Sub 가상화폐 조회" + project_key + ", " + User);
+		isRight(project_key, response);
 
 		UserInfo userInfo = userDao.selectUser(project_key, User);
 		JSONObject jsonObj = new JSONObject();
@@ -265,10 +295,12 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/UseVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String UseVirtualSub(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
 		logger.info("Sub 가상화폐 사용");
+		isRight(project_key, response);
 
 		userDao.useVirtual_sub(project_key, User, money);
 		
@@ -281,10 +313,12 @@ public class RAP_APIsIAPController {
 	@RequestMapping(value = "/APIs/TakeVirtualSub", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String TakeVirtualSub(HttpServletRequest request
+			, HttpServletResponse response
 			, @RequestParam("project_key") String project_key
 			, @RequestParam("User") String User
 			, @RequestParam("money") int money) {
 		logger.info("Sub 가상화폐 추가");
+		isRight(project_key, response);
 		userDao.getVirtual_sub(project_key, User, money);
 		
 		return "";
@@ -299,7 +333,8 @@ public class RAP_APIsIAPController {
 			, @RequestParam("User") String User
 			, @RequestParam("item_id") int item_pk) {
 		logger.info("Main 가상화폐 결제");
-		
+
+		isRight(project_key, response);
 		UserInfo info = userDao.selectUser(project_key, User);
 		IAPInfo item_info = iapSDao.selectItem(project_key, item_pk);
 		
@@ -314,7 +349,7 @@ public class RAP_APIsIAPController {
 			else{
 				// 가진 돈보다 작음
 				response.setStatus(401);
-				return "402";
+				return "405";
 			}
 		}
 		else{
@@ -332,7 +367,8 @@ public class RAP_APIsIAPController {
 			, @RequestParam("User") String User
 			, @RequestParam("item_id") int item_pk) {
 		logger.info("Sub 가상화폐 결제");
-		
+
+		isRight(project_key, response);
 		UserInfo info = userDao.selectUser(project_key, User);
 		IAPInfo item_info = iapSDao.selectItem(project_key, item_pk);
 		
@@ -347,7 +383,7 @@ public class RAP_APIsIAPController {
 			else{
 				// 가진 돈보다 작음
 				response.setStatus(401);
-				return "401";
+				return "405";
 			}
 		}
 		else{
@@ -366,6 +402,8 @@ public class RAP_APIsIAPController {
 			, @RequestParam("item_id") int item_pk) {
 		logger.info("Sub 가상화폐 결제");
 		
+		isRight(project_key, response);
+		
 		UserInfo info = userDao.selectUser(project_key, User);
 		IAPInfo item_info = iapSDao.selectItem(project_key, item_pk);
 		
@@ -377,5 +415,15 @@ public class RAP_APIsIAPController {
 			response.setStatus(401);
 			return "401";
 		}
+	}
+	
+	public boolean isRight(String project_key, HttpServletResponse response){
+		
+		if(projectDao.select(project_key).size() == 0){
+			response.setStatus(401);
+			return false;
+		}
+		
+		return true;
 	}
 }

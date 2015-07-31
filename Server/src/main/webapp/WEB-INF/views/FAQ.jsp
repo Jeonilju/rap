@@ -13,7 +13,7 @@
 				<!--  sidebar-wrapper -->
 				<div id="sidebar-wrapper">
 					<ul class="sidebar-nav">
-						<jsp:include page="getStart-nav.jsp" flush="false" />
+						<jsp:include page="faq-nav.jsp" flush="false" />
 					</ul>
 				</div>
 				
@@ -24,61 +24,52 @@
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>회원가입 및 프로젝트 등록</h2>
+								<h2>FAQ</h2>
 							</div>
 						</div>
 						<br />
 						<div class="row">
 							
-							<h4>회원가입</h4>
-							
-							<p>
-							R.A.P 를 이용하시려면 우선 회원가입을 해야합니다.
-							</p>
+							<h4>Q1. 프로젝트 Key를 초기화 하지 않으면 어떻게 되나요?</h4>
 							
 							<p>
 								<br/>
-								<img src="./resources/image/started/SignUp1.png" width="500" height="300" style="margin: 10px;">
+								<img src="./resources/image/started/project_key1.png" width="1021" height="58" style="margin: 10px;">
 								<br/>
-								우측 상단에 있는 Sign Up 버튼을 클릭하시면 회원가입을 진행 할 수 있는 창이 나타나게 됩니다.<br/>
-								해당 창에서 회원가입을 진행해주세요.
+								위와같이 에러로그가 나타나게됩니다.<br> 
+								프로젝트 Key를 꼭 초기화 한 뒤 사용해주세요<br>
 							</p>
+							
+							<hr style="margin: 20">
+							
+							<h4>Q2. 프로젝트 Key를 잘못 입력하면 어떻게 되나요?</h4>
 							
 							<p>
-								<img src="./resources/image/started/SignUp2.png" width="500" height="300" style="margin: 10px;">
 								<br/>
-								위의 창이 나타나게되면 이메일과 비밀번호를 입력하여 회원가입을 합니다.
+								<br/>
+								모든 요청에 대해서 Http Status 401을 받게됩니다.<br>
+								401 상태를 받으시면 프로젝트 Key에 문제가 발생된것을 의미합니다.<br>
 							</p>
+							
+							<hr style="margin: 20">
+							
+							<h4>Q3. 네트워크 상태가 불안정하면 어떻게되나요?</h4>
 							
 							<p>
-								<img src="./resources/image/started/SignUp3.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								우측 상단에 있는 Sign In 버튼을 클릭하여 회원가입했던 이메일과 비밀번호를 통해 로그인합니다.
+								글세요...
 							</p>
 							
-							<hr/>
-							<h4>프로젝트 등록</h4>
-							<p>
-								<img src="./resources/image/started/Project1.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								로그인 후에 프로젝트를 등록해야합니다.<br/> 
-								Developer 탭을 클릭하시면 현재 등록된 프로젝트 리스트들이 나타나게됩니다.<br/> 
-								좌측 메뉴에 Register를 클릭하여 프로젝트를 등록합니다.<br/><br/>
-							</p>
+							<hr style="margin: 20">
+							
+							<h4>Q4. GPS에서 현재 위치를 가져올 수 없는 경우엔 어떻게 되나요?</h4>
 							
 							<p>
-								<img src="./resources/image/started/Project2.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								프로젝트는 프로젝트 이름과 Summary 그리고 Description을 입력하여 등록합니다.
+								GPS에서 위치를 불러올 수 없는 경우 네트워크를 통해 현재 위치를 받아옵니다.<br>
+								네트워크를 통해서도 위치를 알 수 없다면 현재 사용자 위치를 설정하지 않습니다.<br>
+								이럴경우 잠시후에 다시 호출해주시면 잘 작동할 수 있습니다.
 							</p>
 							
-							<p>
-								<img src="./resources/image/started/Project3.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								위와같이 등록된 프로젝트들의 리스트를 볼 수 있습니다.<br/>
-								프로젝트는 최대 3개까지 등록이 가능합니다.
-							</p>
-							
+							<hr>
 						</div>
 					</div>
 				</div>

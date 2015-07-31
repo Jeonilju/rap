@@ -25,59 +25,121 @@
 						<div class="row">
 							<div class="col-lg-12 text-center">
 								<BR><BR><BR><BR><BR><BR>
-								<h2>회원가입 및 프로젝트 등록</h2>
+								<h2>아이템 결제</h2>
 							</div>
 						</div>
 						<br />
 						<div class="row">
 							
-							<h4>회원가입</h4>
+							<h4>가상화폐를 통한 결제</h4>
 							
 							<p>
-							R.A.P 를 이용하시려면 우선 회원가입을 해야합니다.
+							RAP에선 Main화폐와 Sub화폐를 제공합니다. <br>
+							사용자별로 각각 Main화폐와 Sub화폐를 가지고있습니다.<br>
+							먼저 화폐에 관련된 API를 살펴보면 다음과 같습니다.<br>
+							</p>
+							
+							<hr>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>CheckVirtual_Main()</b><br/>
+								-Main 화폐에 대한 정보 조회-
+							</p>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>CheckVirtual_Sub()</b><br/>
+								-Sub 화폐에 대한 정보 조회-
+							</p>
+							
+							<p style="margin: 20">
+								<br/>
+								<img src="./resources/image/started/curreny_json.png" width="351" height="115" style="margin: 10px;">
+								<br>
+								화폐정보를 조회했을 떄의 받는 정보이다. <br>
+								pk는 화폐의 id를 의미하고<br>
+								key는 프로젝트의 Key,<br>
+								name은 화폐의 이름으로 프로젝트 설정에서 설정한 값이다.<br>
+								image는 등록한 화폐의 이미지의 경로,<br>
+								description은 화폐의 설명,<br>
+								reg_date는 화폐 등록일을 의미한다.<br>
+							</p>
+							
+							<hr>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>GetVirtual_Main()</b><br/>
+								-사용자의 Main 화폐 정보 조회-
+							</p>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>CheckVirtual_Sub()</b><br/>
+								-사용자의 Sub 화폐 정보 조회-
+							</p>
+							
+							<p style="margin: 20">
+								<br/>
+								<img src="./resources/image/started/point_json.png" width="241" height="100" style="margin: 10px;">
+								사용자의 화폐정보를 조회했을 떄의 받는 정보이다. <br>
+								Point는 사용자의 잔여 화폐량을 의미한다.<br>
+							</p>
+							
+							<hr>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>UseVirtual_Main(int 차감량)</b><br/>
+								-사용자의 Main 화폐 차감-
+							</p>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>UseVirtual_Sub(int 추가량)</b><br/>
+								-사용자의 Sub 화폐 차감-
+							</p>
+							
+							<hr>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>TakeVirtual_Main(int 추가량)</b><br/>
+								-사용자의 Main 화폐 추가-
+							</p>
+							
+							<p style="margin: 20">
+								<br/>
+								<b>TakeVirtual_Sub(int 추가량)</b><br/>
+								-사용자의 Sub 화폐 추가-
+							</p>
+							
+							<hr>
+							
+							<p>
+								<br/>
+								다음은 아이템을 구매하는 API입니다. 
+								<br/>
+								<b>BuyItemByMain(int 아이템 ID)</b><br/>
+								
+								<br/>
+								<b>BuyItemBySub(int 아이템 ID)</b><br/>
+							</p>
+							
+							<hr>
+							
+							<p>
+								<img src="./resources/image/started/item_rank.png" width="673" height="414" style="margin: 10px;">
+								<br/>
+								이렇게 누적된 아이템 판매는 위와같이 사용자가 어떤 아이템을 많이 구매하였는지 확인하실 수 있습니다.<br>
+								기본 사용자 정보를 통해 필터링하여 특정 분류의 사용자의 소비패턴도 확인하실 수 있습니다.<br>
 							</p>
 							
 							<p>
+								<img src="./resources/image/started/item_among.png" width="673" height="568" style="margin: 10px;">
 								<br/>
-								<img src="./resources/image/started/SignUp1.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								우측 상단에 있는 Sign Up 버튼을 클릭하시면 회원가입을 진행 할 수 있는 창이 나타나게 됩니다.<br/>
-								해당 창에서 회원가입을 진행해주세요.
-							</p>
-							
-							<p>
-								<img src="./resources/image/started/SignUp2.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								위의 창이 나타나게되면 이메일과 비밀번호를 입력하여 회원가입을 합니다.
-							</p>
-							
-							<p>
-								<img src="./resources/image/started/SignUp3.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								우측 상단에 있는 Sign In 버튼을 클릭하여 회원가입했던 이메일과 비밀번호를 통해 로그인합니다.
-							</p>
-							
-							<hr/>
-							<h4>프로젝트 등록</h4>
-							<p>
-								<img src="./resources/image/started/Project1.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								로그인 후에 프로젝트를 등록해야합니다.<br/> 
-								Developer 탭을 클릭하시면 현재 등록된 프로젝트 리스트들이 나타나게됩니다.<br/> 
-								좌측 메뉴에 Register를 클릭하여 프로젝트를 등록합니다.<br/><br/>
-							</p>
-							
-							<p>
-								<img src="./resources/image/started/Project2.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								프로젝트는 프로젝트 이름과 Summary 그리고 Description을 입력하여 등록합니다.
-							</p>
-							
-							<p>
-								<img src="./resources/image/started/Project3.png" width="500" height="300" style="margin: 10px;">
-								<br/>
-								위와같이 등록된 프로젝트들의 리스트를 볼 수 있습니다.<br/>
-								프로젝트는 최대 3개까지 등록이 가능합니다.
+								또한 기간별로 얼마나 사용자가 구매하였는지도 확인하실 수 있습니다.<br>
 							</p>
 							
 						</div>

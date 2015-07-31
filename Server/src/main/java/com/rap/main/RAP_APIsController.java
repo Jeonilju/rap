@@ -21,6 +21,7 @@ import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
 import com.rap.dao.CategorySDao;
 import com.rap.dao.IAPDao;
+import com.rap.dao.ProjectDao;
 import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.dao.Virtual_MainDao;
@@ -58,6 +59,9 @@ public class RAP_APIsController {
 	@Autowired
 	private Virtual_SubDao virtual_subDao;
 	
+	@Autowired
+	private ProjectDao projectDao;
+	
 	@RequestMapping(value = "/APIs", method = RequestMethod.GET)
 	public String APIs_GET(HttpServletRequest request) {
 		logger.info("APIs Tab");
@@ -69,9 +73,6 @@ public class RAP_APIsController {
 	public String gcmTest(HttpServletRequest request) {
 		logger.info("APIs Tab");
 		
-		//RAP_GCMManager.getInstance().sendPush(1, "제목", "내용", "com.rap.example.RAP_MainActivity" , userDao.select("1"));
-		
 		return "APIs";
 	}
-	
 }
