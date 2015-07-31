@@ -149,7 +149,7 @@ public class RAPAPIs {
 		
 		Log.i(TAG, "사용자 GCM 정보 API 호출");
 		
-		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/sex");
+		HttpPost httpPost = new HttpPost(RAPHttpClient.getBaseURL() + "/APIs/User/gcm");
 		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		nameValuePairs.add(new BasicNameValuePair("name", "" + RAPUser.getUserId()));

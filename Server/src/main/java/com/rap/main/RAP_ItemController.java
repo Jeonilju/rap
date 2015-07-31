@@ -1,20 +1,27 @@
 package com.rap.main;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.IAPDao;
@@ -24,7 +31,6 @@ import com.rap.dao.Virtual_SubDao;
 import com.rap.models.CategoryLInfo;
 import com.rap.models.IAPInfo;
 import com.rap.models.ProjectInfo;
-import com.rap.models.PromotionInfo;
 import com.rap.models.SettingInfo;
 import com.rap.models.Virtual_MainInfo;
 import com.rap.models.Virtual_SubInfo;
@@ -77,19 +83,281 @@ public class RAP_ItemController {
 		return "itemmanagement";
 	}
 	/** 아이템 추가 */
-	@RequestMapping(value = "/registerItem", method = RequestMethod.POST)
-	@ResponseBody
+	@RequestMapping(value = "/registerItem",  method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	public String registerItem(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("ItemName") String ItemName, 
 			@RequestParam("ItemDescription") String ItemDescription,
 			@RequestParam("GoogleID") String GoogleID,
 			@RequestParam("ItemPrice") String ItemPrice, 
-			@RequestParam("Lcategory") String Lcategory,
-			@RequestParam("Mcategory") String Mcategory,
-			@RequestParam("Scategory") String Scategory,
-			@RequestParam("Coin") String Coin) {
+			@RequestParam("Lcategory2") String Lcategory,
+			@RequestParam("Mcategory2") String Mcategory,
+			@RequestParam("Scategory2") String Scategory,
+			@RequestParam("ImageFile") MultipartFile ImageFile,
+			@RequestParam("coinlist") String Coin) throws IOException, FileUploadException {
 		
 		logger.info("registerItem pages");
+
+		// 세션 객체 생성
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null)
+		{
+			request.setAttribute("result", "index");
+			return "index";
+		}
+
+		String project_key = currentproject.getPk();
+
+		// 프로젝트 키 존재 X
+		if (project_key == null)
+		{
+			request.setAttribute("result", "index");
+			return "index";
+		}
+		if (project_key.isEmpty())
+		{
+			request.setAttribute("result", "index");
+			return "index";
+		}
+
+		logger.info("프로젝트 = "+project_key);
+
+		// 대분류가 정상적으로 들어오지 않은 경우
+		if (Lcategory == null)
+		{
+			request.setAttribute("result", "Lcategory");
+			return "Lcategory";
+		}
+		if (Lcategory.isEmpty())
+		{
+			request.setAttribute("result", "Lcategory");
+			return "Lcategory";
+		}
+		logger.info("대분류 = "+Lcategory);
+
+		// 중분류가 정상적으로 들어오지 않은 경우
+		if (Mcategory == null)
+		{
+			request.setAttribute("result", "Mcategory");
+			return "Mcategory";
+		}
+		if (Mcategory.isEmpty())
+		{
+			request.setAttribute("result", "Mcategory");
+			return "Mcategory";
+		}
+		logger.info("중분류 = "+Mcategory);
+
+		// 소분류가 정상적으로 들어오지 않은 경우
+		if (Scategory == null)
+		{
+			request.setAttribute("result", "Scategory");
+			return "Scategory";
+		}
+		if (Scategory.isEmpty())
+		{
+			request.setAttribute("result", "Scategory");
+			return "Scategory";
+		}
+		logger.info("소분류 = "+Scategory);
+
+		// 아이템명이 정상적으로 들어오지 않은 경우
+		if (ItemName == null)
+		{
+			request.setAttribute("result", "ItemName");
+			return "ItemName";
+		}
+		if (ItemName.isEmpty())
+		{
+			request.setAttribute("result", "ItemName");
+			return "ItemName";
+		}
+		logger.info("ItemName = "+ItemName);
+		
+		// 아이템명이 정상적으로 들어오지 않은 경우
+		if (ItemDescription == null)
+		{
+			request.setAttribute("result", "ItemDescription");
+			return "ItemDescription";
+		}
+		if (ItemDescription.isEmpty())
+		{
+			request.setAttribute("result", "ItemDescription");
+			return "ItemDescription";
+		}
+		logger.info("ItemDescription = "+ItemDescription);
+
+		if(ItemName.length()>22)
+		{
+			request.setAttribute("result", "LongItemName");
+			return "LongItemName";
+		}
+		if(ItemDescription.length()>50)
+		{
+			request.setAttribute("result", "LongItemDescription");
+			return "LongItemDescription";
+		}
+		if(GoogleID.length()>25)
+		{
+			request.setAttribute("result", "LongGoogleID");
+			return "LongGoogleID";
+		}
+		if(ImageFile==null)
+		{
+			request.setAttribute("result", "ImageFile");
+			return "ImageFile";
+		}
+		if(ImageFile.isEmpty())
+		{
+			request.setAttribute("result", "ImageFile");
+			return "ImageFile";
+		}
+		
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+		String now = time.getYear()+"_"+time.getMonth()+"_"+time.getDate()+"_"+time.getHours()+"_"+time.getSeconds();
+		logger.info("now = "+now);
+		
+	      String saveDir = "";
+	      String tempSavePath = request.getRealPath(File.separator) + "resources\\upload\\"; 
+	      logger.info("tempSavePath = "+tempSavePath);
+	      String savePath = tempSavePath.replace('\\', '/'); 
+	      logger.info("savePath = "+savePath);
+	       
+	      File targetDir = new File(savePath);
+	      if (!targetDir.exists()) {
+	         targetDir.mkdirs();
+	      }
+	      saveDir = savePath;
+	      
+		String fileLocation = ImageFile.getOriginalFilename();
+		String rootPath;
+		
+		try{
+			byte[] bytes = ImageFile.getBytes();
+			
+			rootPath = saveDir+now+fileLocation;
+			logger.info("saveDir = "+saveDir);
+			logger.info("fileLocation = "+fileLocation);
+			File serverFile = new File(rootPath);
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
+			
+			logger.info("Server File Location = "+serverFile.getAbsolutePath());
+		}
+		catch(Exception e){
+			logger.info("Exception = "+e.toString());
+			request.setAttribute("result", "error");
+			return "error";
+		}
+		
+		//가격 입력값 검증
+		String temp;
+		if(ItemPrice.length() > 10){
+			request.setAttribute("result", "LongItemPrice");
+			return "LongItemPrice";
+		}
+		
+		for(int i=0;i<ItemPrice.length();i++)
+		{
+			temp=ItemPrice.substring(i,i+1);
+			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
+					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
+					temp.equals("8")||temp.equals("9"))
+			{	continue;	}
+			else{
+				request.setAttribute("result", "ItemPrice");
+				return "ItemPrice";
+			}
+		}
+		logger.info("ItemPrice = "+ItemPrice);
+		
+		//화폐가 정상적으로 입력되지 않은 경우
+		if (Coin == null){
+			request.setAttribute("result", "Coin");
+			return "Coin";
+		}
+		if (Coin.isEmpty()){
+			request.setAttribute("result", "Coin");
+			return "Coin";
+		}
+
+		logger.info("Coin = "+Coin);
+		int price_real=-1;
+		int price_main=-1;
+		int price_sub=-1;
+		int using_type=-1;
+		
+		//화폐목록
+		if(Coin.equals("실제결제"))
+		{
+			//실제 결제인데 구글아이디가 입력되지 않은 경우
+			if (GoogleID == null){
+				request.setAttribute("result", "GoogleID");
+				return "GoogleID";
+			}
+			if (GoogleID.isEmpty()){
+				request.setAttribute("result", "GoogleID");
+				return "GoogleID";
+			}
+			logger.info("GoogleID = "+GoogleID);
+			
+			price_real = Integer.parseInt(ItemPrice);
+		}
+		else
+		{
+			//주화폐 리스트
+			List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key, Coin);
+			
+			//해당 이름의 주화폐까 없는 경우
+			if(mainlist.isEmpty())
+			{
+				//부화폐 리스트				
+				List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key, Coin);
+
+				//항목이 없으면 에러
+				if(sublist.isEmpty()){
+					request.setAttribute("result", "error");
+					return "error";
+				}
+				else
+					price_sub = Integer.parseInt(ItemPrice);
+			}
+			else
+				price_main = Integer.parseInt(ItemPrice);
+		}
+		
+		if(price_main != -1)
+			using_type = 1;
+		else if(price_sub != -1)
+			using_type = 2;
+		else if(price_real != -1)
+			using_type = 3;
+		
+		IAPInfo item = iapDao.select(project_key, Lcategory, Mcategory, Scategory, ItemName);
+		logger.info("아이템 생성");
+
+		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, using_type, "resources/upload/"+now+fileLocation, ItemDescription, Lcategory, Mcategory, Scategory, GoogleID);
+		request.setAttribute("result", "200");
+		
+		return "registerItem";
+	}
+	
+	/** 아이템 중복 */
+	@RequestMapping(value = "/overlapItem", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
+	@ResponseBody
+	public String overlapItem(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("Lcategory2") String Lcategory, 
+			@RequestParam("Mcategory2") String Mcategory, 
+			@RequestParam("Scategory2") String Scategory,
+			@RequestParam("ItemName") String ItemName) {
+		logger.info("overlapItem pages");
+		
+		//UTF 인코딩
+		response.setContentType("text/html; charset=utf-8"); 
 
 		// 세션 객체 생성
 		HttpSession session = request.getSession();
@@ -107,124 +375,16 @@ public class RAP_ItemController {
 		if (project_key.isEmpty())
 			return "error";
 
-		logger.info("프로젝트 = "+project_key);
-
-		// 대분류가 정상적으로 들어오지 않은 경우
-		if (Lcategory == null)
-			return "Lcategory";
-		if (Lcategory.isEmpty())
-			return "Lcategory";
-		logger.info("대분류 = "+Lcategory);
-
-		// 중분류가 정상적으로 들어오지 않은 경우
-		if (Mcategory == null)
-			return "Mcategory";
-		if (Mcategory.isEmpty())
-			return "Mcategory";
-		logger.info("중분류 = "+Mcategory);
-
-		// 소분류가 정상적으로 들어오지 않은 경우
-		if (Scategory == null)
-			return "Scategory";
-		if (Scategory.isEmpty())
-			return "Scategory";
-		logger.info("소분류 = "+Scategory);
-
-		// 아이템명이 정상적으로 들어오지 않은 경우
-		if (ItemName == null)
-			return "ItemName";
-		if (ItemName.isEmpty())
-			return "ItemName";
-		logger.info("ItemName = "+ItemName);
+		logger.info("프로젝트 존재");
 		
-		// 아이템명이 정상적으로 들어오지 않은 경우
-		if (ItemDescription == null)
-			return "ItemDescription";
-		if (ItemDescription.isEmpty())
-			return "ItemDescription";
-		logger.info("ItemDescription = "+ItemDescription);
-
-		if(ItemName.length()>22)
-			return "LongItemName";
-		if(ItemDescription.length()>50)
-			return "LongItemDescription";
-		if(GoogleID.length()>25)
-			return "LongGoogleID";
+		IAPInfo item = iapDao.select(project_key, Lcategory, Mcategory, Scategory, ItemName);
 		
-		//가격 입력값 검증
-		String temp;
-		if(ItemPrice.length() > 10)
-			return "LongItemPrice";
-		
-		for(int i=0;i<ItemPrice.length();i++)
-		{
-			temp=ItemPrice.substring(i,i+1);
-			if(temp.equals("0")||temp.equals("1")||temp.equals("2")||temp.equals("3")
-					||temp.equals("4")||temp.equals("5")||temp.equals("6")||temp.equals("7")||
-					temp.equals("8")||temp.equals("9"))
-			{	continue;	}
-			else
-				return "ItemPrice";
-		}
-		logger.info("ItemPrice = "+ItemPrice);
-		
-		//화폐가 정상적으로 입력되지 않은 경우
-		if (Coin == null)
-			return "Coin";
-		if (Coin.isEmpty())
-			return "Coin";
-
-		logger.info("Coin = "+Coin);
-		int price_real=-1;
-		int price_main=-1;
-		int price_sub=-1;
-		int using_type=-1;
-		
-		//화폐목록
-		if(Coin.equals("실제결제"))
-		{
-			//실제 결제인데 구글아이디가 입력되지 않은 경우
-			if (GoogleID == null)
-				return "GoogleID";
-			if (GoogleID.isEmpty())
-				return "GoogleID";
-			logger.info("GoogleID = "+GoogleID);
-			
-			price_real = Integer.parseInt(ItemPrice);
-		}
+		if(item == null)
+			return "200";
 		else
-		{
-			//주화폐 리스트
-			List<Virtual_MainInfo> mainlist = virtual_MainDao.select(project_key, Coin);
-			
-			//해당 이름의 주화폐까 없는 경우
-			if(mainlist.isEmpty())
-			{
-				//부화폐 리스트				
-				List<Virtual_SubInfo> sublist = virtual_SubDao.select(project_key, Coin);
-
-				//항목이 없으면 에러
-				if(sublist.isEmpty())
-					return "error";
-				else
-					price_sub = Integer.parseInt(ItemPrice);
-			}
-			else
-				price_main = Integer.parseInt(ItemPrice);
-		}
-		
-		if(price_main != -1)
-			using_type = 1;
-		else if(price_sub != -1)
-			using_type = 2;
-		else if(price_real != -1)
-			using_type = 3;
-		
-		iapDao.create(project_key, ItemName, price_real, price_main, price_sub, using_type, "", ItemDescription, Lcategory, Mcategory, Scategory, GoogleID);
-		
-		return "200";
+			return "overlap";
 	}
-	
+
 	/** 아이템 리스트 */
 	@RequestMapping(value = "/itemlist_db", method = RequestMethod.POST, produces="applicateion/json;charset=UTF-8")
 	@ResponseBody
@@ -798,6 +958,23 @@ public class RAP_ItemController {
 		IAPInfo item = iapDao.select(project_key, Lcategory, Mcategory, Scategory, itemname);
 		if(item == null) return "error";
 		
+		String imagePath = item.getImagePath();
+	    String tempSavePath = request.getRealPath(File.separator); 
+	    String savePath = tempSavePath.replace('\\', '/'); 
+	    
+	    logger.info(savePath+"/"+imagePath);
+		File imageFile = new File(savePath+"/"+imagePath);
+		
+		try{
+		if(imageFile.delete())
+			logger.info("파일 지우기 성공");
+		else
+			logger.info("파일 지우기 실패");
+		}
+		catch(Exception e)
+		{
+			logger.info("파일 익셉션");
+		}
 		iapDao.delete(item.getPk(), project_key);
 		
 		return "200";

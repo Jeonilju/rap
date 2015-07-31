@@ -761,6 +761,7 @@ public class RAP_AnalysisController {
 			return jObject.toString();
 		}
 		catch(Exception e){
+			logger.info("에러: " + e.toString());
 			return "";
 		}
 	}

@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import com.px.tool.BackPressCloseHandler;
 import com.px.tool.Preference;
+import com.rap.RAPSetting;
 import com.rap.activity.RAPBaseActivity;
 import com.rap.connect.RAPAPIs;
 import com.rap.connect.RAPHttpClient;
+import com.rap.gcm.RAPGcmManager;
 
 public class MainActivity extends RAPBaseActivity {
 
