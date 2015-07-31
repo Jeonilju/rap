@@ -79,6 +79,8 @@ function ccc()
 																	<li><a href="age">Age</a></li>
 																	<li><a href="os">OS</a></li>
 																	<li><a href="device">Device</a></li>
+																	<li><a href="map">Location</a></li>
+																	
 																</ul>
 															</div>
 														</div>

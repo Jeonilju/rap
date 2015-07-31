@@ -633,7 +633,7 @@ public class RAP_AnalysisController {
 
 		return jObject.toString();
 	}
-	//TODO
+	
 	@RequestMapping(value = "/activity_path_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String Activity_path_Get(HttpServletRequest request,
@@ -657,6 +657,35 @@ public class RAP_AnalysisController {
 		List<JSONObject> result=activityDao.count_activity_path(project_key);
 		logger.info("result : "+result.toString());
 		jObject.put("Activity", result);
+		return jObject.toString();
+	}
+	
+	
+	@RequestMapping(value = "/map_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String MAP_Get(HttpServletRequest request,
+			HttpServletResponse response) {
+		logger.info("map_db Tab");
+
+		JSONObject jObject = new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session
+				.getAttribute("currentproject");
+
+		if (currentproject == null)
+			return "";// 세션에 프로젝트 없는 경우
+
+		String project_key = currentproject.getPk();
+
+		if (project_key == null)
+			return "";
+		if (project_key.isEmpty())
+			return "";
+		
+		//TODO 민수
+		List<JSONObject> result = userDao.get_map(project_key);
+		logger.info("result : "+result.toString());
+		jObject.put("Location", result);
 		return jObject.toString();
 	}
 }
