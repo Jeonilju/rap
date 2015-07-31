@@ -1,36 +1,36 @@
 <!-- sidebar-wrapper” -->
 <%@ page import="java.util.List, com.rap.models.ProjectInfo"%>
 
-<%
-ProjectInfo project = (ProjectInfo) session.getAttribute("currentproject");
-String projectname;
+	<%
+		ProjectInfo project = (ProjectInfo) session.getAttribute("currentproject");
+		String projectname;
 
-if(project==null) projectname = "Project";
-else projectname = project.getProject_name();
+		if(project==null) projectname = "Project";
+		else projectname = project.getProject_name();
 
-%>
-<script type="text/javascript">
+		%>
+		<script type="text/javascript">
 
-function aaa()
-{
-	$("#appinfo2").attr('class','accordion-body collapse');			
-	$("#iapinfo2").attr('class','accordion-body collapse');
-	
-}
-
-function bbb()
-{
-	$("#userinfo2").attr('class','accordion-body collapse');			
-	$("#iapinfo2").attr('class','accordion-body collapse');
-	
-}
-
-function ccc()
-{
-	$("#appinfo2").attr('class','accordion-body collapse');			
-	$("#userinfo2").attr('class','accordion-body collapse');
-	
-}
+		function aaa()
+		{
+			$("#appinfo2").attr('class','accordion-body collapse');			
+			$("#iapinfo2").attr('class','accordion-body collapse');
+			
+		}
+		
+		function bbb()
+		{
+			$("#userinfo2").attr('class','accordion-body collapse');			
+			$("#iapinfo2").attr('class','accordion-body collapse');
+			
+		}
+		
+		function ccc()
+		{
+			$("#appinfo2").attr('class','accordion-body collapse');			
+			$("#userinfo2").attr('class','accordion-body collapse');
+			
+		}
 
 	
 	
@@ -79,6 +79,8 @@ function ccc()
 																	<li><a href="age">Age</a></li>
 																	<li><a href="os">OS</a></li>
 																	<li><a href="device">Device</a></li>
+																	<li><a href="map">Location</a></li>
+																	
 																</ul>
 															</div>
 														</div>
@@ -92,21 +94,15 @@ function ccc()
 														<div class="accordion-body collapse" id="appinfo2">
 															<div class="accordion-inner">
 																<ul class="nav nav-list">
-																<li><a href="new_member" >New user</a></li>
-																<li><a href="deleted_member">Deleted user</a></li>
+																	<li><a href="new_member" >New user</a></li>
 																	<li><a href="operation_count">Operation count</a></li>
 																	<li><a href="operation_time">Operation time</a></li>
 																	<li><a href="best_activity">Best activity</a></li>																	
-																	<li><a href="promotions_analysis">Promotions
-																			analysis</a></li>
-																			<li><a href="activity_path">Activity path</a></li>
-																			
-																	
+																	<li><a href="promotions_analysis">Promotions analysis</a></li>
+																	<li><a href="activity_path">Activity path</a></li>
 																</ul>
 															</div>
 														</div>
-														<!-- /Serviços -->
-														<!-- Pontos -->
 													</div>
 		
 													<div class="accordion-heading equipamento" >
@@ -120,21 +116,12 @@ function ccc()
 																	<li><a href="IAP_amount">IAP amount</a></li>
 															</div>
 														</div>
-														<!-- /Serviços -->
-														<!-- Pontos -->
 													</div>
-		
-		
-		
 												</div>
-												<!-- /Equipamentos -->
 											</div>
 										</div>
 									</div>
-		
 								</div>
-		
-		
 							</div>
 						</div>
 						<!-- /accordion -->

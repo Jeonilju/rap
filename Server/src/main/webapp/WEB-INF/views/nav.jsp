@@ -389,8 +389,8 @@ function onEnterSignUp()
 					<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
 						<li role="presentation"><a role="menuitem" href="sdk">Download</a></li>
 						<li role="presentation"><a role="menuitem" href="ApiDoc">Documentation</a></li>
-						<li role="presentation"><a role="menuitem" href="getStart">Get Start</a></li>
-						<li role="presentation"><a role="menuitem" href="QnA">QnA</a></li>
+						<li role="presentation"><a role="menuitem" href="getStart">Get Started</a></li>
+						<li role="presentation"><a role="menuitem" href="FAQ">FAQ</a></li>
 					</ul></li>
 				
 				<%

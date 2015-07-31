@@ -5,11 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.rap.analysismodels.DeletedmembercountInfo;
-import com.rap.analysismodels.IAPamountInfo;
 import com.rap.analysismodels.NewmemberInfo;
 import com.rap.analysismodels.OPcountInfo;
-import com.rap.analysismodels.OPtimeInfo;
-import com.rap.analysismodels.Promotion_resultInfo;
-import com.rap.analysismodels.SalesRankingInfo;
+import com.rap.analysismodels.OSInfo;
 import com.rap.dao.ActivityDao;
 import com.rap.dao.CategoryLDao;
 import com.rap.dao.CategoryMDao;
@@ -35,14 +35,17 @@ import com.rap.dao.DeleteuserDao;
 import com.rap.dao.IAPDao;
 import com.rap.dao.Log_timeDao;
 import com.rap.dao.PayDao;
+import com.rap.dao.PromotionDao;
 import com.rap.dao.PromotionResultDao;
+import com.rap.dao.TimeDao;
 import com.rap.dao.UserDao;
 import com.rap.models.BestActivityInfo;
+import com.rap.models.DeviceInfo;
 import com.rap.models.IAPInfo;
+import com.rap.models.PayInfo;
 import com.rap.models.ProjectInfo;
 import com.rap.models.PromotionResultInfo;
-
-import net.sf.json.JSONObject;
+import com.rap.models.TimeInfo;
 
 @Controller
 public class RAP_AnalysisController {
@@ -73,10 +76,14 @@ public class RAP_AnalysisController {
 	private Log_timeDao log_timeDao;
 
 	@Autowired
+	private TimeDao timeDao;
+	
+	@Autowired
 	private DeleteuserDao deletedmemberDao;
 
 	@Autowired
 	private IAPDao iapDao;
+	
 	@Autowired
 	private PayDao payDao;
 
@@ -84,16 +91,21 @@ public class RAP_AnalysisController {
 	private PromotionResultDao promotionResultDao;
 
 	@Autowired
+	private PromotionDao promotionDao;
+	
+	@Autowired
 	private UserDao userDao;
 
-	@RequestMapping(value = "/Analysis", method = RequestMethod.GET)
+	/** 분석 페이지 */
+	@RequestMapping(value = "/Analysis", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
 	public String TCManagement_GET(HttpServletRequest request) {
 		logger.info("Analysis Tab");
 
 		return "Analysis";
 	}
 
-	@RequestMapping(value = "/sex_db", method = RequestMethod.POST)
+	/** 성별 데이터 반환 */
+	@RequestMapping(value = "/sex_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Sex_Get(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -114,14 +126,24 @@ public class RAP_AnalysisController {
 		if (project_key.isEmpty())
 			return "";
 
-		int woman = userDao.countSex(project_key, 0);
+		int none = userDao.countSex(project_key, 0);
+		int woman = userDao.countSex(project_key, 2);
 		int man = userDao.countSex(project_key, 1);
 		jObject.put("woman", woman);
 		jObject.put("man", man);
+		jObject.put("none", none);
+		
+		logger.info("성별: (" + none + "/" + man + "/" + woman + ")");
+		
+		if(none == 0 && woman == 0 && man == 0){
+			return "";
+		}
+		
 		return jObject.toString();
 	}
 
-	@RequestMapping(value = "/age_db", method = RequestMethod.POST)
+	/** 나이 데이터 반환 */
+	@RequestMapping(value = "/age_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Age_get(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -158,17 +180,21 @@ public class RAP_AnalysisController {
 		jObject.put("thirty", thirty);
 		jObject.put("forty", forty);
 		jObject.put("old", old);
+		
+		int total = baby + ten + twenty + thirty + forty + old;
+		if(total == 0){
+			return "";
+		}
 
 		return jObject.toString();
 	}
 
-	@RequestMapping(value = "/new_member_db", method = RequestMethod.POST)
+	/** 신규 유저 데이터 반환 */
+	@RequestMapping(value = "/new_member_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String New_member_Get(HttpServletRequest request,
 			HttpServletResponse response
 			, @RequestParam("during") int during) {
-
-		
 		logger.info("new_member Tab");
 
 		JSONObject jObject = new JSONObject();
@@ -189,13 +215,29 @@ public class RAP_AnalysisController {
 		
 		List<NewmemberInfo> receive = userDao.count_new_member(project_key, current, during);
 		List<String> result = new ArrayList<String>();
+		logger.info("size: " + receive.size());
+		
+		if(receive.size() == 0){
+			return "";
+		}
 		
 		for (int i = 0; i < receive.size(); i++) {
-			
-			String year = "" + (receive.get(i).getStart().getYear() + 1900);
-			String month = receive.get(i).getStart().getMonth() + 1 > 9 ? "" + (receive.get(i).getStart().getMonth() + 1) : "0" + (receive.get(i).getStart().getMonth() + 1);
-			String day = receive.get(i).getStart().getDate() > 9 ? "" + receive.get(i).getStart().getDate() : "0" + receive.get(i).getStart().getDate();
-			result.add( "[" + year + month + day  + "," + receive.get(i).getCount() + "]" );
+
+			if(during == 0 || during == 1 || during == 2 || during == 3){
+				String year = "" + (receive.get(i).getStart().getYear() + 1900);
+				String month = receive.get(i).getStart().getMonth() + 1 > 9 ? "" + (receive.get(i).getStart().getMonth() + 1) : "0" + (receive.get(i).getStart().getMonth() + 1);
+				String day = receive.get(i).getStart().getDate() > 9 ? "" + receive.get(i).getStart().getDate() : "0" + receive.get(i).getStart().getDate();
+				result.add( "[" + year + "년 " + month + "월 " + day + "일"  + "," + receive.get(i).getCount() + "]" );
+			}
+			else{
+				
+				if(receive.size() == 4 && i == 0){
+					continue;
+				}
+				String year = "" + (receive.get(i).getStart().getYear() + 1900);
+				String month = receive.get(i).getStart().getMonth() + 1 > 9 ? "" + (receive.get(i).getStart().getMonth() + 1) : "0" + (receive.get(i).getStart().getMonth() + 1);
+				result.add( "[" + year + "년" + month + "월" + "," + receive.get(i).getCount() + "]" );
+			}
 		}
 
 		logger.info("NewmemberInfo : " + result.toString());
@@ -203,7 +245,8 @@ public class RAP_AnalysisController {
 		return jObject.toString();
 	}
 
-	@RequestMapping(value = "/deleted_member_db", method = RequestMethod.POST)
+	/** 사용 안함*/
+	@RequestMapping(value = "/deleted_member_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String deleted_member_Get(HttpServletRequest request,
 			HttpServletResponse response, @RequestParam("type") String type,
@@ -274,7 +317,8 @@ public class RAP_AnalysisController {
 
 	}
 
-	@RequestMapping(value = "/operation_count_db", method = RequestMethod.POST)
+	/** 사용 횟수 */
+	@RequestMapping(value = "/operation_count_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Operation_count_Get(HttpServletRequest request,
 			HttpServletResponse response
@@ -297,18 +341,19 @@ public class RAP_AnalysisController {
 			ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
 			if (currentproject == null)
-				return "[[0,0]]";// 세션에 프로젝트 없는 경우
+				return "";// 세션에 프로젝트 없는 경우
 
 			String project_key = currentproject.getPk();
 			if (project_key == null || project_key.isEmpty())
-				return "[[0,0]]";
+				return "";
 
-			List<OPcountInfo> receive = log_timeDao.getOperationCount(
-					project_key, start_time, end_time, sex_num, age, grade_time, grade_using);
+			List<OPcountInfo> receive = log_timeDao.getOperationCount(project_key, start_time, end_time, sex_num, age, grade_time, grade_using);
+			//List<UserInfo> userInfo = userDao.select(project_key, sex_num, age, grade_time, grade_using);
+			
 			List<String> result = new ArrayList<String>();
 			
 			if(receive.size() == 0)
-				return "[[0,0]]";
+				return "";
 			
 			for (int i = 0; i < receive.size(); i++) {
 				
@@ -316,7 +361,7 @@ public class RAP_AnalysisController {
 				String month = receive.get(i).getStart().getMonth() + 1 > 9 ? "" + (receive.get(i).getStart().getMonth() + 1) : "0" + (receive.get(i).getStart().getMonth() + 1);
 				String date = receive.get(i).getStart().getDate() > 9 ? "" + receive.get(i).getStart().getDate() : "0" + receive.get(i).getStart().getDate();
 				
-				result.add( "[" + year + month + date  + "," + receive.get(i).getCount() + "]" );
+				result.add( "[" + year + "년 " + month + "월 " + date + "일"  + "," + receive.get(i).getCount() + "]" );
 			}
 
 			logger.info("OPcountInfo : " + result.toString());
@@ -324,67 +369,74 @@ public class RAP_AnalysisController {
 			return jObject.toString();
 		}
 		catch(Exception e){
-			return "[[0,0]]";
+			return "";
 		}
 	}
 
-	@RequestMapping(value = "/operation_time_db", method = RequestMethod.POST)
+	/** 사용 시간대 조회 */
+	@RequestMapping(value = "/operation_time_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Operation_time_Get(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("start") String start) {
+			HttpServletResponse response
+			, @RequestParam("start_date") String start_date
+			, @RequestParam("end_date") String end_date
+			, @RequestParam("sex_num") int sex_num
+			, @RequestParam("age") int age
+			, @RequestParam("grade_using") int grade_using
+			, @RequestParam("grade_time") int grade_time) {
 
-		Calendar cal;
-		Timestamp starttime = null;
-		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
-		start = start.replace("-", "");
-		String date = new String(start + "000000");
-		try {
-			sd.parse(date);
-			cal = sd.getCalendar();
+		logger.info("operation_time Tab");
 
-			starttime = new Timestamp(cal.getTime().getTime());
+		try{
+			start_date = start_date + " 00:00:00.0";
+			end_date = end_date + " 00:00:00.0";
+			
+			Timestamp start_time = Timestamp.valueOf(start_date);
+			Timestamp end_time = Timestamp.valueOf(end_date);
+			
+			JSONObject jObject = new JSONObject();
+			HttpSession session = request.getSession();
+			ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		} catch (ParseException e) {
-			e.printStackTrace();
+			if (currentproject == null)
+				return "";// 세션에 프로젝트 없는 경우
+
+			String project_key = currentproject.getPk();
+			if (project_key == null)
+				return "";
+			if (project_key.isEmpty())
+				return "";
+
+			List<TimeInfo> time_log_info = timeDao.select(project_key, start_time, end_time, sex_num, age, grade_time, grade_using);
+			
+			if(time_log_info.size() == 0)
+				return "";
+			
+			List<String> result = new ArrayList<String>();
+			int []temp = new int[25];
+			
+			for(int n=0;n<25;n++){
+				temp[n] = 0;
+			}
+			
+			for(int n=0;n < time_log_info.size();n++){
+				temp[time_log_info.get(n).getStart().getHours()]++;
+			}
+			
+			for(int n=1;n<25;n++){
+				result.add("[" + n + "시" + "," + temp[n] +"]");
+			}
+			
+			jObject.put("result", result.toString());
+			return jObject.toString();
 		}
-
-		logger.info("operation_time Tab" + " start : " + starttime.toString());
-
-		JSONObject jObject = new JSONObject();
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session
-				.getAttribute("currentproject");
-
-		if (currentproject == null)
-			return "";// 세션에 프로젝트 없는 경우
-
-		String project_key = currentproject.getPk();
-		if (project_key == null)
+		catch(Exception e){
 			return "";
-		if (project_key.isEmpty())
-			return "";
-
-		List<OPtimeInfo> receive = log_timeDao.count_operation_time(
-				project_key, starttime);
-		// List<List<String>> result=new ArrayList<List<String>>();
-		List<String> result = new ArrayList<String>();
-
-		for (int i = 0; i < receive.size(); i++) {
-
-			List<String> templist = new ArrayList<String>();
-			templist.add(0, Hourformatter.format((java.util.Date) receive
-					.get(i).getStart()));
-			templist.add(1, receive.get(i).getCount() + "");
-			result.add(templist.toString());
 		}
-
-		logger.info("result_time : " + result.toString());
-		jObject.put("result", result.toString());
-		return jObject.toString();
-
 	}
 
-	@RequestMapping(value = "/device_db", method = RequestMethod.POST)
+	/** 기기 정보 조회 */
+	@RequestMapping(value = "/device_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Device_Get(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -405,11 +457,17 @@ public class RAP_AnalysisController {
 		if (project_key.isEmpty())
 			return "";
 
-		jObject.put("Device", userDao.countDevice(project_key));
+		List<DeviceInfo> result = userDao.countDevice(project_key);
+		if(result.size() == 0){
+			return "";
+		}
+		
+		jObject.put("Device", result);
 		return jObject.toString();
 	}
 
-	@RequestMapping(value = "/os_db", method = RequestMethod.POST)
+	/** OS 정보 조회 */
+	@RequestMapping(value = "/os_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String OS_Get(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -430,12 +488,16 @@ public class RAP_AnalysisController {
 		if (project_key.isEmpty())
 			return "";
 
-		jObject.put("OS", userDao.countOS(project_key));
+		List<OSInfo> result = userDao.countOS(project_key);
+		if(result.size() == 0){
+			return "";
+		}
+		jObject.put("OS", result);
 		return jObject.toString();
 	}
 
-	
-	@RequestMapping(value = "/best_activity_db", method = RequestMethod.POST)
+	/** 최다 Activity 조회 */
+	@RequestMapping(value = "/best_activity_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Best_activity_Get(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -463,8 +525,11 @@ public class RAP_AnalysisController {
 		List<Integer> count = new ArrayList<Integer>();
 
 		int size = receive.size();
-		if (size > 10)
-			size = 10;
+		
+		if(size == 0){
+			return "";
+		}
+		
 		for (int i = 0; i < size; i++) {
 			name.add(receive.get(i).getActivity_name());
 			count.add(receive.get(i).getCount());
@@ -477,45 +542,86 @@ public class RAP_AnalysisController {
 		return jObject.toString();
 	}
 
-	// TODO 작업중
-	@RequestMapping(value = "/promotions_analysis_db", method = RequestMethod.POST)
+	/** 프로모션 데이터 조회 */
+	@RequestMapping(value = "/promotions_analysis_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String Promotions_analysis_Get(HttpServletRequest request,
 			HttpServletResponse response
+			, @RequestParam("sex_num") int sex_num
+			, @RequestParam("age") int age
+			, @RequestParam("grade_using") int grade_using
+			, @RequestParam("grade_time") int grade_time
 			, @RequestParam("promotion_pk") int promotion_pk) {
 
 		
 		logger.info("promotions_analysis Tab");
+		try{
+			JSONObject jObject = new JSONObject();
+			HttpSession session = request.getSession();
+			ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		JSONObject jObject = new JSONObject();
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+			if (currentproject == null)
+				return "";// 세션에 프로젝트 없는 경우
 
-		if (currentproject == null)
-			return "";// 세션에 프로젝트 없는 경우
+			String project_key = currentproject.getPk();
+			if (project_key == null)
+				return "";
+			if (project_key.isEmpty())
+				return "";
 
-		String project_key = currentproject.getPk();
-		if (project_key == null)
-			return "";
-		if (project_key.isEmpty())
-			return "";
-
-		List<PromotionResultInfo> receive = promotionResultDao.select(project_key, promotion_pk);
-		List<String> result = new ArrayList<String>();
-		
-		for (int i = 0; i < receive.size(); i++) {
+			List<PromotionResultInfo> receive = promotionResultDao.select(project_key, promotion_pk, sex_num, age, grade_time, grade_using);
 			
-			List<String> templist = new ArrayList<String>();
-			result.add(templist.toString());
+			if(receive.size()== 0){
+				logger.info("프로모션 결과 조회 데이터 없음");
+				return "";
+			}
+			List<String> result = new ArrayList<String>();
+			
+			
+			Timestamp startTime = promotionDao.selectPromotion(project_key, promotion_pk).getReg_date();
+			Timestamp current = new Timestamp((new java.util.Date()).getTime());
+			
+			logger.info("시작시간: " + startTime.toString() );
+			
+			int number = 0;
+			int whileCount = 0;
+			int beforeCount = -1;
+			while(whileCount < 24 * 3 && startTime.compareTo(current) <= 0){
+				logger.info("계산시간: " + startTime.toString() );
+				int count = 0;
+				for (int i = 0; i < receive.size(); i++) {
+					if(receive.get(i).getReg_date().compareTo(startTime) <= 0){
+						count++;
+					}
+				}
+				
+				String day = startTime.getDate() > 9 ? "" + startTime.getDate() : "0" + startTime.getDate();
+				String hour = startTime.getHours() > 9 ? "" + startTime.getHours() : "0" + startTime.getHours();
+				
+					result.add("[" + number + "시간 후" + ", " + count + "]");
+					logger.info("추가: " + "[" + number + ", " + count + "]");
+				
+				if(startTime.getHours() == 23){
+					startTime.setDate(startTime.getDate() + 1);
+					startTime.setHours(0);
+				}else{
+					startTime.setHours(startTime.getHours() + 1);
+				}
+				number++;
+			}
+
+			logger.info("Promotion_resultInfo : " + result.toString());
+			jObject.put("result", result.toString());
+			return jObject.toString();
 		}
-
-		logger.info("Promotion_resultInfo : " + result.toString());
-		jObject.put("result", result.toString());
-		return jObject.toString();
-
+		catch(Exception e){
+			
+			return "";
+		}
 	}
 
-	@RequestMapping(value = "/sales_ranking_db", method = RequestMethod.POST,  produces = "text/plain;charset=UTF-8")
+	/** 판매 순위 정보 조회 */
+	@RequestMapping(value = "/sales_ranking_db", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String sales_ranking_Get(HttpServletRequest request
 			, @RequestParam("start_date") String start_date
@@ -556,8 +662,10 @@ public class RAP_AnalysisController {
 		List<IAPInfo> receive = iapDao.getRankingCount(project_key, start_time, end_time, sex_num, age, grade_time, grade_using);
 
 		int size = receive.size();
-		if (size > 10)
-			size = 10;
+		if(size == 0){
+			return "";
+		}
+		
 		List<String> item_name = new ArrayList<String>();
 		List<Integer> count = new ArrayList<Integer>();
 
@@ -572,68 +680,91 @@ public class RAP_AnalysisController {
 		return jObject.toString();
 	}
 
-	@RequestMapping(value = "/IAP_amount_db", method = RequestMethod.POST)
+	/** IAP 곡선 조회 */
+	@RequestMapping(value = "/IAP_amount_db", method = RequestMethod.POST , produces = "text/plain;charset=UTF-8")
 	@ResponseBody
 	public String IAP_amount_Get(HttpServletRequest request,
-			HttpServletResponse response, @RequestParam("type") String type,
-			@RequestParam("start") String start) {
+			HttpServletResponse response
+			, @RequestParam("start_date") String start_date
+			, @RequestParam("end_date") String end_date
+			, @RequestParam("sex_num") int sex_num
+			, @RequestParam("age") int age
+			, @RequestParam("grade_using") int grade_using
+			, @RequestParam("grade_time") int grade_time
+			, @RequestParam("money") int money) {
 
-		Calendar cal;
-		Timestamp starttime = null;
-		SimpleDateFormat sd = new SimpleDateFormat("yyyyMMddHHmmss");
-		start = start.replace("-", "");
-		String date = new String(start + "000000");
-		try {
-			sd.parse(date);
-			cal = sd.getCalendar();
+		logger.info("IAP_amount_db Tab");
 
-			starttime = new Timestamp(cal.getTime().getTime());
+		try{
+			start_date = start_date + " 00:00:00.0";
+			end_date = end_date + " 00:00:00.0";
+			
+			Timestamp start_time = Timestamp.valueOf(start_date);
+			Timestamp end_time = Timestamp.valueOf(end_date);
+			
+			JSONObject jObject = new JSONObject();
+			HttpSession session = request.getSession();
+			ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
 
-		} catch (ParseException e) {
-			e.printStackTrace();
+			if (currentproject == null)
+				return "";// 세션에 프로젝트 없는 경우
+
+			String project_key = currentproject.getPk();
+			if (project_key == null)
+				return "";
+			if (project_key.isEmpty())
+				return "";
+			
+			
+			List<PayInfo> result = payDao.select(project_key, start_time, end_time, sex_num, age, grade_time, grade_using, money);
+			
+			if(result.size() == 0)
+				return "";
+			
+			HashMap<String, Integer> map = new HashMap<String, Integer>();
+			
+			List<String> map_key_list = new ArrayList<String>();
+			List<String> start_list = new ArrayList<String>();
+			List<Integer> count = new ArrayList<Integer>();
+
+			logger.info("결과수: " + result.size());
+			
+			for(int n=0;n < result.size();n++){
+				
+				PayInfo info = result.get(n);
+				
+				String year = "" + (info.getReg_date().getYear() + 1900);
+				String month = info.getReg_date().getMonth() + 1 > 9 ? "" + (info.getReg_date().getMonth() + 1) : "0" + (info.getReg_date().getMonth() + 1);
+				String day = info.getReg_date().getDate() > 9 ? "" + info.getReg_date().getDate() : "0" + info.getReg_date().getDate();
+				
+				String keyVal = year + "년 " + month + "월 " + day + "일";
+				logger.info("날짜: " + keyVal);
+				if(map.containsKey(keyVal)){
+					map.put(keyVal, map.get(keyVal) + info.getPrice());	
+				}
+				else{
+					map_key_list.add(keyVal);
+					map.put(keyVal, info.getPrice());
+				}
+			}
+			
+			for(int n=0;n < map_key_list.size();n++){
+				String key = map_key_list.get(n);
+				start_list.add(key);
+				count.add(map.get(key));
+				logger.info("key: " + key + ", count: " + map.get(key));
+			}
+			
+			jObject.put("start_time", start_list);
+			jObject.put("count", count);
+
+			return jObject.toString();
 		}
-
-		logger.info("IAP_amount_db Tab" + "  type : " + type + " start : "
-				+ starttime.toString());
-
-		JSONObject jObject = new JSONObject();
-		HttpSession session = request.getSession();
-		ProjectInfo currentproject = (ProjectInfo) session
-				.getAttribute("currentproject");
-
-		if (currentproject == null)
-			return "";// 세션에 프로젝트 없는 경우
-
-		String project_key = currentproject.getPk();
-		if (project_key == null)
+		catch(Exception e){
 			return "";
-		if (project_key.isEmpty())
-			return "";
-
-		List<IAPamountInfo> result = payDao.count_IAP_amount(project_key, type,
-				starttime);
-		List<String> start_time = new ArrayList<String>();
-		List<Integer> count = new ArrayList<Integer>();
-
-		for (int i = 0; i < result.size(); i++) {
-			if (type.equals("day"))
-				start_time.add(i, monthDayYearformatter
-						.format((java.util.Date) result.get(i).getReg_date()));
-			if (type.equals("month"))
-				start_time.add(i, monthYearformatter
-						.format((java.util.Date) result.get(i).getReg_date()));
-			if (type.equals("year"))
-				start_time.add(i, Yearformatter.format((java.util.Date) result
-						.get(i).getReg_date()));
-			count.add(result.get(i).getAmount());
 		}
-
-		jObject.put("start_time", start_time);
-		jObject.put("count", count);
-
-		return jObject.toString();
 	}
-	//TODO
+	
 	@RequestMapping(value = "/activity_path_db", method = RequestMethod.POST)
 	@ResponseBody
 	public String Activity_path_Get(HttpServletRequest request,
@@ -657,6 +788,35 @@ public class RAP_AnalysisController {
 		List<JSONObject> result=activityDao.count_activity_path(project_key);
 		logger.info("result : "+result.toString());
 		jObject.put("Activity", result);
+		return jObject.toString();
+	}
+	
+	
+	@RequestMapping(value = "/map_db", method = RequestMethod.POST)
+	@ResponseBody
+	public String MAP_Get(HttpServletRequest request,
+			HttpServletResponse response) {
+		logger.info("map_db Tab");
+
+		JSONObject jObject = new JSONObject();
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session
+				.getAttribute("currentproject");
+
+		if (currentproject == null)
+			return "";// 세션에 프로젝트 없는 경우
+
+		String project_key = currentproject.getPk();
+
+		if (project_key == null)
+			return "";
+		if (project_key.isEmpty())
+			return "";
+		
+		//TODO 민수
+		List<JSONObject> result = userDao.get_map(project_key);
+		logger.info("result : "+result.toString());
+		jObject.put("Location", result);
 		return jObject.toString();
 	}
 }

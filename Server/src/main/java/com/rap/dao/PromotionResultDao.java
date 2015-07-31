@@ -83,9 +83,27 @@ public class PromotionResultDao implements PromotionResultIDao{
 		    });
 	}
 
-	public List<PromotionResultInfo> select(String project_pk, int promotion_pk, Timestamp date) {
-		return jdbcTemplate.query("select * from promotion_result where project_key = ? and promotion_pk = ? and DATE(reg_date) = DATE(?)" ,
-		    	new Object[] { project_pk, promotion_pk, date }
+	public List<PromotionResultInfo> select(String project_pk, int promotion_pk, int sex, int age, int grade_time, int grade_using) {
+		
+		String query = "";
+		if(sex != 0){
+			query += "AND user.sex = " + sex;
+		}
+		if(age != 0){
+			query += " AND user.age >= " + sex + " AND user.age < " + (sex + 10);
+		}
+		if(grade_time != 0){
+			query += " AND user.grade_time = " + grade_time;
+		}
+		if(grade_using != 0){
+			query += " AND user.grade_money = " + grade_using;
+		}
+		
+		return jdbcTemplate.query("select * from promotion_result join user"
+				+ " where promotion_result.project_key = ? "
+				+ "and promotion_result.promotion_pk = ? "
+				+ "and user.name = promotion_result.username " + query ,
+		    	new Object[] { project_pk, promotion_pk }
 				, new RowMapper<PromotionResultInfo>() {
 		    	public PromotionResultInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
 		    	{

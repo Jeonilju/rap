@@ -37,7 +37,7 @@ demo.css}
 		$("#appinfo2").attr('class', 'accordion-body collapse in');
 	});
 
-	$(document).ready(getAge());
+	//$(document).ready(getAge());
 </script>
 
 <body id="page-top" class="index" onload="init();">

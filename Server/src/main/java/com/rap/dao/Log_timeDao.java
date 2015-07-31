@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 
 import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OPtimeInfo;
-
 import net.sf.json.JSONObject;
 
 @Repository

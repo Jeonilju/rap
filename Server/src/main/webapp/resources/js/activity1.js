@@ -1,9 +1,5 @@
 var labelType, useGradients, nativeTextSupport, animate;
 
-function getAge() {
-
-}
-
 (function() {
   var ua = navigator.userAgent,
       iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),

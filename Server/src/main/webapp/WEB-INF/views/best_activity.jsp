@@ -1,75 +1,73 @@
- <!DOCTYPE HTML>
-<html>
-<!-- ÃÂ¬ÃÂÃÂÃÂ«ÃÂÃÂ¨ ÃÂ«ÃÂÃÂ¤ÃÂ«ÃÂ¹ÃÂÃÂªÃÂ²ÃÂÃÂ¬ÃÂÃÂ´ÃÂ¬ÃÂÃÂ ÃÂ«ÃÂ°ÃÂ ÃÂ¬ÃÂÃÂ¸ÃÂ­ÃÂÃÂ´ÃÂ«ÃÂ£ÃÂ¨ÃÂ«ÃÂÃÂ -->
-<jsp:include page="nav.jsp" flush = "false" />
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html lang="en">
+	<jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Highcharts Example</title>
+		<title>RAP</title>
 
-		
-		  <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<style type="text/css">
-${demo.css}
+			${demo.css}
 		</style>
 		
-        
-		
-<script type="text/javascript">
-$(function() {
-	$("#basicuserinfo").attr('class','accordion-body collapse in');
-	$("#appinfo2").attr('class','accordion-body collapse in');
-	});
-
-
-$( document ).ready(getoperation_count());
-function getoperation_count() {
-	$.ajax({
-		url : "best_activity_db",
-		type : "POST",
-		dataType : "JSON",
-		success : function(data) {
-
-			if (data != null && data != "") {
-
-				var activity_name=data.activity_name;
-				var count=data.count;
-				//alert(activity_name.toString());
-				add_to_table(activity_name,count);
-
+		<script type="text/javascript">
+			$(function() {
+				$("#basicuserinfo").attr('class','accordion-body collapse in');
+				$("#appinfo2").attr('class','accordion-body collapse in');
+				});
+			
+			
+			$( document ).ready(getoperation_count());
+			function getoperation_count() {
+				$.ajax({
+					url : "best_activity_db",
+					type : "POST",
+					dataType : "JSON",
+					success : function(data) {
+			
+						if (data != null && data != "") {
+			
+							var activity_name=data.activity_name;
+							var count=data.count;
+							//alert(activity_name.toString());
+							add_to_table(activity_name,count);
+			
+						}
+					},
+			
+					error : function(request, status, error) {
+						if(request.status == '200'){
+							alert("데이터가 존재하지 않습니다.");
+						}
+						else if (request.status != '0') {
+							alert("code : " + request.status + "\r\nmessage : "
+									+ request.reponseText + "\r\nerror : " + error);
+						}
+					}
+				});
 			}
-		},
-
-		error : function(request, status, error) {
-			if (request.status != '0') {
-				alert("code : " + request.status + "\r\nmessage : "
-						+ request.reponseText + "\r\nerror : " + error);
+			
+			
+			
+			function add_to_table(name,count){
+				
+				//민수 여기 사이즈 체크 필요
+				if (name.length > 0) {
+						var a = name.length;
+						if (a > 10)
+							a = 10;
+			
+						for (i = 0; i < a; i++)
+			
+							for (i = 0; i < a; i++)
+								$('#table_body').append(
+										"<tr><td>" + (i + 1) + "</td><td>" + name[i]
+												+ "</td><td>" + count[i] + "</td></tr>");
+			
+					}
+			
 			}
-		}
-	});
-}
-
-
-
-function add_to_table(name,count){
-	
-	//민수 여기 사이즈 체크 필요
-		
-	if (name.length > 0) {
-			var a = name.length;
-			if (a > 10)
-				a = 10;
-
-			for (i = 0; i < a; i++)
-
-				for (i = 0; i < a; i++)
-					$('#table_body').append(
-							"<tr><td>" + (i + 1) + "</td><td>" + name[i]
-									+ "</td><td>" + count[i] + "</td></tr>");
-
-		}
-
-	}
-</script>
+		</script>
 		
 		
 		

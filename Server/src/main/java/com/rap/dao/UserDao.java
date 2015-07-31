@@ -15,12 +15,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.rap.analysismodels.MapInfo;
 import com.rap.analysismodels.NewmemberInfo;
-import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OSInfo;
 import com.rap.idao.UserIDao;
 import com.rap.models.DeviceInfo;
 import com.rap.models.UserInfo;
+
+import net.sf.json.JSONObject;
 
 @Repository
 public class UserDao implements UserIDao {
@@ -337,6 +339,10 @@ public class UserDao implements UserIDao {
 			date = c.getTime();
 			
 			currentTime = new Timestamp(date.getTime());
+			
+			logger.info("시작 날짜: " + currentTime.toString());
+			logger.info("끝 날짜: " + end_date.toString());
+			
 		} else if (during == 5) {
 			// 최근 6개월
 			Calendar c = Calendar.getInstance(); 
@@ -351,7 +357,7 @@ public class UserDao implements UserIDao {
 		
 		while(currentTime.compareTo(end_date) <= 0) {
 			
-			if(during == 0 || during == 1 || during == 2 || during == 3){
+			if(during == 0 || during == 1 || during == 2 || during == 3 ){
 				
 				List<NewmemberInfo> info = jdbcTemplate.query(
 						"select * from user where project_key=? AND DATE(reg_date) = DATE(?)",
@@ -374,6 +380,12 @@ public class UserDao implements UserIDao {
 				Timestamp temp = Timestamp.valueOf(currentTime.toString());
 				temp.setMonth(temp.getMonth()+1);
 				
+				currentTime.setDate(1);
+				temp.setDate(1);
+				
+				logger.info("temp: " + temp.toString());
+				logger.info("currentTime: " + currentTime.toString());
+				
 				List<NewmemberInfo> info = jdbcTemplate.query(
 						"select * from user where project_key=? AND DATE(reg_date) >= DATE(?) AND DATE(reg_date) <= DATE(?)",
 						new Object[] { project_key, currentTime, temp}, new RowMapper<NewmemberInfo>() {
@@ -386,8 +398,7 @@ public class UserDao implements UserIDao {
 				logger.info("temp: " + temp.toString());
 				logger.info("currentTime: " + currentTime.toString() + ", size: " + info.size());
 				
-				//if(info.size() != 0)
-					result.add(new NewmemberInfo(currentTime, info.size()));
+				result.add(new NewmemberInfo(currentTime, info.size()));
 				
 				currentTime.setMonth(currentTime.getMonth()+1);
 			}
@@ -410,6 +421,30 @@ public class UserDao implements UserIDao {
 								resultSet.getInt("virtual_sub"), resultSet.getTimestamp("reg_date"));
 					}
 				});
+	}
+	
+	//TODO 민수
+	public List<JSONObject> get_map(String project_key) {
+		logger.info("get map");
+
+		List<JSONObject> result=new ArrayList<JSONObject>();
+		List<MapInfo> receive = jdbcTemplate.query(
+				"select location,count(*) from user where project_key=? group by location",
+				new Object[] { project_key }, new RowMapper<MapInfo>() {
+					public MapInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+						return new MapInfo(resultSet.getString("location"),resultSet.getInt("count(*)"));
+					}
+				});
+		
+		for(int i=0;i<receive.size();i++){
+			JSONObject newobj=new JSONObject();
+			newobj.put("hc-key", receive.get(i).getArea());
+			newobj.put("value", receive.get(i).getCount());
+			result.add(newobj);
+		}
+		
+
+		return result;
 	}
 	
 }

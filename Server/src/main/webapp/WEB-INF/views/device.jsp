@@ -1,52 +1,60 @@
-<!DOCTYPE HTML>
-<html>
-<!-- ìë¨ ë¤ë¹ê²ì´ì ë° ì¸í´ë£¨ë -->
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html lang="en">
 <jsp:include page="nav.jsp" flush = "false" />
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<title>Highcharts Example</title>
+		<title>RAP</title>
 
+		<script src="./resources/js/highcharts.js"></script>
+		<script src="./resources/js/modules/data.js"></script>
+		<script src="./resources/js/modules/drilldown.js"></script>
 		
+		<!-- Additional files for the Highslide popup effect -->
+		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide-full.min.js"></script>
+		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide.config.js" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/media/com_demo/highslide.css" />
+
 		<style type="text/css">
-${demo.css}
+			${demo.css}
 		</style>
 		<script type="text/javascript">
-		$(function() {
-			$("#basicuserinfo").attr('class','accordion-body collapse in');
-			$("#userinfo2").attr('class','accordion-body collapse in');
-			});
-		$(document).ready(getDevice());
-
-		function getDevice() {
-			$.ajax({
-				url : "device_db",
-				type : "POST",
-				dataType : "JSON",
-				success : function(data) {
-
-					if (data != null && data != "") {
-
-						var device = data.Device;
-						var devicelen = device.length;
-						modify_chart(device,devicelen);
-
+			$(function() {
+				$("#basicuserinfo").attr('class','accordion-body collapse in');
+				$("#userinfo2").attr('class','accordion-body collapse in');
+				});
+			$(document).ready(getDevice());
+	
+			function getDevice() {
+				$.ajax({
+					url : "device_db",
+					type : "POST",
+					dataType : "JSON",
+					success : function(data) {
+	
+						if (data != null && data != "") {
+	
+							var device = data.Device;
+							var devicelen = device.length;
+							modify_chart(device,devicelen);
+	
+						}
+					},
+	
+					error : function(request, status, error) {
+						if(request.status == 200){
+							alert("데이터가 존재하지 않습니다.");
+						}
+						else if (request.status != '0') {
+							alert("code : " + request.status + "\r\nmessage : "
+									+ request.reponseText + "\r\nerror : " + error);
+						}
 					}
-				},
-
-				error : function(request, status, error) {
-					if (request.status != '0') {
-						alert("code : " + request.status + "\r\nmessage : "
-								+ request.reponseText + "\r\nerror : " + error);
-					}
-				}
-			});
-		}
+				});
+			}
 
 
 
 		function modify_chart(device,devicelen) {
-		    // Create the chart
-		 
 		    
 			$('#container')
 			.highcharts(
@@ -58,10 +66,10 @@ ${demo.css}
 							type : 'pie'
 						},
 						title : {
-							text : 'title'
+						  	text:' '
 						},
 						tooltip : {
-							pointFormat : '{series.name}: <b>{point.percentage:.1f}%</b>'
+							pointFormat : '{point.percentage:.1f}%</b>'
 						},
 						plotOptions : {
 							pie : {
@@ -75,33 +83,19 @@ ${demo.css}
 												|| 'black'
 									}
 								}
-							}
-						},
-				        series:  [{
-				            name: "Brands",
-				            colorByPoint: true,
-				            data:device
-				            
-				            
-				        }]
-					});
-}
-		
-		
-		
-	
-
+							},
+					        series:  [{
+					            name: "Brands",
+					            colorByPoint: true,
+					            data:device
+					            
+					            
+					        }]
+						}});
+			}
 		</script>
 	</head>
 	<body id="page-top" class="index">
-		<script src="./resources/js/highcharts.js"></script>
-		<script src="./resources/js/modules/data.js"></script>
-		<script src="./resources/js/modules/drilldown.js"></script>
-		
-		<!-- Additional files for the Highslide popup effect -->
-		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide-full.min.js"></script>
-		<script type="text/javascript" src="http://www.highcharts.com/media/com_demo/highslide.config.js" charset="utf-8"></script>
-		<link rel="stylesheet" type="text/css" href="http://www.highcharts.com/media/com_demo/highslide.css" />
 		
 		<div class="container">
 			<div id="wrapper">

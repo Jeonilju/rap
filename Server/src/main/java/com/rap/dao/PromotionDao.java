@@ -44,7 +44,8 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
 		    				, resultSet.getInt("grade_money")
-		    				, resultSet.getString("target_activity"));
+		    				, resultSet.getString("target_activity")
+		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 	}
@@ -61,7 +62,39 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
 		    				, resultSet.getInt("grade_money")
-		    				, resultSet.getString("target_activity"));
+		    				, resultSet.getString("target_activity")
+		    				, resultSet.getTimestamp("reg_date"));
+		    	}
+		    });
+		
+		if(result.size() == 1)
+			return result.get(0);
+		else if(result.size() > 1)
+		{
+			logger.info("프로모션 중복 에러");
+			return result.get(0);
+		}
+		else
+		{
+			logger.info("해당 프로모션 존재 X");
+			return null;
+		}
+	}
+	
+	public PromotionInfo selectPromotion(String project_key, int promotion_pk){
+		List<PromotionInfo> result= jdbcTemplate.query("select * from promotion where project_key = ? and pk = ?",
+		    	new Object[] { project_key, promotion_pk }, new RowMapper<PromotionInfo>() {
+		    	public PromotionInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException 
+		    	{
+		    		return new PromotionInfo(
+		    				resultSet.getInt("pk")
+		    				, resultSet.getString("project_key")
+		    				, resultSet.getString("name")
+		    				, resultSet.getString("summary")
+		    				, resultSet.getInt("grade_time")
+		    				, resultSet.getInt("grade_money")
+		    				, resultSet.getString("target_activity")
+		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 		
@@ -91,7 +124,8 @@ public class PromotionDao implements PromotionIDao{
 		    				, resultSet.getString("summary")
 		    				, resultSet.getInt("grade_time")
 		    				, resultSet.getInt("grade_money")
-		    				, resultSet.getString("target_activity"));
+		    				, resultSet.getString("target_activity")
+		    				, resultSet.getTimestamp("reg_date"));
 		    	}
 		    });
 	}
