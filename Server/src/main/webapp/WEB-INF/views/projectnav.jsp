@@ -45,7 +45,7 @@ function ccc()
 		<li role="presentation"><a role="menuitem" href="projectsettings">Project Settings</a></li>
 		<li role="presentation"><a role="menuitem" href="itemmanagement">Virtual Store</a></li>
 		<li role="presentation"><a role="menuitem" href="promotions">Promotions</a></li>	
-		<li role="presentation">			
+		<li role="presentation" style="padding-left:15px">			
 		
 				<div class="row">
 					<div class="span12">
@@ -56,7 +56,7 @@ function ccc()
 									<!-- Área -->
 									<div class="accordion-heading area">
 										<a class="accordion-toggle sidebar-brand" data-toggle="collapse" 
-											href="#basicuserinfo" id="analytics"  > Analytics </a>
+											href="#basicuserinfo" id="analytics" > Analytics </a>
 									</div>
 									<!-- /Área -->
 		

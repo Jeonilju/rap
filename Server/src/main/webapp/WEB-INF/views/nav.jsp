@@ -21,6 +21,7 @@ if (request.getProtocol().equals("HTTP/1.1"))
 <title>R.A.P</title>
 
 <!-- Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+<link href="./resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="./resources/css/bootstrap.css" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="./resources/css/freelancer.css" rel="stylesheet">

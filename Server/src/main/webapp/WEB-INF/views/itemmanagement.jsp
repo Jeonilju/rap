@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List, com.rap.models.CategoryLInfo, com.rap.models.Virtual_MainInfo, com.rap.models.Virtual_SubInfo"%>
-
 <!DOCTYPE html>
 <html lang="en">
 <!-- ìë¨ ë¤ë¹ê²ì´ì ë° ì¸í´ë£¨ë -->
 <jsp:include page="nav.jsp" flush = "false" />
 <script src="./resources/js/itemcategorization.js"></script>
+<script src="./resources/js/bootstrap.file-input.js"></script>
+
 <script type="text/javascript">
 
 function getAllLcategory2()
@@ -72,7 +73,7 @@ function getItemlist()
 				var main = response.main;
 				var sub = response.sub;
 				var price='';
-				
+				var path = "./";
 				for(var i=0;i<listLen;i++)
 				{
 					if(list[i].using_type == 1)
@@ -87,7 +88,7 @@ function getItemlist()
 							list[i].iap+"</h3><a onclick='deleteItem(\""+list[i].iap+"\")' style='cursor:pointer'><i class='fa fa-trash pull-right'></i></a>"
 							+"<a style='cursor:pointer' onclick='getItem(\""+list[i].iap+"\")'><i class='fa fa-edit pull-right' style='margin-right: 4px;'></i></a></div>"
 							+"<div class='panel-body'>"
-							+"<div class='col-xs-3 text-center'><i class='fa fa-comments fa-5x'></i></div>"
+							+"<div class='col-xs-3 text-center'><img  width='150px' height='150px' src=\""+path+list[i].imagePath+"\"></div>"
 							+"<div class='col-xs-9'><div class='huge'><h4>"+list[i].description+"</h4></div>"
 							+"<div>"+price+"</div></div>"
 							+"</div>"
@@ -107,10 +108,85 @@ function getItemlist()
 
 	});
 }
+function uploadfile_check(f2) {
+    var  str_dotlocation,str_ext,str_low;
+    str_value  = f2;
+   
+    str_low   = str_value.toLowerCase(str_value);
+    str_dotlocation = str_low.lastIndexOf(".");
+    str_ext   = str_low.substring(str_dotlocation+1);
+    
+    switch (str_ext) {
+     case "gif" :
+     case "jpg" :
+     case "png" :
+     case "bmp" :
+     case "tif" :
+     case "jpe" :
+    
+         return true;
+         break;
+     default:
+         alert("그림 파일 입력 양식에 맞지 않는 파일입니다.")
+         return false;
+    }
+    
+}
+function getFileType(filePath)
+{
+    var index = -1;
+        index = filePath.lastIndexOf('.');
+    var type = "";
+    if(index != -1)
+    {
+        type = filePath.substring(index+1, filePath.len);
+    }
+    else
+    {
+        type = "";
+    }
+    return type;
+}
 
 function addItem()
 {
 
+	if(document.getElementById('ItemName').value.length==0)
+	{
+	alert("아이템 이름을 입력해주세요.");
+	return false;
+	}
+	if(document.getElementById('ItemDescription').value.length==0)
+	{
+	alert("아이템 설명을 입력해주세요.");
+	return false;
+	}
+	if(document.getElementById('GoogleID').value.length==0)
+	{
+	alert("Google ID를 입력해주세요.");
+	return false;
+	}
+	if(document.getElementById('ItemPrice').value.length==0)
+	{
+	alert("가격를 입력해주세요.");
+	return false;
+	}	
+	if(document.getElementById('Lcategory2').value.length==0)
+	{
+	alert("대분류를 선택해주세요.");
+	return false;
+	}
+	if(document.getElementById('Mcategory2').value.length==0)
+	{
+	alert("중분류를 선택해주세요.");
+	return false;
+	}
+	if(document.getElementById('Scategory2').value.length==0)
+	{
+	alert("소분류를 선택해주세요.");
+	return false;
+	}
+	
 	if(document.getElementById('ItemName').value.length>22)
 	{
 	alert("아이템 이름이 너무 깁니다.");
@@ -132,76 +208,50 @@ function addItem()
 	return false;
 	}
 	
+	var fileVal = document.getElementById("ImageFile").files[0];
+	
+	if(fileVal.name >30)
+		{
+		alert("파일 이름이 너무 깁니다.");
+		return false;
+		
+		}
+	if(!(uploadfile_check(getFileType(fileVal.name)))){ alert("이미지 확장자는 gif,jpg,png,bmp,tif,jpe만 가능합니다.");return false;}
+	var maxSize = 1000000; //1MB;
+	var fileSize = Math.round(fileVal.size);
+	if(fileSize > maxSize)
+		{
+			alert("첨부파일 사이즈는 1MB 이내로 가능합니다.");
+			return false;
+		}
+
+	
 	$.ajax({
-		url : "registerItem",
+		url : "overlapItem",
 		type : "POST",
 		data : 
 		{
-			ItemName: document.getElementById('ItemName').value,
-			ItemDescription: document.getElementById('ItemDescription').value,
-			GoogleID: document.getElementById('GoogleID').value,
-			ItemPrice: document.getElementById('ItemPrice').value,
-			Lcategory: document.getElementById('Lcategory2').value,
-			Mcategory: document.getElementById('Mcategory2').value,
-			Scategory: document.getElementById('Scategory2').value,
-			Coin: document.getElementById('coinlist').value
+			ItemName : document.getElementById('ItemName').value,
+			Lcategory2: document.getElementById('Lcategory2').value,
+			Mcategory2: document.getElementById('Mcategory2').value,
+			Scategory2: document.getElementById('Scategory2').value
 		},
 		cache : false,
 		async : false,
 		dataType : "text",
 
 		success : function(response) {				
-			if(response=='200')
-			{
-				alert("아이템이 정상적으로 등록되었습니다.");
-				close();
-				getItemlist();
-			}
-			else if(response=='error')
-			{
-				alert("에러가 발생했습니다.");
-			}	
-			else if(response=='Lcategory')
-			{
-				alert("대분류를 입력해주세요.");
-			}	
-			else if(response=='Mcategory')
-			{
-				alert("중분류를 입력해주세요.");
-			}	
-			else if(response=='Scategory')
-			{
-				alert("소분류를 입력해주세요.");
-			}	
-			else if(response=='ItemName')
-			{
-				alert("아이템이름을 입력해주세요.");
-			}	
-			else if(response=='ItemDescription')
-			{
-				alert("아이템설명을 입력해주세요.");
-			}	
-			else if(response=='ItemPrice')
-			{
-				alert("아이템 가격을 정상적으로 입력해주세요.");
-			}	
-			else if(response=='GoogleID')
-			{
-				alert("실제결제의 경우 구글 아이디를 입력해주세요.");
-			}
-			else if(response=='LongItemPrice')
-				alert("금액이 너무 큽니다");
-			else if(response=='LongItemName')
-				alert("이름이 너무 깁니다.");
-			else if(response=='LongItemDescription')
-				alert("설명이 너무 깁니다.");
-			else if(response=='LongGoogleID')
-				alert("구글 아이디가 너무 깁니다.");
-			else if(response=='Coin')
-			{
-				alert("Coin을 선택해주세요.");
-			}
 			
+			if(response == '200')
+				document.addForm.submit();
+			else if(response == 'overlap'){
+				alert('같은 이름의 아이템이 존재합니다.');
+				return false;
+			}
+			else{
+				alert('error');
+				return false;
+			}
 			
 		},
 		
@@ -471,6 +521,15 @@ function editItem()
 
 	});
 }
+
+window.onload = inputfile;
+
+function inputfile()
+{
+	$('input[type=file]').bootstrapFileInput();
+	$('.file-inputs').bootstrapFileInput();
+}
+
 </script>
 
 <body id="page-top" class="index">
@@ -545,59 +604,56 @@ function editItem()
 		<h4 class="modal-title" id="myModalLabel">Add an Item</h4>
 	  </div>
 	  <div class="modal-body">
+	  
 		<div class="row">
-			<div class="col-md-4 portfolio-item">
-				<a href="#">
-					<img class="img-responsive" src="http://placehold.it/700x400" alt="">
-				</a>
-				<p class="text-center">Item Image</p>
-			</div>
-			<div class="col-md-8 portfolio-item">
-				<div class = "row">
-					<div class="col-md-4" style="padding:0px; margin:0px;">
-						<!-- 대분류 -->
-							<select class="selectpicker"  id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
-								<option value='' selected>대분류</option>
-								<%
-									for(int i =0;i<categoryLlistcount;i++)
-									{
-										out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
-									}
-								%>
-									</select>
-					</div>
-					<div class="col-md-4" style="padding:0px; margin:0px;">
-						<!-- 중분류 -->
-							<select class="selectpicker"  id="Mcategory2" name="Mcategory2" onchange="getScategory('2')">
-								<option value='' selected>중분류</option>
+			<div class="portfolio-item">
+				<form name="addForm" method="post" action="registerItem" enctype="multipart/form-data" accept-charset="UTF-8">
+				<div class="form-inline">
+					<!-- 카테고리 -->
+							<!-- 대분류 -->
+								<select class="selectpicker"  id="Lcategory2" name="Lcategory2" onchange="getMcategory('2')">
+									<option value='' selected>대분류</option>
+									<%
+										for(int i =0;i<categoryLlistcount;i++)
+										{
+											out.println("<option value='"+categoryLlist.get(i).getCategoryL()+"'>"+categoryLlist.get(i).getCategoryL()+"</option>");
+										}
+									%>
+										</select>
+							<!-- 중분류 -->
+								<select class="selectpicker"  id="Mcategory2" name="Mcategory2" onchange="getScategory('2')">
+									<option value='' selected>중분류</option>
+								</select>
+							<!-- 소분류 -->
+							<select class="selectpicker"  id="Scategory2" name="Scategory2">
+									<option value='' selected>소분류</option>		
 							</select>
-						
-					</div>
-					<div class="col-md-4" style="padding:0px; margin:0px;">
-						<!-- 소분류 -->
-						<select class="selectpicker"  id="Scategory2" name="Scategory2">
-								<option value='' selected>소분류</option>		
-						</select>
-						
-					</div>
+							
+					<!-- /카테고리 -->
 				</div>
-				<div class="row">
+				<br>
+				<div>
+					<div><label>Item Image</label></div>
+					<div><input type="file" data-filename-placement="inside" id="ImageFile" name="ImageFile"></div>
+				
+				</div>
+				<div>
 					<label>Item Name</label>
-					<input type="text" class="form-control" placeholder="Item Name" id="ItemName" required data-validation-required-message="Please enter Item Name.">
+					<input type="text" class="form-control" placeholder="Item Name" id="ItemName" name="ItemName" required data-validation-required-message="Please enter Item Name.">
 				</div>
-				<div class="row">
+				<div>
 					<label>Item Description</label>
-					<input type="text" class="form-control" placeholder="Item Description" id="ItemDescription" required data-validation-required-message="Please enter Item Description.">
+					<input type="text" class="form-control" placeholder="Item Description" id="ItemDescription" name="ItemDescription" required data-validation-required-message="Please enter Item Description.">
 				</div>
-				<div class="row">
+				<div>
 					<label>Google ID</label>
-					<input type="text" class="form-control" placeholder="Google ID" id="GoogleID" required data-validation-required-message="Please enter Google ID.">
+					<input type="text" class="form-control" placeholder="Google ID" id="GoogleID" name="GoogleID" required data-validation-required-message="Please enter Google ID.">
 				</div>
-				<div class="row">
+				<div>
 					<label>Item Price</label>
-					<input type="text" class="form-control" placeholder="Item Price" id="ItemPrice" required data-validation-required-message="Please enter Item Price.">
+					<input type="text" class="form-control" placeholder="Item Price" id="ItemPrice" name="ItemPrice" required data-validation-required-message="Please enter Item Price.">
 				</div>
-				<div class="row">
+				<div>
 					<label>Coin to use</label>
 					<div class="dropdown form-group">
 						<select class="selectpicker"  id="coinlist" name="coinlist">
@@ -605,6 +661,7 @@ function editItem()
 						</select>
 					</div>
 				</div>
+				</form>
 			</div>
 		</div>
 	  </div>
@@ -626,38 +683,34 @@ function editItem()
 	  </div>
 	  <div class="modal-body">
 		<div class="row">
-			<div class="col-md-4 portfolio-item">
-				<a href="#">
-					<img class="img-responsive" src="http://placehold.it/700x400" alt="">
-				</a>
-				<p class="text-center">Item Image</p>
-			</div>
-			<div class="col-md-8 portfolio-item">
-				<div class="row">
-					<label>Item Name</label>
-					<input type="text" class="form-control" placeholder="" id="EditItemName" required data-validation-required-message="Please enter Item Name.">
-				</div>
-				<div class="row">
-					<label>Item Description</label>
-					<input type="text" class="form-control" placeholder="" id="EditItemDescription" required data-validation-required-message="Please enter Item Description.">
-				</div>
-				<div class="row">
-					<label>Google ID</label>
-					<input type="text" class="form-control" placeholder="" id="EditGoogleID" required data-validation-required-message="Please enter Google ID.">
-				</div>
-				<div class="row">
-					<label>Item Price</label>
-					<input type="text" class="form-control" placeholder="" id="EditItemPrice" required data-validation-required-message="Please enter Item Price.">
-				</div>
-				<div class="row">
-					<label>Coin to use</label>
-					<div class="dropdown form-group">
-						<select class="selectpicker"  id="Editcoinlist" name="coinlist">
-							<option value='실제결제' selected>실제결제</option>		
-						</select>
+			<form name="editForm" method="post" action="editItem" enctype="multipart/form-data" accept-charset="UTF-8">
+				<div class="portfolio-item">
+					<div>
+						<label>Item Name</label>
+						<input type="text" class="form-control" placeholder="" id="EditItemName"  name="EditItemName" required data-validation-required-message="Please enter Item Name.">
+					</div>
+					<div>
+						<label>Item Description</label>
+						<input type="text" class="form-control" placeholder="" id="EditItemDescription" name="EditItemDescription" required data-validation-required-message="Please enter Item Description.">
+					</div>
+					<div>
+						<label>Google ID</label>
+						<input type="text" class="form-control" placeholder="" id="EditGoogleID" name="EditGoogleID" required data-validation-required-message="Please enter Google ID.">
+					</div>
+					<div>
+						<label>Item Price</label>
+						<input type="text" class="form-control" placeholder="" id="EditItemPrice" name="EditItemPrice" required data-validation-required-message="Please enter Item Price.">
+					</div>
+					<div>
+						<label>Coin to use</label>
+						<div class="dropdown form-group">
+							<select class="selectpicker"  id="Editcoinlist" name="Editcoinlist">
+								<option value='실제결제' selected>실제결제</option>		
+							</select>
+						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	  </div>
 	  <div class="modal-footer">
