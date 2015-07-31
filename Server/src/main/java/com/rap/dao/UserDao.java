@@ -15,12 +15,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.rap.analysismodels.MapInfo;
 import com.rap.analysismodels.NewmemberInfo;
-import com.rap.analysismodels.OPcountInfo;
 import com.rap.analysismodels.OSInfo;
 import com.rap.idao.UserIDao;
 import com.rap.models.DeviceInfo;
 import com.rap.models.UserInfo;
+
+import net.sf.json.JSONObject;
 
 @Repository
 public class UserDao implements UserIDao {
@@ -419,6 +421,30 @@ public class UserDao implements UserIDao {
 								resultSet.getInt("virtual_sub"), resultSet.getTimestamp("reg_date"));
 					}
 				});
+	}
+	
+	//TODO 민수
+	public List<JSONObject> get_map(String project_key) {
+		logger.info("get map");
+
+		List<JSONObject> result=new ArrayList<JSONObject>();
+		List<MapInfo> receive = jdbcTemplate.query(
+				"select location,count(*) from user where project_key=? group by location",
+				new Object[] { project_key }, new RowMapper<MapInfo>() {
+					public MapInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+						return new MapInfo(resultSet.getString("location"),resultSet.getInt("count(*)"));
+					}
+				});
+		
+		for(int i=0;i<receive.size();i++){
+			JSONObject newobj=new JSONObject();
+			newobj.put("hc-key", receive.get(i).getArea());
+			newobj.put("value", receive.get(i).getCount());
+			result.add(newobj);
+		}
+		
+
+		return result;
 	}
 	
 }

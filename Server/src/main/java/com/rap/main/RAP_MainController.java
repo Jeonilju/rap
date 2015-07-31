@@ -413,4 +413,19 @@ public class RAP_MainController {
 
 		return "activity_path";
 	}
+	@RequestMapping(value = "/map", method = RequestMethod.GET)
+	public String MainController_map(HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+		logger.info("map Page");
+		HttpSession session = request.getSession();
+		ProjectInfo currentproject = (ProjectInfo) session.getAttribute("currentproject");
+
+		// 세션에 프로젝트 존재 X
+		if (currentproject == null) {
+			response.sendRedirect("projecthome");
+			return "projecthome";
+		}
+
+		return "map";
+	}
 }
